@@ -66,7 +66,7 @@ namespace PicFlyerApp
 	        {
 	        	pictureCollectionIDs=QStringList(acn);
 	        	arbFac->setCollectionNames(acn);
-	        	for(int i; i<pictureCollectionIDs.size(); i++)
+	        	for(int i = 0; i<pictureCollectionIDs.size(); i++)
 	        	{
 	        		allCollectionIDs->insert(pictureCollectionIDs.at(i), UNORDERED_COLLECTION);
 	        	}
@@ -76,7 +76,7 @@ namespace PicFlyerApp
 	        {
 	        	manuscriptIDs=QStringList(mn);
 	        	ManuscriptCollectionFactory::setCollectionNames(mn);
-	        	for(int i; i<manuscriptIDs.size(); i++)
+	        	for(int i = 0; i<manuscriptIDs.size(); i++)
 	        	{
 	        		allCollectionIDs->insert(manuscriptIDs.at(i), MANUSCRIPT_COLLECTION);
 	        	}

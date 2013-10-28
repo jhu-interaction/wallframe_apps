@@ -72,7 +72,6 @@ namespace PicFlyerApp {
 
     enum envState_t {   ENV_STATE_INDEX,
                         ENV_STATE_ARRAY,
-                        ENV_STATE_MATRIX,
                         ENV_STATE_IMAGE,
                         ENV_STATE_WAITING,
                         ENV_STATE_WAITING_SELECTED,
@@ -81,8 +80,6 @@ namespace PicFlyerApp {
                         ENV_STATE_SELECT,
                         ENV_STATE_BACK,
                         ENV_STATE_IMAGE_ZOOM,
-                        ENV_STATE_WAITING_MATRIX,
-                        ENV_STATE_WAITING_ARRAY,
                         ENV_STATE_IMAGE_PAN,
                         ENV_STATE_PAGE_TURNER};
 
@@ -90,7 +87,6 @@ namespace PicFlyerApp {
                             MANUSCRIPT_SELECTION,
                             COLLECTION_SELECTION,
                             OPENING_THUMBNAILS,
-                            STANDARD_THUMBNAILS,
                             PAGE_TURNER,
                             LARGE_IMAGE,
                             LARGE_IMAGE_T};
@@ -115,7 +111,7 @@ namespace PicFlyerApp {
         Q_OBJECT;
     public: 
         PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size);
-        ~PicFlyer(){}
+        ~PicFlyer();
         
         osgQt::GLWidget* addViewWidget( osg::Camera* camera, 
                                         osg::Node* scene );
@@ -135,10 +131,7 @@ namespace PicFlyerApp {
         
 	static void set_z_position(OSGObjectBase* p, int z);
         
-	void updateCursor(PlanarObject* cursor, osg::Vec3d kinect_hand_position, osg::Group* group);
-
-        // void setupSkeletons();
-        void readConfigFile();
+	void updateCursor(PlanarObject* cursor, Eigen::Vector3d kinect_hand_position, osg::Group* group);
 
         // Tooltips //
         void loadToolTips();
@@ -160,7 +153,6 @@ namespace PicFlyerApp {
         QStringList* loadManuscriptCollection(QString collection, int start);
         void showManuscriptCollection(QString collection, int start);
 
-        void updateEnvironment();
         void handleUserInput();
 
         void findImage(osg::Vec3 pt, QString& col, int& index, QString& id);
@@ -222,8 +214,7 @@ namespace PicFlyerApp {
         QList<PicFlyerApp::Model::DisplayImage *>* collectionImages;
         QList<PicFlyerApp::Model::Opening *>* dispOpenings;
 
-
-        osg::Vec2d mapEnvPos(osg::Vec3d in);
+        osg::Vec2d mapEnvPos(Eigen::Vector3d in);
 
 	int col_start;
 	int pages_start;
@@ -275,9 +266,6 @@ namespace PicFlyerApp {
         QList<osg::ref_ptr< osg::TextureRectangle > > _assetTextures;
         QList<osg::ref_ptr< osg::TextureRectangle > > _imageTextures;
         QList<osg::ref_ptr< osg::TextureRectangle > > _indexTextures;
-        // TextureList _assetTextures;
-        // TextureList _imageTextures;
-        // TextureList _indexTextures;
 
         QStringList _indexNames;
         QStringList _indexLabels;
@@ -301,7 +289,6 @@ namespace PicFlyerApp {
 
         // Large Image 
         QList<osg::ref_ptr< osg::TextureRectangle > > _large;
-        // TextureList _large;
         
         //TODO: ELIMINATE WHEN FIXED
         PlanarObject* _largeImage;
@@ -316,8 +303,6 @@ namespace PicFlyerApp {
 
         osg::Vec3 _imageLocation;
 
-        QString assetDir;
-        QString resourceDir;
         QString imageDir;
 
         // ToolTips //
@@ -362,26 +347,22 @@ namespace PicFlyerApp {
 
         std::vector<int> button_call;
 
-        bool resume();
-        bool pause();
+	bool build();
+	bool start();
+	bool stop();
+	bool pause();
+	bool resume();
 
-    Q_SIGNALS:
-        void showImgs(int node);
-        void showThumbs();
-        void removeAllActive();
+	void updateEnvironment();
+	void config();
 
     public Q_SLOTS:
-        void config();
-        void unpause();
-        void suspend();
-        void pullData(); 
-        void recieveDiscreteGesture(QMap<int,int> events){};
-        void select();
+	void select();
         void back();
-        void turn();
+	void turn();
+        void updateApp();
         
     protected:
-        // Timers //
         QTimer _timer;
         QTimer _dataTimer; 
         QTimer _delay;   

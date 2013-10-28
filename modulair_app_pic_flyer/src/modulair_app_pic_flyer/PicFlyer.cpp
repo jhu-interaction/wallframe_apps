@@ -7,8 +7,18 @@
 
 using namespace std;
 using namespace modulair;
-//using namespace osg;
 using namespace PicFlyerApp;
+
+// TODO All this code should be updated to use the gestures on AppUser.
+// The model needs to be refactored. The manuscript stuff does not work. 
+// But all of the app should be rewritten anyway. :)
+
+// TODO: This should be elsewhere. Produced from /wallframe_user/scripts/wallframe_user_manager.py
+enum {
+  HEAD, NECK, TORSO, RIGHT_SHOULDER, LEFT_SHOULDER, RIGHT_ELBOW, LEFT_ELBOW, RIGHT_HAND,
+  LEFT_HAND, RIGHT_HIP, LEFT_HIP, RIGHT_KNEE, LEFT_KNEE, RIGHT_FOOT, LEFT_FOOT 
+};
+
 
 // For testing
 double camz = 1010;
@@ -21,15 +31,7 @@ osg::ref_ptr<osg::Image> PicFlyer::defaultCoverImage;
 osg::ref_ptr<osg::Image> PicFlyer::defaultPageImage;
 
 PicFlyer::PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size) : wallframe::WallframeAppBaseQt(app_name.toStdString(), nh, event_deque_size)
-{
-    // this->myManager = appManager;
-
-    //Read the manuscript names and locations from the configuration file
-    readConfigFile();
-
-    //Loads the asset directories
-    setImageDirectories();
-    
+{ 
     //Initializing variables to defaults
     _imageLast = osg::Vec3(0,0,0);
     _handLast = osg::Vec2d(0,0);
@@ -64,99 +66,88 @@ PicFlyer::PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size) :
 
     //Connect slots and signals for the timers
     connect( &_selectTimer, SIGNAL(timeout()), this, SLOT(select()));
-    connect( &_matrixTimer, SIGNAL(timeout()), this, SLOT(setMatrixMode()));
-    connect( &_arrayTimer, SIGNAL(timeout()), this, SLOT(setArrayMode()));
     connect( &_backTimer, SIGNAL(timeout()), this, SLOT(back()));
     connect( &_turnTimer, SIGNAL(timeout()), this, SLOT(turn()));
-    connect( &_dataTimer, SIGNAL(timeout()), this, SLOT(pullData()));
 
     _torsoLast = osg::Vec3d(0,0,0);
-
     pr_saved = osg::Vec3d(0,0,0);
     pl_saved = osg::Vec3d(0,0,0);
 
-    // copied from image storm
     this->paused = false;
     connect( &_timer, SIGNAL(timeout()), this, SLOT(update()));
     connect( &_dataTimer, SIGNAL(timeout()), this, SLOT(updateApp()));
  }
 
-/**
- * Reads image directory information and collection information from the configuration file.
- */
-void PicFlyer::readConfigFile()
-{   
-    // TODO
-    // QString app_path(GetEnv("LAIR_APP_PATH").c_str());
-    // this->imageDir = GetEnv("LAIR_DATABASE_PATH").c_str();
+bool PicFlyer::build() {
+    std::string asset_path;
 
-    // ROS_WARN_STREAM("<<< PicFlyer >>> App Path: "<<app_path.toStdString());
-   
-    // QString configFileName = app_path + QString("/") + this->myID + QString("/")+ this->myID + QString(".txt");
-    // QFile config_file(configFileName);
-    // if (!config_file.open(QIODevice::ReadOnly)){
-    //     ROS_WARN_STREAM("<<< PicFlyer >>> Error with config file");
-    //     ROS_WARN_STREAM("<<< PicFlyer >>> File is "<<configFileName.toStdString());
-    //     exit(0);
-    // }
+    if (!node_.getParam("/modulair/apps/osg_app/paths/assets", asset_path)){
+      ROS_ERROR("Modulair%s: No asset path found on parameter server (namespace: %s)",
+		name_.c_str(), node_.getNamespace().c_str());
+      return false;
+    } else {
+      asset_path_ = QString(asset_path.c_str());
+      ROS_WARN_STREAM("PicFlyer:  Asset path is [" << this->asset_path_.toStdString() << "]");
+    }
 
+    std::string image_collection_path;
+
+    if (!node_.getParam("/modulair/apps/osg_app/paths/image_collections_path", image_collection_path)){
+      ROS_ERROR("Modulair%s: No image collections path found on parameter server (namespace: %s)",
+		name_.c_str(), node_.getNamespace().c_str());
+      return false;
+    } else {
+      imageDir = QString(image_collection_path.c_str());
+      ROS_WARN_STREAM("PicFlyer:  Image collection path is [" << imageDir.toStdString() << "]");
+    }
+
+    std::string tooltip_path;
+
+    if (!node_.getParam("/modulair/apps/osg_app/paths/tooltips", tooltip_path)){
+      ROS_ERROR("Modulair%s: No tooltips path found on parameter server (namespace: %s)",
+		name_.c_str(), node_.getNamespace().c_str());
+      return false;
+    } else {
+      tooltipDir = QString(tooltip_path.c_str());
+      ROS_WARN_STREAM("PicFlyer:  Tooltips path is [" << tooltipDir.toStdString() << "]");
+    }
     
-    // this->assetDir="";
-    // this->assetPaths=QStringList();
+    std::string image_collections;
 
-    // ROS_WARN_STREAM("<<< PicFlyer >>> Parsing Config File");
-    //   QTextStream stream ( &config_file );
-    //   while( !stream.atEnd() ) 
-    //   {
-    //     QString line;
-    //     QStringList lineElem;
-    //     line = stream.readLine();
-    //     lineElem = line.split(" ");
+    if (!node_.getParam("/modulair/apps/osg_app/paths/image_collections", image_collections)){
+      ROS_ERROR("Modulair%s: No image collections found on parameter server (namespace: %s)",
+		name_.c_str(), node_.getNamespace().c_str());
+      return false;
+    } else {
+      _collectionIDs = QString(image_collections.c_str()).split(" ");
 
-    //     if(lineElem[0] == "ASSET_DIR"){
-    //       this->assetDir = app_path + QString("/") + this->myID + QString("/") + lineElem[1];
-    //       ROS_INFO_STREAM(this->assetDir.toStdString());
-    //     }
+      ROS_WARN_STREAM("PicFlyer:  Image collections are [" << _collectionIDs.join(", ").toStdString() << "]");
+    }
 
-    //     if(lineElem[0] == "TOOL_TIP_DIR"){
-    //       this->tooltipDir = app_path + QString("/") + this->myID + QString("/") + lineElem[1];
-    //       ROS_INFO_STREAM(this->tooltipDir.toStdString());
-    //     }
-
-    //     if(lineElem[0] == "UNORDERED")
-    //     {
-    //         for(int x = 1; x<lineElem.size(); x++)
-    //             this->_collectionIDs<< lineElem[x];
-    //     }
-
-    //     if(lineElem[0] == "MANUSCRIPTS")
-    //     {
-    //         for(int x =1; x<lineElem.size(); x++)
-    //             this->_manuscriptIDs<< lineElem[x];
-    //     }
-
-    //}
-
-    //The references to the static variables outside of the class
-    //are not necessary, strictly, but I am too aggravated to change it back
-    // Model::PictureCollectionFactory::root= imageDir+QString("/Unordered");
-    // Model::PictureCollectionFactory::names=&_collectionIDs;
-    // arbFac= Model::PictureCollectionFactory::getInstance();
-    
-    // Model::ManuscriptCollectionFactory::root = imageDir+QString("/Manuscripts");
-    // Model::ManuscriptCollectionFactory::names= new QStringList(_manuscriptIDs);
+    setImageDirectories();
 
     Model::CollectionStore::setPictureCollectionIDs(_collectionIDs);
     Model::CollectionStore::setManuscriptIDs(_manuscriptIDs);
     Model::CollectionStore::setDirectoryRoot(imageDir);
+
+    config();
+
+    ROS_WARN_STREAM("<<< PicFlyer >>> Configured Successfully");
+    return true;
+  }
+
+PicFlyer::~PicFlyer() {
+  for (unsigned int i = 0; i < _envWrapper->getNumChildren(); i++) {
+    _envWrapper->removeChild(i);
+  }
+
+  _envWrapper = NULL;
+
+  // TODO Incomplete.
 }
 
-/**
- * Required for all Balaur apps, sets up the application to be run.
- */
 void PicFlyer::config()
 {
-
     //Configures & displays the application widget
     this->resize(width_, height_);
     this->move(0,0);
@@ -389,21 +380,7 @@ void PicFlyer::config()
     ROS_WARN_STREAM("<<< PicFlyer >>> Configured Successfully");
 }
 
-
-/**
- * Pulls Kinect data and updates environment. 
- * (Nothing will update without the kinect)
- */
-void PicFlyer::pullData()
-{
-  //requestUserData();
-  //getPrimaryUser();
-  //if(primaryUserID != -1){
-  //  updateEnvironment();
-  // }
-}
-
-osg::Vec2d PicFlyer::mapEnvPos(osg::Vec3d in){
+osg::Vec2d PicFlyer::mapEnvPos(Eigen::Vector3d in){
     osg::Vec2d h;
     osg::Vec3d p,pt;
     pt[0] = in[0];
@@ -499,6 +476,11 @@ void PicFlyer::hideTooltip(int id)
     }
 }
 
+void PicFlyer::updateApp()
+{
+  updateEnvironment();
+}
+
 /**
  * Updates the view. Main driving force of the program.
  */
@@ -528,15 +510,6 @@ void PicFlyer::updateEnvironment()
     if (!this->getFocusedUser(user)) {
       return;
     }
-
-    // TODO: This should be elsewhere. Produced from /wallframe_user/scripts/wallframe_user_manager.py
-    // TODO All this code should be updated to use the gestures on AppUser. But all of the app
-    // should be rewritten anyway. :)
-
-    enum {
-      HEAD, NECK, TORSO, RIGHT_SHOULDER, LEFT_SHOULDER, RIGHT_ELBOW, LEFT_ELBOW, RIGHT_HAND,
-      LEFT_HAND, RIGHT_HIP, LEFT_HIP, RIGHT_KNEE, LEFT_KNEE, RIGHT_FOOT, LEFT_FOOT 
-    };
 
     // TODO Unsure which of this should be jtPosById and jtPosBodyById
     torso = user.jtPosById(TORSO);
@@ -733,13 +706,22 @@ void PicFlyer::updateEnvironment()
         case ENV_STATE_TURN:
             switch(prevManState)
             {
-                // setTooltip("go_back",1);
-                setTooltip("highlight_image",2);
-                if(_planarCursors["r"]->isVisible() || _planarCursors["l"]->isVisible())
-                    setTooltip("forearm_select",3);
-                else
-                    setTooltip("hide",3);
-                setTooltip("go_back",4);
+
+	      setTooltip("highlight_image",2);
+
+	      if (_planarCursors["r"]->isVisible() || _planarCursors["l"]->isVisible()) {
+		setTooltip("forearm_select",3);
+	      } else {
+		setTooltip("hide",3);
+	      }
+
+	      setTooltip("go_back",4);
+	      
+	    case INDEX_SELECTION:
+	    case LARGE_IMAGE:
+	    case LARGE_IMAGE_T:
+	      break;
+    
                 case MANUSCRIPT_SELECTION:
                     if(dir == TURN_RIGHT) {
                         col_start += NUM_THUMBNAILS;
@@ -1194,8 +1176,9 @@ void PicFlyer::updateEnvironment()
             }
 
             // Zoom Behavior
-            if(rAbs[2] > 350 && right.SumOfElements() !=0 
-               && lAbs[2] > 350 && left.SumOfElements() !=0 ){
+	    // Changed hand check from right.SumOfElements() !=0 to !right.izZero()
+            if(rAbs[2] > 350 && !right.isZero() 
+               && lAbs[2] > 350 && !left.isZero()) {
                 setTooltip("zoom_how",2);
                 v = left - right;
                 dist = v.norm();
@@ -1232,12 +1215,12 @@ void PicFlyer::updateEnvironment()
         case ENV_STATE_IMAGE_PAN:
             // ACTION //
             if(panning_hand == QString("left")){
-                if(lAbs[2] > 250 && left.SumOfElements() !=0){
+	      if(lAbs[2] > 250 && !left.isZero()){
                     panning_active = true;
                     osg::Vec2d handCurrent = mapEnvPos(left);
                     osg::Vec2d handCommand = handCurrent-_handLast;
 
-                    handCommand.Multiply(.75 - (camz - 100)/600);
+                    handCommand *= (.75 - (camz - 100)/600);
 
                     osg::Vec3 command = osg::Vec3(handCommand[0],handCommand[1],0)+_imageLast;
                     _envWrapper->setPosition(command);
@@ -1260,7 +1243,7 @@ void PicFlyer::updateEnvironment()
                     break; 
                 }
             }else if(panning_hand == QString("right")){
-                if(rAbs[2] > 250 && right.SumOfElements() !=0){
+	      if(rAbs[2] > 250 && !right.isZero()){
                     panning_active = true;
                     osg::Vec2d handCurrent = mapEnvPos(right);
                     osg::Vec2d handCommand = handCurrent-_handLast;
@@ -1290,7 +1273,7 @@ void PicFlyer::updateEnvironment()
             }
             break;
     }
-    _torsoLast = torso;
+    _torsoLast = osg::Vec3d(torso[0], torso[1], torso[1]);
 }
 
 /**
@@ -1319,12 +1302,12 @@ void PicFlyer::turn()
 
 // You have got to be kidding me...
 void PicFlyer::set_z_position(OSGObjectBase *p, int z) {
-    Vec3 b = p->getPosition();
+    osg::Vec3 b = p->getPosition();
     osg::Vec3d back = osg::Vec3d(b[0], b[1], z);
     p->setPos3DAbs(back);
 }
 
-void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_position, osg::Group* group)
+void PicFlyer::updateCursor(PlanarObject *cursor, Eigen::Vector3d kinect_hand_position, osg::Group* group)
 {
 
     // Move cursor towards new hand position
@@ -1335,7 +1318,7 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
     if (cursor->isVisible()) {
         old_screen_cursor_pos =  cursor->getPos2D();
     } else {
-        old_screen_cursor_pos.Assign(0, 0);
+      old_screen_cursor_pos = osg::Vec2d(0, 0);
     }
 
     osg::Vec2d offset;
@@ -1346,7 +1329,8 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
     screen_cursor_pos += (offset);
     screen_cursor_pos += (old_screen_cursor_pos);
 
-    cursor->setPos2DAbs(screen_cursor_pos);
+    // TODO Should there be a setPos@dAbs taking a osg::Vec2?
+    cursor->setPos2DAbs(osg::Vec3(screen_cursor_pos[0], screen_cursor_pos[1], 0));
     cursor->setVisible();
 
     // Highlight and popout closest object
@@ -1354,7 +1338,7 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
     double closest;
     OSGObjectBase *closest_object = 0;
 
-    for (int i = 0; i < group->getNumChildren(); i++) {
+    for (unsigned int i = 0; i < group->getNumChildren(); i++) {
         OSGObjectBase* p = dynamic_cast<OSGObjectBase*>(group->getChild(i));
 
         if (!p) {
@@ -1364,7 +1348,7 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
         osg::Vec2d pos = p->getPos2D();
         osg::Vec2d v;
         v = screen_cursor_pos - pos;
-        double dist = v.norm();
+        double dist = v.normalize();
 
         if (!closest_object || dist < closest) {
             closest = dist;
@@ -1380,7 +1364,7 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
         osg::Vec2d pos = left->getPos2D();
         osg::Vec2d v;
         v = screen_cursor_pos - pos;
-        double dist = v.norm();
+        double dist = v.normalize();
 
         if (!closest_object || dist < closest) {
             closest = dist;
@@ -1394,7 +1378,7 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
         osg::Vec2d pos = right->getPos2D();
         osg::Vec2d v;
         v = screen_cursor_pos - pos;
-        double dist = v.norm();
+        double dist = v.normalize();
 
         if (!closest_object || dist < closest) {
 
@@ -1461,11 +1445,25 @@ void PicFlyer::updateCursor(PlanarObject *cursor, osg::Vec3d kinect_hand_positio
  */
 void PicFlyer::updateCursors()
 {
-    osg::Vec3d torso = users[primaryUserID]->pts3D[lair::TOR];
-    osg::Vec3d right = users[primaryUserID]->pts3D[lair::RHN];
-    osg::Vec3d left = users[primaryUserID]->pts3D[lair::LHN];
-    osg::Vec3d rAbs = users[primaryUserID]->pts3D_norm[lair::RHN];
-    osg::Vec3d lAbs = users[primaryUserID]->pts3D_norm[lair::LHN];
+    Eigen::Vector3d torso;
+    Eigen::Vector3d right;
+    Eigen::Vector3d left;
+    Eigen::Vector3d rAbs;
+    Eigen::Vector3d lAbs;
+
+    AppUser user;
+
+    if (!this->getFocusedUser(user)) {
+      return;
+    }
+
+    // TODO Unsure which of this should be jtPosById and jtPosBodyById
+    torso = user.jtPosById(TORSO);
+    right = user.jtPosById(RIGHT_HAND);
+    left = user.jtPosById(LEFT_HAND);
+
+    rAbs = user.jtPosBodyById(RIGHT_HAND);
+    lAbs = user.jtPosBodyById(LEFT_HAND);
 
     OSGObjectBase* group;
 
@@ -1477,14 +1475,13 @@ void PicFlyer::updateCursors()
         return;
     }
 
-
     PlanarObject *right_cursor = _planarCursors["r"];
     PlanarObject *left_cursor = _planarCursors["l"];
 
     // Check that the users is in the working area
     if(torso[2] < WKSP_MAX_Z_PIC && torso[2] > WKSP_MIN_Z_PIC) {
         if(rAbs[2] > lAbs[2]) {
-            if(rAbs[2] > 220 && right.SumOfElements() !=0 ) {
+	  if(rAbs[2] > 220 && !right.isZero()) {
                 updateCursor(right_cursor, right, group);
                 left_cursor->setHidden();
                 right_cursor->setVisible();
@@ -1492,7 +1489,7 @@ void PicFlyer::updateCursors()
                 right_cursor->setHidden();
             }
         } else {
-            if(lAbs[2] > 220 && left.SumOfElements() !=0 ) {
+	  if(lAbs[2] > 220 && !left.isZero()) {
                 updateCursor(left_cursor, left, group);
                 right_cursor->setHidden();
                 left_cursor->setVisible();
@@ -1503,10 +1500,23 @@ void PicFlyer::updateCursors()
     }
 }
 
+bool PicFlyer::start(){
+  // Start up app
+  _timer.start( 10 );
+  _dataTimer.start(10);
+  ROS_WARN_STREAM("<<< PicFlyer >>> Timers Started");
+  return true;
+}
+
+bool PicFlyer::stop(){
+  /*Stop stuff here before destructor is called, if needed*/
+  return true;
+}
+
 /**
  * Pauses the application. Required by AppBase.
  */
-void PicFlyer::pause()
+bool PicFlyer::pause()
 {
     this->hide();
     _timer.stop();
@@ -1514,25 +1524,13 @@ void PicFlyer::pause()
     this->update();
     paused = true;
     ROS_INFO_STREAM("<<< PicFlyer >>> Pausing");
-}
-
-/**
- * Unpauses the application. Required by AppBase.
- */
-void PicFlyer::unpause()
-{
-    this->show();
-    _timer.start(10);
-    _dataTimer.start(30);
-    this->update();
-    paused = false;
-    ROS_INFO_STREAM("<<< PicFlyer >>> Un-pausing");
+    return true;
 }
 
 /**
  * Resumes the application. Required by AppBase.
  */
-void PicFlyer::resume()
+bool PicFlyer::resume()
 {
     _timer.start(10);
     _dataTimer.start(30);
@@ -1540,19 +1538,7 @@ void PicFlyer::resume()
     this->glWidget->show();
     this->update();
     ROS_INFO_STREAM("<<< PicFlyer >>> Resumed");
-}
-
-/**
- * Suspends the application. Required by AppBase.
- */
-void PicFlyer::suspend()
-{
-    _timer.stop();
-    _dataTimer.stop();
-    this->hide();
-    this->glWidget->hide();
-    this->update();
-    ROS_INFO_STREAM("<<< PicFlyer >>> Suspended");
+    return true;
 }
 
 /**
@@ -1561,8 +1547,11 @@ void PicFlyer::suspend()
 void PicFlyer::setImageDirectories()
 {
     // Asset Textures //
-    ROS_INFO_STREAM("<<< PicFlyer >>> Setting Image paths from "<<this->assetDir.toStdString());
-    QDir asset_dir(this->assetDir);
+    ROS_INFO_STREAM("<<< PicFlyer >>> Setting asset image paths from "<<this->asset_path_.toStdString());
+
+    this->assetPaths = QStringList();
+    QDir asset_dir(this->asset_path_);
+
     QStringList assetFiles = asset_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
     for (int i=0; i<assetFiles.count(); i++){
         this->assetPaths << asset_dir.absoluteFilePath(assetFiles[i]);
@@ -1575,7 +1564,8 @@ void PicFlyer::setImageDirectories()
 void PicFlyer::LoadTextures()
 {
     //Only loads assets so far as I can tell
-    ROS_INFO_STREAM("Loading Textures from "<<this->assetDir.toStdString());;
+    ROS_INFO_STREAM("Loading Textures from "<<this->asset_path_.toStdString());;
+
     osg::ref_ptr<osg::Image> img;    
     for (int i = 0; i < this->assetPaths.size(); ++i){
         img = osgDB::readImageFile(this->assetPaths.at(i).toStdString());
@@ -1584,13 +1574,13 @@ void PicFlyer::LoadTextures()
         this->_assetTextures.push_back(new osg::TextureRectangle(img));
     }
 
-    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(assetDir.toStdString()+"/previous_inactive.png")));
-    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(assetDir.toStdString()+"/previous_active.png")));
-    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(assetDir.toStdString()+"/next_inactive.png")));
-    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(assetDir.toStdString()+"/next_active.png")));
+    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/previous_inactive.png")));
+    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/previous_active.png")));
+    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/next_inactive.png")));
+    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/next_active.png")));
 
-    PicFlyer::defaultCoverImage = osgDB::readImageFile(assetDir.toStdString()+"/DEFAULT_PAGE_IMAGE.tif");
-    PicFlyer::defaultPageImage = osgDB::readImageFile(assetDir.toStdString()+"/DEFAULT_PAGE_IMAGE.tif");
+    PicFlyer::defaultCoverImage = osgDB::readImageFile(asset_path_.toStdString()+"/DEFAULT_PAGE_IMAGE.tif");
+    PicFlyer::defaultPageImage = osgDB::readImageFile(asset_path_.toStdString()+"/DEFAULT_PAGE_IMAGE.tif");
 
     if (!PicFlyer::defaultPageImage) {
       ROS_WARN_STREAM("Failed to load default page image");
@@ -1693,11 +1683,10 @@ void PicFlyer::loadPageTurner(osg::Vec3 location)
     double closest;
     OSGObjectBase *closest_object = 0;
 
-    osg::Vec2d sel;
-    sel.Assign(location[0], location[1]);
+    osg::Vec2d sel = osg::Vec2d(location[0], location[1]);
 
     osg::Group *group = _imageWrapper;
-    for (int i = 0; i < group->getNumChildren(); i++) {
+    for (unsigned int i = 0; i < group->getNumChildren(); i++) {
         OSGObjectBase* p = dynamic_cast<OSGObjectBase*>(group->getChild(i));
 
         if (!p) {
@@ -1707,7 +1696,7 @@ void PicFlyer::loadPageTurner(osg::Vec3 location)
         osg::Vec2d pos = p->getPos2D();
         osg::Vec2d v;
         v = sel - pos;
-        double dist = v.norm();
+        double dist = v.normalize();
 
         if (!closest_object || dist < closest) {
             closest = dist;
@@ -1724,7 +1713,8 @@ void PicFlyer::loadPageTurner(osg::Vec3 location)
 
 void PicFlyer::loadTurn(turn_t turn)
 {
-    int idNum;
+    int idNum = 0;
+
     //TODO: Turning animation
     if(turn==TURN_LEFT)
     {
@@ -2002,7 +1992,7 @@ void PicFlyer::showPageCollection(QString c, QString ident, int start)
 void PicFlyer::findImage(osg::Vec3 pt, QString& col, int& index, QString& id)
 {
     QString closestID, closestCol;
-    int closestIndex;
+    int closestIndex = -1;
     double dist, small = INT_MAX;
     osg::Vec3d v;
     osg::Vec3d p = osg::Vec3d(pt[0],pt[1],pt[2]);
@@ -2013,7 +2003,7 @@ void PicFlyer::findImage(osg::Vec3 pt, QString& col, int& index, QString& id)
         osg::Vec3d ipv = osg::Vec3d(ip[0],ip[1],ip[2]);
 
         v = p - ipv;
-        dist = v.norm();
+        dist = v.normalize();
 
         if(dist<small){
             small = dist;
@@ -2038,7 +2028,7 @@ void PicFlyer::findImage(osg::Vec3 pt, QString& col, int& index, QString& id)
 int PicFlyer::findNearestIndex(osg::Vec3 pt)
 {
     ROS_INFO_STREAM("Finding Cloest Index");
-    int closestIndex;
+    int closestIndex = -1;
 
     double dist, small= INT_MAX;
 
@@ -2050,7 +2040,7 @@ int PicFlyer::findNearestIndex(osg::Vec3 pt)
         osg::Vec3 ip = _indexThumbs[i]->getPosition();
         osg::Vec3d ipv = osg::Vec3d(ip[0],ip[1],ip[2]);
         v = p - ipv;
-        dist = v.norm();
+        dist = v.normalize();
 
         if(dist<small)
         {
@@ -2358,7 +2348,6 @@ QString PicFlyer::labelFormatter(QString toForm, int length)
     QString in = QString(toForm);
     int index=length;
     int cursize= in.size();
-    int processed=0;
     int last= -1;
 
 
@@ -2495,7 +2484,7 @@ bool PicFlyerKeyboardHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUI
             {
                 //Quit
                 case 'q':
-                    this->appPtr->sendSelfTerminate();
+		  //this->appPtr->sendSelfTerminate();
                     break;
                 
                 // Camera Zoom
@@ -2615,8 +2604,8 @@ void PicFlyer::loadToolTips()
 }
 
 
-int main(int argc, char* argv[]){
-  ros::init(argc,argv, "pic_flyer_app");
+int main(int argc, char* argv[]) {
+  ros::init(argc, argv, "pic_flyer_app");
 
   ROS_WARN_STREAM("PicFlyerApp: Starting Up...");
 
@@ -2624,7 +2613,8 @@ int main(int argc, char* argv[]){
   application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
 
   ros::NodeHandle node_handle;
-  PicFlyerApp pic_flier_app("PicFlyerApp", node_handle, 20);
+
+  PicFlyer pic_flier_app("PicFlyerApp", node_handle, 20);
 
   pic_flier_app.build();
   pic_flier_app.start();
@@ -2638,5 +2628,4 @@ int main(int argc, char* argv[]){
   ROS_WARN_STREAM("PicFlyerApp: App Finished");
   return 0;
 }
-
 

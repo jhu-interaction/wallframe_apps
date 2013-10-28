@@ -125,8 +125,10 @@ namespace PicFlyerApp {
 
 		QList<DisplayImage *>* Manuscript::getImages()
 		{
-			//May leak memory. Check later
-			QList<DisplayImage *>* temp;
+
+		// TODO: Awful
+		  QList<DisplayImage *>* temp = new QList<DisplayImage *>();
+
 			for(int x=0; x< pages->size(); x++)
 			{
 				temp->append(dynamic_cast<DisplayImage*>(pages->at(x)));

@@ -1,4 +1,8 @@
 <launch>
   <node pkg="modulair_app_pic_flier" name="pic_flier_app" type="pic_flier_app" output="screen"/>
+
   <param name="/modulair/apps/pic_flier_app/paths/assets" value="$(find modulair_app_pic_flier)/assets"/>
+  <param name="/modulair/apps/pic_flier_app/paths/tooltips" value="$(find modulair_app_pic_flier)/tooltips"/>
+  <param name="/modulair/apps/pic_flier_app/paths/image_collections_path" value="$(find modulair_app_pic_flier)/image_collections"/>
+  <param name="/modulair/apps/pic_flier_app/paths/image_collections" value="test"/>
 </launch>
