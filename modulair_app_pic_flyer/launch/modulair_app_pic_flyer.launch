@@ -1,8 +1,7 @@
 <launch>
-  <node pkg="modulair_app_pic_flier" name="pic_flier_app" type="pic_flier_app" output="screen"/>
+  <node pkg="modulair_app_pic_flyer" name="pic_flyer_app" type="pic_flyer_app" output="screen"/>
 
-  <param name="/modulair/apps/pic_flier_app/paths/assets" value="$(find modulair_app_pic_flier)/assets"/>
-  <param name="/modulair/apps/pic_flier_app/paths/tooltips" value="$(find modulair_app_pic_flier)/tooltips"/>
-  <param name="/modulair/apps/pic_flier_app/paths/image_collections_path" value="$(find modulair_app_pic_flier)/image_collections"/>
-  <param name="/modulair/apps/pic_flier_app/paths/image_collections" value="test"/>
+  <param name="/modulair/apps/pic_flyer_app/paths/assets_path" value="$(find modulair_app_pic_flyer)/assets"/>
+  <param name="/modulair/apps/pic_flyer_app/paths/image_collections_path" value="$(find modulair_app_pic_flyer)/image_collections"/>
+  <param name="/modulair/apps/pic_flyer_app/paths/image_collections" value="test"/>
 </launch>

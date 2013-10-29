@@ -120,25 +120,23 @@ namespace PicFlyerApp {
                                    const std::string& name="",
                                    bool windowDecoration=false);
         void rotateCamera(double theta,double phi,double rad);
-        void setImageDirectories();
-        void LoadTextures();
+        void LoadTextures(QDir texture_dir);
         void setTexture(QString ID, int texIndex);
         virtual void paintEvent( QPaintEvent* event ) { frame(); }
 
         osg::Vec3 mapWallPos(osg::Vec3 pt);
         void updateDockables();
         void updateCursors();
-        
+       
 	static void set_z_position(OSGObjectBase* p, int z);
         
 	void updateCursor(PlanarObject* cursor, Eigen::Vector3d kinect_hand_position, osg::Group* group);
 
         // Tooltips //
-        void loadToolTips();
+        void loadToolTips(QDir tooltip_dir);
         void setTooltip(QString key, int id);
         void hideTooltip(int id);
 
-        void toggleStacks(){};
         void loadIndex();
 
         void loadLarge(osg::Vec3 v);
@@ -164,6 +162,7 @@ namespace PicFlyerApp {
         osg::Vec3 _cameraOrbit;
         osg::Vec3 _cameraStart;
 
+    private:
         QTimer _selectTimer;
         QTimer _backTimer;
         QTimer _turnTimer;
@@ -175,7 +174,7 @@ namespace PicFlyerApp {
         // USERS //
         int numActiveUsers;
 
-    private:
+
         //String Formatter
         static QString labelFormatter(QString, int);
         static void thumbnailCalc(double& x, double& y);
@@ -184,6 +183,8 @@ namespace PicFlyerApp {
         static void turnCalc(double& x, double& y);
         void setTitle(QString t, QString st, int pO, int pT);
         void updateButtons(int tStart, int tTotal);
+
+	bool get_param(std::string param, std::string &value);
 
         //Thumbnail Measurements. TODO: Potentialy make struct.
         const static int THUMBNAIL_SIDE= 90;
@@ -277,10 +278,6 @@ namespace PicFlyerApp {
         osg::ref_ptr<osgText::Text> subtitle;
         osg::ref_ptr<osgText::Text> pageInd;
 
-        // Collections
-        QStringList _collectionIDs; //Should probably be eliminated in a refactor
-        QStringList _manuscriptIDs; //Should probably be eliminated in a refactor
-
         //Default images
         static osg::ref_ptr<osg::Image> defaultCoverImage;
         static osg::ref_ptr<osg::Image> defaultPageImage;
@@ -303,11 +300,7 @@ namespace PicFlyerApp {
 
         osg::Vec3 _imageLocation;
 
-        QString imageDir;
-
         // ToolTips //
-        QString tooltipDir;
-        QStringList tooltipPaths;
         QList<QPixmap*> toolTipImages;
 
         QLabel* tooltip1;
@@ -354,7 +347,7 @@ namespace PicFlyerApp {
 	bool resume();
 
 	void updateEnvironment();
-	void config();
+	void config(QDir texture_dir, QDir tooltip_dir);
 
     public Q_SLOTS:
 	void select();

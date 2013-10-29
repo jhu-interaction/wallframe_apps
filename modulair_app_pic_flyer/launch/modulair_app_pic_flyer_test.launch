@@ -1,0 +1,31 @@
+<launch>
+  <node launch-prefix="gdb -ex run --args" pkg="modulair_app_pic_flyer" name="pic_flyer_app" type="pic_flyer_app" output="screen"/>
+
+  <param name="/modulair/apps/pic_flyer_app/paths/assets" value="$(find modulair_app_pic_flyer)/assets"/>
+  <param name="/modulair/apps/pic_flyer_app/paths/image_collections" value="$(find modulair_app_pic_flyer)/assets/image_collections"/>
+  <param name="/modulair/apps/pic_flyer_app/image_collections" value="test"/>
+
+  <rosparam>
+    wallframe:
+      core:
+        params:
+          x: 1680
+          y: 24
+          width: 1920
+          height: 1200
+        default_app: image_storm
+      app:
+        params:
+          height_percentage: .97
+      infobar:
+        params:
+          height_percentage: .03    
+      menu:
+        params:
+          height_percentage: .97
+          workspace_size: [-1200,1200,-600,600,1500,3000]
+          border_scale: .02
+          y_offset: -600.0
+          screensaver: no
+  </rosparam>
+</launch>

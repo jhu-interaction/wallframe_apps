@@ -78,63 +78,48 @@ PicFlyer::PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size) :
     connect( &_dataTimer, SIGNAL(timeout()), this, SLOT(updateApp()));
  }
 
+bool PicFlyer::get_param(std::string param, std::string &value) {
+  if (!node_.getParam(param, value)) {
+      ROS_ERROR("%s: Parameter not found: %s (namespace: %s)",
+		name_.c_str(), param.c_str(), node_.getNamespace().c_str());
+      return false;
+  } else {
+    ROS_WARN_STREAM("PicFlyer: Parameter " << param << ": " << value);
+    return true;
+  }
+}
+
 bool PicFlyer::build() {
     std::string asset_path;
 
-    if (!node_.getParam("/modulair/apps/osg_app/paths/assets", asset_path)){
-      ROS_ERROR("Modulair%s: No asset path found on parameter server (namespace: %s)",
-		name_.c_str(), node_.getNamespace().c_str());
+    if (!get_param("/modulair/apps/pic_flyer_app/paths/assets", asset_path)){
       return false;
     } else {
       asset_path_ = QString(asset_path.c_str());
-      ROS_WARN_STREAM("PicFlyer:  Asset path is [" << this->asset_path_.toStdString() << "]");
     }
 
     std::string image_collection_path;
 
-    if (!node_.getParam("/modulair/apps/osg_app/paths/image_collections_path", image_collection_path)){
-      ROS_ERROR("Modulair%s: No image collections path found on parameter server (namespace: %s)",
-		name_.c_str(), node_.getNamespace().c_str());
+    if (!get_param("/modulair/apps/pic_flyer_app/paths/image_collections", image_collection_path)) {
       return false;
-    } else {
-      imageDir = QString(image_collection_path.c_str());
-      ROS_WARN_STREAM("PicFlyer:  Image collection path is [" << imageDir.toStdString() << "]");
     }
 
-    std::string tooltip_path;
-
-    if (!node_.getParam("/modulair/apps/osg_app/paths/tooltips", tooltip_path)){
-      ROS_ERROR("Modulair%s: No tooltips path found on parameter server (namespace: %s)",
-		name_.c_str(), node_.getNamespace().c_str());
-      return false;
-    } else {
-      tooltipDir = QString(tooltip_path.c_str());
-      ROS_WARN_STREAM("PicFlyer:  Tooltips path is [" << tooltipDir.toStdString() << "]");
-    }
-    
     std::string image_collections;
 
-    if (!node_.getParam("/modulair/apps/osg_app/paths/image_collections", image_collections)){
-      ROS_ERROR("Modulair%s: No image collections found on parameter server (namespace: %s)",
-		name_.c_str(), node_.getNamespace().c_str());
+    if (!get_param("/modulair/apps/pic_flyer_app/image_collections", image_collections)) {
       return false;
-    } else {
-      _collectionIDs = QString(image_collections.c_str()).split(" ");
-
-      ROS_WARN_STREAM("PicFlyer:  Image collections are [" << _collectionIDs.join(", ").toStdString() << "]");
     }
 
-    setImageDirectories();
+    Model::CollectionStore::setDirectoryRoot(QString(image_collection_path.c_str()));
+    Model::CollectionStore::setPictureCollectionIDs(QString(image_collections.c_str()).split(" "));
 
-    Model::CollectionStore::setPictureCollectionIDs(_collectionIDs);
-    Model::CollectionStore::setManuscriptIDs(_manuscriptIDs);
-    Model::CollectionStore::setDirectoryRoot(imageDir);
+    QDir texture_dir = QDir(QDir(asset_path_).absoluteFilePath("textures"));
+    QDir tooltip_dir = QDir(QDir(asset_path_).absoluteFilePath("tooltips"));
 
-    config();
+    config(texture_dir, tooltip_dir);
 
-    ROS_WARN_STREAM("<<< PicFlyer >>> Configured Successfully");
     return true;
-  }
+}
 
 PicFlyer::~PicFlyer() {
   for (unsigned int i = 0; i < _envWrapper->getNumChildren(); i++) {
@@ -146,7 +131,7 @@ PicFlyer::~PicFlyer() {
   // TODO Incomplete.
 }
 
-void PicFlyer::config()
+void PicFlyer::config(QDir texture_dir, QDir tooltip_dir)
 {
     //Configures & displays the application widget
     this->resize(width_, height_);
@@ -157,9 +142,9 @@ void PicFlyer::config()
 
     //Loads assets
     ROS_WARN_STREAM("<<< PicFlyer >>> Application Loading Textures.");
-    LoadTextures();
+    LoadTextures(texture_dir);
     ROS_WARN_STREAM("<<< PicFlyer >>> Application Loading ToolTips.");
-    loadToolTips();
+    loadToolTips(tooltip_dir);
 
     //Sets the Cursors
     _planarCursors["r"] = new PlanarObject(   -30,-30,0,30,30,0,
@@ -1542,50 +1527,40 @@ bool PicFlyer::resume()
 }
 
 /**
- * Sets the directories for the program assets
- */
-void PicFlyer::setImageDirectories()
-{
-    // Asset Textures //
-    ROS_INFO_STREAM("<<< PicFlyer >>> Setting asset image paths from "<<this->asset_path_.toStdString());
-
-    this->assetPaths = QStringList();
-    QDir asset_dir(this->asset_path_);
-
-    QStringList assetFiles = asset_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
-    for (int i=0; i<assetFiles.count(); i++){
-        this->assetPaths << asset_dir.absoluteFilePath(assetFiles[i]);
-    }
-}
-
-/**
  * Loads asset textures
  */
-void PicFlyer::LoadTextures()
+void PicFlyer::LoadTextures(QDir texture_dir)
 {
-    //Only loads assets so far as I can tell
-    ROS_INFO_STREAM("Loading Textures from "<<this->asset_path_.toStdString());;
+  QStringList assetPaths;
+
+    QStringList assetFiles = texture_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
+    for (int i=0; i<assetFiles.count(); i++){
+        assetPaths << texture_dir.absoluteFilePath(assetFiles[i]);
+    }
+
+    std::string base = texture_dir.absolutePath().toStdString();
+
+    ROS_INFO_STREAM("Loading Textures from " << base);
 
     osg::ref_ptr<osg::Image> img;    
-    for (int i = 0; i < this->assetPaths.size(); ++i){
-        img = osgDB::readImageFile(this->assetPaths.at(i).toStdString());
+    for (int i = 0; i < assetPaths.size(); ++i){
+        img = osgDB::readImageFile(assetPaths.at(i).toStdString());
         if(!img)
-            ROS_INFO_STREAM(this->assetPaths.at(i).toStdString()<<" not loaded!");
+            ROS_INFO_STREAM(assetPaths.at(i).toStdString()<<" not loaded!");
         this->_assetTextures.push_back(new osg::TextureRectangle(img));
     }
 
-    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/previous_inactive.png")));
-    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/previous_active.png")));
-    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/next_inactive.png")));
-    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(asset_path_.toStdString()+"/next_active.png")));
+    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(base + "/previous_inactive.png")));
+    _leftTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(base + "/previous_active.png")));
+    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(base + "/next_inactive.png")));
+    _rightTex.push_back(new osg::TextureRectangle(osgDB::readImageFile(base + "/next_active.png")));
 
-    PicFlyer::defaultCoverImage = osgDB::readImageFile(asset_path_.toStdString()+"/DEFAULT_PAGE_IMAGE.tif");
-    PicFlyer::defaultPageImage = osgDB::readImageFile(asset_path_.toStdString()+"/DEFAULT_PAGE_IMAGE.tif");
+    PicFlyer::defaultCoverImage = osgDB::readImageFile(base + "/DEFAULT_PAGE_IMAGE.tif");
+    PicFlyer::defaultPageImage = osgDB::readImageFile(base + "/DEFAULT_PAGE_IMAGE.tif");
 
     if (!PicFlyer::defaultPageImage) {
       ROS_WARN_STREAM("Failed to load default page image");
     }
-
 }
 
 /**
@@ -2523,11 +2498,6 @@ bool PicFlyerKeyboardHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUI
                     this->appPtr->showManuscriptCollection(this->appPtr->_indexNames[2], 0);
                     break;
 
-                //Toggle stacks(?)
-                case 'b':
-                    this->appPtr->toggleStacks();
-                    break; 
-
                 //Manually step update
                 case 'i':
                     this->appPtr->updateEnvironment();
@@ -2584,25 +2554,23 @@ void PicFlyerKeyboardHandler::setup(PicFlyer* appPt)
     this->appPtr = appPt;
 }
 
-void PicFlyer::loadToolTips()
+void PicFlyer::loadToolTips(QDir tooltip_dir)
 {
-    ROS_INFO_STREAM("Getting ToolTip Image Directories");
-    QDir tooltip_dir(this->tooltipDir);
     QStringList tooltipFiles = tooltip_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
+    
+    QStringList tooltipPaths;
+
     for (int i=0; i<tooltipFiles.count(); i++){
-        this->tooltipPaths << tooltip_dir.absoluteFilePath(tooltipFiles[i]);
+        tooltipPaths << tooltip_dir.absoluteFilePath(tooltipFiles[i]);
     }
 
     ROS_INFO_STREAM(">>> Loading Tooltip Images... ");
       
-    for (int i = 0; i < this->tooltipPaths.size(); ++i){
-        QPixmap* pix = new QPixmap(this->tooltipPaths.at(i)); 
-        ROS_INFO_STREAM(">>> Loading Image: "<<this->tooltipPaths.at(i).toStdString());
+    for (int i = 0; i < tooltipPaths.size(); ++i){
+        QPixmap* pix = new QPixmap(tooltipPaths.at(i)); 
         toolTipImages.push_back(pix);
     }
-    ROS_INFO_STREAM(">>> loaded "<<toolTipImages.size()<<" images!");
 }
-
 
 int main(int argc, char* argv[]) {
   ros::init(argc, argv, "pic_flyer_app");
@@ -2614,16 +2582,16 @@ int main(int argc, char* argv[]) {
 
   ros::NodeHandle node_handle;
 
-  PicFlyer pic_flier_app("PicFlyerApp", node_handle, 20);
+  PicFlyer pic_flyer_app("PicFlyerApp", node_handle, 20);
 
-  pic_flier_app.build();
-  pic_flier_app.start();
+  pic_flyer_app.build();
+  pic_flyer_app.start();
 
   ROS_WARN_STREAM("PicFlyerApp: App Running");
 
   application.exec();
 
-  pic_flier_app.stop();
+  pic_flyer_app.stop();
 
   ROS_WARN_STREAM("PicFlyerApp: App Finished");
   return 0;
