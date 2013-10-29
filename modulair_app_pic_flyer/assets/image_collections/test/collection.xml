@@ -1,0 +1,61 @@
+<collection>
+  <title>JHU images</title>
+  <description>Photos from the Johns Hopkins University campus.</description>
+  <url></url>
+  <thumb></thumb>
+
+   <images>
+    <image filename="blc_atrium.jpg">
+      <title>sunlight in atrium view</title>
+      <url> </url>
+    </image>
+    <image filename="blc_brick_exterior.jpg">
+      <title>south view of finished BLC exterior</title>
+      <url> </url>
+    </image>
+    <image filename="blc_floor.jpg">
+      <title>construction view of BLC ground floor</title>
+      <url> </url>
+    </image>
+    <image filename="blc_skeleton.jpg">
+      <title>scaffolding view of BLC</title>
+      <url> </url>
+    </image>
+    <image filename="blc_stairway.jpeg">
+      <title>interior stairway view of BLC atrium</title>
+      <url> </url>
+    </image>
+    <image filename="Gilman_Hall_atrium.jpg">
+      <title>Gilman Hall atrium </title>
+      <url></url>
+    </image>
+    <image filename="Gilman_north_view.jpg">
+      <title>Gilman north view</title>
+      <url></url>
+    </image>
+    <image filename="Gilman_quad_snow.jpg">
+      <title>Gilman quad snowing</title>
+      <url></url>
+    </image>
+    <image filename="Gilman_stairwell.jpg">
+      <title>Gilman stairwell</title>
+      <url></url>
+    </image>
+    <image filename="Gilman_tower.jpg">
+      <title>Gilman tower</title>
+      <url></url>
+    </image>
+    <image filename="Lacrosse_in_Snow.jpg">
+      <title>Hopkins Lacrosse team in 2010 snow</title>
+      <url></url>
+    </image>
+    <image filename="Lacrosse_Practice_Snow.jpg">
+      <title>Hopkins Lacrosse team practice in snow 2010</title>
+      <url></url>
+    </image>
+    <image filename="Lacrosse_Team_Snow.jpg">
+      <title>Hopkins Lacrosse Team practice in snow 2010</title>
+      <url></url>
+    </image>
+  </images>
+</collection>
