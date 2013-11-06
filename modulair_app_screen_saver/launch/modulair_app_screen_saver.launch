@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="modulair_app_screen_saver" name="screen_saver_app" type="screen_saver_app" output="screen"/>
+  <param name="/modulair/apps/screen_saver_app/paths/assets" value="$(find modulair_app_screen_saver)/assets"/>
+</launch>
