@@ -1,0 +1,17 @@
+<package>
+  <description brief="wallframe_app_key_control">
+    Control an application by translating motions to key events.
+  </description>
+  <author>Mark Patton</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url></url>
+  
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="wallframe_core"/>
+  <depend package="wallframe_msgs"/>
+  
+</package>
+
+
