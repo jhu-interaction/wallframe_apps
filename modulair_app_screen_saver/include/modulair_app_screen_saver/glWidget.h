@@ -85,18 +85,31 @@ private:
 
 
     int userId;
+
+
     //    int origX;
     //    int origY;
 
     // intialize the particles
 public:
-//    PARTICLE (*particles)[MAX_PARTICLES];  //  TODO  making it public for now
-
     vector<PARTICLE*> particles;
+
     bool isActive;
-    ParticleSystem(int id){
+
+    float xscale;
+    float yscale;
+    float r,g,b;
+    float dr, dg, db;
+
+    ParticleSystem(int id,float r,float g,float b, float dr,float dg,float db){
         this->isActive = true;
         this->userId = id;
+        this->r = r;
+        this->g = g;
+        this->b = b;
+        this->dr = dr;
+        this->dg = dg;
+        this->db = db;
 //        particles = new particles[MAX_PARTICLES];
 //        cout<<"New particles :)  \n";
         //        particles.intialize();
@@ -134,11 +147,11 @@ public:
 
     void createParticleSystemForUser(int id);
 //    void initializeSingleUserParticle(int i,int user);
-    void initializeSingleUserParticle(int i,PARTICLE* p);
+    void initializeSingleUserParticle(int i,PARTICLE* p,float r,float g,float b);
 
 
     void destroyParticleSystemForUser(int id);
-    void splashParticleSystem(int x, int y, int deviceID);
+    void splashParticleSystem(int x, int y, int deviceID,bool left);
     void toggleMode();
 
 protected:
@@ -147,10 +160,10 @@ protected:
 private:
 
 
-    //     PARTICLE userParticles[NUM_USERS][MAX_PARTICLES];
-
-
     map<int , ParticleSystem*> ParticleSystems;
+
+    // map containing the particle systems given to the left hand
+    map<int , ParticleSystem*> ParticleSystemsLeft;
 
     PARTICLE defaultParticles[MAX_PARTICLES];
 

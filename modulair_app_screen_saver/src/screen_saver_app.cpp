@@ -117,15 +117,14 @@ void ExampleApp::updateUsers(){
         //   ROS_WARN_STREAM( activeUsers[id] <<"aftersettrue");
         if(prev_activeUsers[id]==false){
             ROS_WARN_STREAM("New user found! associating particle set #"<<id);
-
             widget->createParticleSystemForUser(id);
-            //}
         }
         prev_activeUsers[id]=true;
 
         // now update the particle system position for this user
         // get the 2D position of this user in the space
 
+        // this is actually left mappings are reversed in the original map
         osg::Vec3 joint_vec = eigToOsg3(user.jtPosById(user.jtIdByName("right_hand")));
 
         int xmin = -1200;
@@ -143,51 +142,15 @@ void ExampleApp::updateUsers(){
         int x = (int)(xcenter + (float)(width/xtotal)*joint_vec[0]);
         int y = (int)(ycenter + (float)(height/ytotal)*joint_vec[1]);
 
-        //          y_pos = int(y_center + (-(self.height_/y_total)*user_pos[1]) - self.y_offset_)
+        mouseMoved(x,y,id,true); // left hand
+
+        // right hand
+        osg::Vec3 joint_vec_right = eigToOsg3(user.jtPosById(user.jtIdByName("left_hand")));
 
 
-        //        xmin -1200 xmax 1200 ymin -600 ymax 600
-
-
-//        x_min = self.workspace_limits_[0]
-//          x_max = self.workspace_limits_[1]
-//          y_min = self.workspace_limits_[2]
-//          y_max = self.workspace_limits_[3]
-//          x_total = fabs(x_max)+fabs(x_min)
-//          y_total = fabs(y_max)+fabs(y_min)
-//          x_center = int(self.width_/2)
-//          y_center = int(self.height_/2)
-//          x_pos = int(x_center + (self.width_/x_total)*user_pos[0])
-//          y_pos = int(y_center + (-(self.height_/y_total)*user_pos[1]) - self.y_offset_)
-
-//          if y_pos < 0.0:
-//            y_pos = 100
-//          if y_pos > self.height_:
-//            y_pos = self.height_-100
-//          if x_pos < 0.0:
-//            x_pos = 100
-//          if x_pos > self.width_:
-//            x_pos = self.width_-100
-
-//          screen_pos = [x_pos, y_pos]
-
-        // convert Vec3 to 2D
-        // I do not know if thesez are the perfect values
-//        int  x = ((joint_vec[0]) + 250) * 5760.0 / 850.0 + 1680.0;
-//        int  y = ((-1) * joint_vec[1] + 300) * 3197.0 / 550.0 + 20.0;
-
-//        cout<<"x :"<<x << "y:" <<y <<endl;
-//        if(x < 1680)
-//            x = 1680;
-//        else if(x > 1680 + 5720)
-//            x = 1680 + 5720;
-
-//        if(y < 20)
-//            y = 20;
-//        else if(y > 20 + 3240)
-//            y = 20 + 3240;
-
-        mouseMoved(x,y,id);
+        int xright = (int)(xcenter + (float)(width/xtotal)*joint_vec_right[0]);
+        int yright = (int)(ycenter + (float)(height/ytotal)*joint_vec_right[1]);
+        mouseMoved(xright,yright,id,false); // right hand
 
     }
     // if there are no user the default mode is on
@@ -214,8 +177,8 @@ void ExampleApp::updateUsers(){
 
 }
 
-void ExampleApp::mouseMoved(int x,int y,int id){
-    widget->splashParticleSystem(x,y,id);
+void ExampleApp::mouseMoved(int x,int y,int id,bool left){
+    widget->splashParticleSystem(x,y,id,left);
 
     //      cout<< "Mouse "<< mouse->x << "," << mouse->y <<endl;
 

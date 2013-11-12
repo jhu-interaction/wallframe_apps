@@ -81,7 +81,8 @@ namespace modulair{
 //    void mouseMoved(Mouse* mouse);
 //    void mouseClicked(Mouse* mouse,bool pressed);
 
-    void mouseMoved(int x,int y,int id);
+    // left represents if the mouse is moved for the left or the right hand
+    void mouseMoved(int x,int y,int id,bool left);
     void mouseClicked(int x,int y,int id,bool pressed);
 
     void updateUsers();

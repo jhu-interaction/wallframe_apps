@@ -42,10 +42,10 @@ RM = /usr/bin/cmake -E remove -f
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kel/modulair_applications/modulair_core_applications/modulair_app_screen_saver
+CMAKE_SOURCE_DIR = /home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kel/modulair_applications/modulair_core_applications/modulair_app_screen_saver
+CMAKE_BINARY_DIR = /home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -72,9 +72,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kel/modulair_applications/modulair_core_applications/modulair_app_screen_saver/CMakeFiles /home/kel/modulair_applications/modulair_core_applications/modulair_app_screen_saver/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/CMakeFiles /home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kel/modulair_applications/modulair_core_applications/modulair_app_screen_saver/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

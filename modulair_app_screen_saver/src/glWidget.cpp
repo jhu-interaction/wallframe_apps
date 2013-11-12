@@ -53,10 +53,10 @@ using namespace std;
 
  float R = 0.8f;
  float G = 0.2f;
- float B = 0.0f;
- float cR = 0.002f;
- float cG = 0.002f;
- float cB = 0.001f;
+ float B = 0.1f;
+ float cR = 0.0005f;
+ float cG = 0.0005f;
+ float cB = 0.0005f;
 
 
 GLWidget::GLWidget(QWidget *parent)
@@ -90,6 +90,10 @@ GLWidget::~GLWidget()
         ParticleSystem* system = it->second;
          delete system;
      }
+    for(it = ParticleSystemsLeft.begin() ; it != ParticleSystemsLeft.end() ; it++){
+        ParticleSystem* system = it->second;
+         delete system;
+     }
 }
 
 void GLWidget::initializeGL()
@@ -114,7 +118,6 @@ void GLWidget::resizeGL(int w, int h)
  	glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
  	glMatrixMode (GL_PROJECTION);
  	glLoadIdentity ();
-// 	glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
  	glMatrixMode (GL_MODELVIEW);
 
     cout<< "Width "<< w << "Height "<< h << endl;
@@ -133,12 +136,9 @@ void GLWidget::keyPressEvent(QKeyEvent *e)
 
 void GLWidget::paintGL()
 {
-//    std::cout<<"paintGL called";
    glClear (GL_COLOR_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-
-
 
    DrawGLScene();
 }
@@ -148,7 +148,7 @@ void GLWidget::DrawGLScene(void){
 
 
 //    glPointSize(2.0);
-    glPointSize(5.0);
+    glPointSize(6.0);
   //glBindTexture(GL_TEXTURE_2D,ParticleTexture);          // choose particle texture
     glBegin(GL_POINTS);
 
@@ -183,11 +183,35 @@ void GLWidget::DrawGLScene(void){
 
                     } else{
 
-                        initializeSingleUserParticle(i,p);
-
-
+                        initializeSingleUserParticle(i,p,p->r,p->g,p->b);
                     }
 
+                    glColor4f(p->r,p->g,p->b,0.5f);
+                    glVertex3f(p->xpos, p->ypos, p->zpos);
+                }
+
+            }
+        }
+
+
+
+        // iterate over the particle system map to draw the active particle systems
+        for(it = ParticleSystemsLeft.begin() ; it != ParticleSystemsLeft.end() ; it++){
+            ParticleSystem* system = it->second;
+
+            if(system && system->isActive){
+
+                int id = it->first;
+//                cout<<"Drawing for id "<<id<<endl;
+
+                for(int i=0;i<=MAX_PARTICLES;i++){
+                    PARTICLE* p = system->particles.at(i);
+                    if((p->lifetime>0.0)){
+
+                    } else{
+
+                        initializeSingleUserParticle(i,p,p->r,p->g,p->b);
+                    }
 
                     glColor4f(p->r,p->g,p->b,0.5f);
                     glVertex3f(p->xpos, p->ypos, p->zpos);
@@ -225,14 +249,30 @@ void GLWidget::EvolveParticles()
             ParticleSystem* system = it->second;
 
             if(system && system->isActive == true){
-//                cout<<"Drawing for id "<<it->first<<endl;
 
                 for(int i=0;i<=MAX_PARTICLES;i++){
                     PARTICLE* p = system->particles.at(i);
                     p->lifetime-=p->decay;
-                    p->xpos+=p->xspeed * 0.05;
-                    p->ypos+=p->yspeed * 0.05;
-                    p->zpos+=p->zspeed * 0.05;
+
+                    p->r -= system->dr;
+
+                    p->g -= system->dg;
+
+                    p->b -= system->db;
+
+                    if(p->r > 1.0f){p->r=1.0f; system->dr=-system->dr;}if(p->r<0.0f){p->r=0.0f; system->dr=-system->dr;}
+                    if(p->g > 1.0f){p->g=1.0f; system->dg=-system->dg;}if(p->g<0.0f){p->r=0.0f; system->dg=-system->dg;}
+                    if(p->b > 1.0f){p->b=1.0f; system->db=-system->db;}if(p->b<0.0f){p->r=0.0f; system->db=-system->db;}
+
+
+                    p->xpos += p->xspeed * 0.06 * system->xscale  * p->lifetime  ;
+
+                    p->ypos += p->yspeed * 0.06 * system->yscale * p->lifetime    ;
+                    p->zpos += p->zspeed * 0.05;
+
+
+
+
                 }
 
             }
@@ -241,6 +281,42 @@ void GLWidget::EvolveParticles()
         }
 
 
+
+        // iterate over the particle system map to draw the active particle systems
+        for(it = ParticleSystemsLeft.begin() ; it != ParticleSystemsLeft.end() ; it++){
+            ParticleSystem* system = it->second;
+
+            if(system && system->isActive == true){
+
+                for(int i=0;i<=MAX_PARTICLES;i++){
+                    PARTICLE* p = system->particles.at(i);
+                    p->lifetime-=p->decay;
+
+                    p->r -= system->dr;
+
+                    p->g -= system->dg;
+
+                    p->b -= system->db;
+
+                    if(p->r > 1.0f){p->r=1.0f; system->dr=-system->dr;}if(p->r<0.0f){p->r=0.0f; system->dr=-system->dr;}
+                    if(p->g > 1.0f){p->g=1.0f; system->dg=-system->dg;}if(p->g<0.0f){p->r=0.0f; system->dg=-system->dg;}
+                    if(p->b > 1.0f){p->b=1.0f; system->db=-system->db;}if(p->b<0.0f){p->r=0.0f; system->db=-system->db;}
+
+                    p->xpos += p->xspeed * 0.06 * system->xscale  * p->lifetime  ;
+
+                    p->ypos += p->yspeed * 0.06 * system->yscale * p->lifetime    ;
+                    p->zpos += p->zspeed * 0.05;
+
+
+//                     p->xspeed *= 0.9;
+//                     p->yspeed *= 0.9;
+
+                }
+
+            }
+
+
+        }
     }
 
 }
@@ -306,12 +382,17 @@ void GLWidget::toggleMode(){
         defaultMode = true;
 
 }
-void GLWidget::splashParticleSystem(int x, int y, int id){
+void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
 
-    map<int,ParticleSystem*>::iterator it = ParticleSystems.find(id );
+    map<int,ParticleSystem*>::iterator it;
+
+    if(left)
+        it = ParticleSystemsLeft.find(id);
+    else
+        it = ParticleSystems.find(id);
 
     // insert the Particle system for the user in the map
-    if(it == ParticleSystems.end()){ //  if the id is not already there in the map
+    if((left && (it == ParticleSystemsLeft.end())) || ((left == false) && (it == ParticleSystems.end())) ){ //  if the id is not already there in the map
 //        cout<<"Id not there in the map"<<id<<endl;
         return;
 
@@ -325,26 +406,50 @@ void GLWidget::splashParticleSystem(int x, int y, int id){
     int screenWidth = this->size().width();
     int screenHeight = this->size().height();
     float screenX =(float) ((float)(x - (screenWidth/2)))/(screenWidth/2);
-//    float screenY =(float) (-1) * (y - (screenHeight/2))/(screenHeight/2);
-        float screenY =(float)  (y - (screenHeight/2))/(screenHeight/2);
-//float screenY =(float)  (y)/(screenHeight/2);
+    float screenY =(float)  (y - (screenHeight/2))/(screenHeight/2);
+
 
     // TODO ideally the origin be with the particle system not the particles
     for(int i=0;i<=MAX_PARTICLES;i++){
         PARTICLE* p = system->particles.at(i);
 
+        if(i ==0){
+//        cout <<"xdiff" << (screenX - p->origX) << " ";
+//        cout <<"ydiff" << (screenY - p->origY) << " " <<endl;
+
+        system->xscale = ((float)(p->origX - screenX)) /0.01;
+        if(system->xscale < 0)
+            system->xscale *= -1;
+        cout<<system->xscale;
+
+        system->yscale = ((float)(p->origY - screenY)) /0.01;
+
+        if(system->yscale < 0)
+            system->yscale *= -1;
+
+
+        if(system->yscale < 2)
+            system->yscale = 2;
+
+        if(system->xscale < 2)
+            system->xscale = 2;
+
+        // set the minimum threshold for the scale factor we do not want the speed to scale to zero ever
+
+//        cout<<" x "<<system->yscale << " ";
+//        cout<<"y " <<system->xscale << " ";
+
+       }
         p->origX = screenX;
         p->origY = screenY;
 
 
-    }
+        }
     return;
-
-
 
 }
 
-
+// creates both the left and the right particle system
 void GLWidget::createParticleSystemForUser(int id){
 
 
@@ -354,15 +459,14 @@ void GLWidget::createParticleSystemForUser(int id){
     // insert the Particle system for the user in the map
     if(it == ParticleSystems.end()) //  if the id is not already there in the map
     {
+        float r = 0.8f, g = 0.0f , b = 0.0f;
+        float dr = 0.002, dg = 0.002 , db = 0.001;
 
         cout<<"Initializing the particles\n";
-        ParticleSystem* system = new ParticleSystem(id);
+        ParticleSystem* system = new ParticleSystem(id,r,g,b,dr,dg,db);
 
         if(!system)
             cout<<"I do not know why I did not get memory\n";
-
-//        ParticleSystems.insert(pair<id,system>);
-
 
         // TODO ideally this should be a part of the particle class
         for(int i=0;i<=MAX_PARTICLES;i++){
@@ -370,8 +474,7 @@ void GLWidget::createParticleSystemForUser(int id){
             PARTICLE* p= new PARTICLE();
             system->particles.push_back(p);
 
-            initializeSingleUserParticle(i,p);
-
+            initializeSingleUserParticle(i,p,r,g,b);
 
         }
         ParticleSystems[id] = system;
@@ -382,24 +485,46 @@ void GLWidget::createParticleSystemForUser(int id){
         if(system->isActive == false)
             system->isActive = true;
         else
-            cout<<"USER  already exists in the particle map";
+            cout<<"USER already exists in the particle map";
 
     }
-    cout<<"PArticle system succesfully created\n";
+
+    it = ParticleSystemsLeft.find(id);
+
+    // insert the Particle system for the user in the map
+    if(it == ParticleSystemsLeft.end()) //  if the id is not already there in the map
+    {
+        float r = 0.0f, g = 0.0f , b = 1.0f;
+        float dr = 0.002, dg = 0.001 , db = 0.002;
+        cout<<"Initializing the particles\n";
+        ParticleSystem* system = new ParticleSystem(id,r,g,b,dr,dg,db);
+
+        if(!system)
+            cout<<"I do not know why I did not get memory\n";
+
+        // TODO ideally this should be a part of the particle class
+        for(int i=0;i<=MAX_PARTICLES;i++){
+
+            PARTICLE* p= new PARTICLE();
+            system->particles.push_back(p);
+
+            initializeSingleUserParticle(i,p,r,g,b);
+
+        }
+        ParticleSystemsLeft[id] = system;
+
+    }
+
+
+    cout<<"Left and right Particle system succesfully created\n";
     return;
 
-#if 0
-    for(int i=0;i<=MAX_PARTICLES;i++){
-
-        initializeSingleUserParticle(i,id);
-    }
-#endif
 }
 
 // TODO thinking to make the particle system inactive instead of deleting
 void GLWidget::destroyParticleSystemForUser(int id){
 
-    cout<<"Destroying the particle system";
+    cout<<"Destroying the right particle system";
     map<int,ParticleSystem*>::iterator it = ParticleSystems.find(id);
 
     // if the user does not exist in the map then return
@@ -413,106 +538,76 @@ void GLWidget::destroyParticleSystemForUser(int id){
         return;
     }
 
-
     // instead of deallocating the memory just make the particle system inactive
     system->isActive = false;
 
-    // delete the system
-//    delete system;
+    cout<<"Destroying the left particle system";
+    it = ParticleSystemsLeft.find(id);
 
-    // ideally this should set the particle system in the maap to NULL CHECKKKKK ??????????????
-//    system = NULL;
-//    ParticleSystems[id] = NULL;
+    // if the user does not exist in the map then return
+    if(it == ParticleSystemsLeft.end())
+        return;
+     //  get the particle system for the user from the map
+    ParticleSystem *system2 = it->second;
 
-    cout<<"Particle system deleted1\n";
+    if(!system){
+//        cout<<"There is no system associated with this user";
+        return;
+    }
+
+    // instead of deallocating the memory just make the particle system inactive
+    system2->isActive = false;
+
+
+    cout<<"Particle system deleted"<< id<<endl;
 
     return;
 
 }
 // TODO start from the position of the user
-void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p){
-
+void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, float b){
 
     p->lifetime= (float)(rand() % 500000 )/500000.0;
-    p->decay=0.0025;
+//    cout<<"lifetime" << p->lifetime << "\n";
+    p->decay=0.01;
 
     p->xpos= p->origX + 0.0;
     p->ypos= p->origY + 0.0;
     p->zpos= p->origZ + 0.0;
-//    p->xpos=  0.0;
-//    p->ypos=  0.0;
-//    p->zpos=  0.0;
-
-//    p->xspeed = (((float)((rand() % 100) + 1)) / 10000.0f) - 0.005f;
-//    p->yspeed = (((float)((rand() % 100) + 1)) / 10000.0f) - 0.005f;
-//    p->zspeed = (((float)((rand() % 100) + 1)) / 10000.0f) - 0.005f;
 
     p->xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
     p->yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
     p->zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
 
-
-    p->r = R;
-    p->g = G;
-    p->b = B;
-    R+=cR;
-    G+=cG;
-    B+=cB;
-
-    if(R>1.0f){R=1.0f; cR=-cR;}if(R<0.0f){R=0.0f; cR=-cR;}
-    if(G>1.0f){G=1.0f; cG=-cG;}if(G<0.0f){G=0.0f; cG=-cG;}
-    if(B>1.0f){B=1.0f; cB=-cB;}if(B<0.0f){B=0.0f; cB=-cB;}
+    p->r = r;
+    p->g = g;
+    p->b = b;
 
 
 
-    if(i%2 == 0){
-        p->xspeed *= -1;
-        p->zspeed *= -1;
-        p->yspeed *= -1;
-
+    int xdirection = 1;
+    int ydirection = 1;
+    if(i%4 == 1){
+       xdirection = -1;
+       ydirection = 1;
     }
+    else if(i%4 == 2) {
+        xdirection = -1;
+        ydirection = -1;
+    }
+    else if(i%4 == 3) {
+        xdirection = 1;
+        ydirection = -1;
+    }
+
+    p->xspeed *= -xdirection;
+    p->yspeed*= -ydirection;
+
+//    if(i%2 == 0)
+//       p->zspeed *= -1;
+
     p->active = true; //    TODO we do not need this active field
 
-
-#if 0
-
-    userParticles[userID -1 ][i].lifetime= (float)(rand() % 500000 )/500000.0;
-    userParticles[userID -1 ][i].decay=0.0025;
-    userParticles[userID -1 ][i].r = 0.7;
-    userParticles[userID -1 ][i].g = 0.7;
-    userParticles[userID -1 ][i].b = 1.0;
-    userParticles[userID -1 ][i].xpos= userParticles[userID -1 ][i].origX + 0.0;
-    userParticles[userID -1 ][i].ypos= userParticles[userID -1 ][i].origY + 0.0;
-    userParticles[userID -1 ][i].zpos= userParticles[userID -1 ][i].origZ + 0.0;
-
-
-    userParticles[userID -1 ][i].xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-    userParticles[userID -1 ][i].yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-    userParticles[userID -1 ][i].zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-
-    userParticles[userID -1 ][i].r = R;
-    userParticles[userID -1 ][i].g = G;
-    userParticles[userID -1 ][i].b = B;
-    R+=cR;
-    G+=cG;
-    B+=cB;
-
-    if(R>1.0f){R=1.0f; cR=-cR;}if(R<0.0f){R=0.0f; cR=-cR;}
-    if(G>1.0f){G=1.0f; cG=-cG;}if(G<0.0f){G=0.0f; cG=-cG;}
-    if(B>1.0f){B=1.0f; cB=-cB;}if(B<0.0f){B=0.0f; cB=-cB;}
-
-
-//    userParticles[userID -1 ][i].origX= 0;
-//    userParticles[userID -1 ][i].origY= 0;
-
-    if(i%2 == 0){
-        userParticles[userID -1 ][i].xspeed *= -1;
-        userParticles[userID -1 ][i].zspeed *= -1;
-        userParticles[userID -1 ][i].yspeed *= -1;
-
-    }
-    userParticles[userID -1 ][i].active = true;
-#endif
 }
 
 
