@@ -1,5 +1,7 @@
 <launch>
-  <node launch-prefix="gdb -ex run --args" pkg="modulair_app_pic_flyer" name="pic_flyer_app" type="pic_flyer_app" output="screen"/>
+
+
+  <node pkg="modulair_app_pic_flyer" name="pic_flyer_app" type="pic_flyer_app" output="screen"/>
 
   <param name="/modulair/apps/pic_flyer_app/paths/assets" value="$(find modulair_app_pic_flyer)/assets"/>
   <param name="/modulair/apps/pic_flyer_app/paths/image_collections" value="$(find modulair_app_pic_flyer)/assets/image_collections"/>
@@ -9,8 +11,8 @@
     wallframe:
       core:
         params:
-          x: 1680
-          y: 24
+          x: 0
+          y: 0
           width: 1920
           height: 1200
         default_app: image_storm
