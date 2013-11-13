@@ -46,17 +46,18 @@
 #include <math.h>
 #include <iostream>
 
-
+#define PI 3.14159265
 
 using namespace std;
 
 
  float R = 0.8f;
- float G = 0.2f;
- float B = 0.1f;
- float cR = 0.0005f;
- float cG = 0.0005f;
- float cB = 0.0005f;
+ float G = 0.0f;
+ float B = 0.5f;
+ float cR = 0.01f;
+ float cG = 0.01f;
+ float cB = 0.01f;
+ float theta = 0;
 
 
 GLWidget::GLWidget(QWidget *parent)
@@ -88,11 +89,21 @@ GLWidget::~GLWidget()
 
     for(it = ParticleSystems.begin() ; it != ParticleSystems.end() ; it++){
         ParticleSystem* system = it->second;
+
+        for(int i=0;i<=MAX_PARTICLES;i++){
+            PARTICLE* p = system->particles.at(i);
+            delete p;
+        }
+
          delete system;
      }
     for(it = ParticleSystemsLeft.begin() ; it != ParticleSystemsLeft.end() ; it++){
         ParticleSystem* system = it->second;
-         delete system;
+        for(int i=0;i<=MAX_PARTICLES;i++){
+            PARTICLE* p = system->particles.at(i);
+            delete p;
+        }
+        delete system;
      }
 }
 
@@ -238,6 +249,17 @@ void GLWidget::EvolveParticles()
             defaultParticles[i].xpos+=defaultParticles[i].xspeed * 0.1 ;
             defaultParticles[i].ypos+=defaultParticles[i].yspeed * 0.1;
             defaultParticles[i].zpos+=defaultParticles[i].zspeed * 0.1;
+
+            float r = 0.2  * theta / 360;//* sin(theta * PI / 180.0 );
+            //if(r < 0 )
+              //  r *= -1;
+            defaultParticles[i].origX = r * cos(theta * PI / 180.0);
+//            cout <<"default orig x" << defaultParticles[i].origX <<"\n";
+            defaultParticles[i].origY = r * sin(theta * PI / 180.0);
+            theta += 1;
+
+            if(theta >= 1200)
+                theta = 0;
             //     defaultParticles[i].yspeed-=0.007;
         }
     }
@@ -270,7 +292,8 @@ void GLWidget::EvolveParticles()
                     p->ypos += p->yspeed * 0.06 * system->yscale * p->lifetime    ;
                     p->zpos += p->zspeed * 0.05;
 
-
+//                    if(i == 0)
+//                        cout<<"p orig" << p->origX <<" ";
 
 
                 }
@@ -308,8 +331,6 @@ void GLWidget::EvolveParticles()
                     p->zpos += p->zspeed * 0.05;
 
 
-//                     p->xspeed *= 0.9;
-//                     p->yspeed *= 0.9;
 
                 }
 
@@ -324,7 +345,7 @@ void GLWidget::CreateParticle(int i)
 {
 
      defaultParticles[i].lifetime= (float)(rand() % 500000 )/500000.0;
-     defaultParticles[i].decay=0.001;
+     defaultParticles[i].decay=0.02;
      defaultParticles[i].r = 0.7;
      defaultParticles[i].g = 0.7;
      defaultParticles[i].b = 1.0;
@@ -403,6 +424,7 @@ void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
         cout<<"There is no system associated with this user";
         return;
     }
+
     int screenWidth = this->size().width();
     int screenHeight = this->size().height();
     float screenX =(float) ((float)(x - (screenWidth/2)))/(screenWidth/2);
@@ -420,7 +442,6 @@ void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
         system->xscale = ((float)(p->origX - screenX)) /0.01;
         if(system->xscale < 0)
             system->xscale *= -1;
-        cout<<system->xscale;
 
         system->yscale = ((float)(p->origY - screenY)) /0.01;
 
@@ -460,7 +481,7 @@ void GLWidget::createParticleSystemForUser(int id){
     if(it == ParticleSystems.end()) //  if the id is not already there in the map
     {
         float r = 0.8f, g = 0.0f , b = 0.0f;
-        float dr = 0.002, dg = 0.002 , db = 0.001;
+        float dr = 0.002, dg = 0.003 , db = 0.001;
 
         cout<<"Initializing the particles\n";
         ParticleSystem* system = new ParticleSystem(id,r,g,b,dr,dg,db);
@@ -495,7 +516,7 @@ void GLWidget::createParticleSystemForUser(int id){
     if(it == ParticleSystemsLeft.end()) //  if the id is not already there in the map
     {
         float r = 0.0f, g = 0.0f , b = 1.0f;
-        float dr = 0.002, dg = 0.001 , db = 0.002;
+        float dr = 0.002, dg = 0.001 , db = 0.003;
         cout<<"Initializing the particles\n";
         ParticleSystem* system = new ParticleSystem(id,r,g,b,dr,dg,db);
 
