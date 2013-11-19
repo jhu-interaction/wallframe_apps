@@ -1,0 +1,11 @@
+Install Box2d
+-------------
+
+apt-get remove libbox2d-dev libbox2d
+Install premake 4.4. Can just use downloaded binary.
+Install Box2d 2.3.0 from source using premake4.
+Box2d bizarelly provide no way to install. 
+Install header files
+From Box2D directory: for i in `find Box2D/ -name '*.h'`; do cp --parents $i /usr/include/; done
+Install library: cp libBox2D.a /usr/lib/
+

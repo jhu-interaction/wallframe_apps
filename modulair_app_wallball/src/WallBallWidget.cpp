@@ -12,7 +12,6 @@
 #include <pthread.h>
 
 using namespace std;
-using namespace modulair;
 
 #define NUM_USERS 7
 
@@ -27,8 +26,7 @@ void* WallBallWidget::physicsThreadMethod(void* data) {
     return 0;
 }
 
-WallBallWidget::WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size) :
-    ModulairAppBaseQt(app_name, nh, event_deque_size)
+WallBallWidget::WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size) : wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size)
 {
     std::cout << "WallBallWidget constructor!!!\n" << std::flush;
 
@@ -72,14 +70,14 @@ void WallBallWidget::updateUsers(){
     for (int i = 0; i < NUM_USERS; ++i)
         userFlags[i] = false;
 
-    AppUserMap::iterator uit;
+    wallframe::AppUserMap::iterator uit;
     // for each user
     for(uit = users_.begin();uit!=users_.end();uit++){
 
         // will return the existing ball if user already exists for it
         GOBall* ball = WallBall::newBall(uit->first);
                 
-        AppUser appUser = uit->second;
+	wallframe::AppUser appUser = uit->second;
         Eigen::Vector3d torso = appUser.jtPosByName("torso");
         Eigen::Vector3d lShoulder = appUser.jtPosByName("left_shoulder");
         Eigen::Vector3d rShoulder = appUser.jtPosByName("right_shoulder");

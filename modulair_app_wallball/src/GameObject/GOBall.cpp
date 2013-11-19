@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+// TODO Changed various apply force method to have wake set to true.
+
 bool GOBall::USE_KINECT = true;
 
 GOBall::GOBall() : GameObject() {
@@ -180,11 +182,11 @@ void GOBall::updateVelocity() {
 	if (moveVelocity != 0.0f &&
 		(product < 0.0f || fabs(velocity.x) < fabs(moveVelocity) )) {
 		float force = difference * FORCE_CONST;
-		body->ApplyForce(b2Vec2(force, 0.0f), position);
+		body->ApplyForce(b2Vec2(force, 0.0f), position, true);
 	}
 	else {
 		float force = -velocity.x * FORCE_CONST * 0.2f;
-		body->ApplyForce(b2Vec2(force, 0.0f), position);
+		body->ApplyForce(b2Vec2(force, 0.0f), position, true);
 	}
 }
 
@@ -204,7 +206,7 @@ void GOBall::onCollision(GameObject* other) {
 		difference.Normalize();
 		difference *= BOUNCE_IMPULSE;
 		
-		body->ApplyLinearImpulse(difference, position);
+		body->ApplyLinearImpulse(difference, position, true);
 		
 //		std::cout << "Impulse 2 (" << difference.x << "," << difference.y <<")\n" << std::flush;
 	}

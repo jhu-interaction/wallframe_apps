@@ -27,11 +27,12 @@ void WallBall::start(QWidget* qWidget) {
 	WallBall::start();
 }
 
+// TODO What is going on here?
 void WallBall::setupLevel() {
     //	WallBall::s_GOBalls[0] = new GOBall(Qt::Key_W,Qt::Key_A,Qt::Key_D);
     //    WallBall::s_GOBalls[1] = new GOBall(Qt::Key_I,Qt::Key_J,Qt::Key_L,1);
 	    
-	GameObject* goStar = new GOStar();
+        GameObject* goStar = new GOStar();
 	
 	GameObject* levelFrame = new GOLevelFrame();
 	GameObject* bottomRamp = new GOBottomRamp();

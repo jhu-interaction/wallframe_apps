@@ -6,13 +6,12 @@
 #include <QPaintEvent>
 #include <QResizeEvent>
 
-#include <modulair_core/modulair_app_base_qt.h>
+#include <wallframe_core/wallframe_app_base_qt.h>
 
 #include <WallBall.h>
 
-//namespace lair {
 
-class WallBallWidget : public modulair::ModulairAppBaseQt
+class WallBallWidget : public wallframe::WallframeAppBaseQt
 {
     //Q_OBJECT;
 
