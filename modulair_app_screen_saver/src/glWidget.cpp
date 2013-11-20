@@ -555,12 +555,10 @@ void GLWidget::destroyParticleSystemForUser(int id){
     ParticleSystem *system = it->second;
 
     if(!system){
-//        cout<<"There is no system associated with this user";
-        return;
-    }
 
     // instead of deallocating the memory just make the particle system inactive
     system->isActive = false;
+    }
 
     cout<<"Destroying the left particle system";
     it = ParticleSystemsLeft.find(id);
