@@ -357,11 +357,6 @@ void PicFlyer::config(QDir texture_dir, QDir tooltip_dir)
     tooltip4->setScaledContents(true);
     tooltip4->hide();
 
-    // STARTUP ////////////////////////////////////////////////////////////////
-    _timer.start( 10 );
-    _dataTimer.start(30);
-    ROS_WARN_STREAM("<<< PicFlyer >>> Timers Started");
-
     ROS_WARN_STREAM("<<< PicFlyer >>> Configured Successfully");
 }
 
