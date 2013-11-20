@@ -6,3 +6,5 @@ bin
 *.pyc
 srv_gen
 *.cxx
+*.project
+*.cproject

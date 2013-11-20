@@ -1,0 +1,5 @@
+
+<launch>
+  <node pkg="wallframe_app_key_control" name="key_control_app" type="key_control_app.py"/>
+  <param name="/wallframe/apps/key_control/paths/assets" value="$(find wallframe_app_key_control)/assets"/>
+</launch>

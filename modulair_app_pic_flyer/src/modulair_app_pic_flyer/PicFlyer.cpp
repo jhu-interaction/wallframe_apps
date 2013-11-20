@@ -503,8 +503,8 @@ void PicFlyer::updateEnvironment()
     lel = user.jtPosById(LEFT_ELBOW);
     left = user.jtPosById(LEFT_HAND);
 
-    rAbs = user.jtPosBodyById(RIGHT_HAND);
-    lAbs = user.jtPosBodyById(LEFT_HAND);
+    rAbs = user.jtPosBodyById(RIGHT_HAND).cwiseAbs();
+    lAbs = user.jtPosBodyById(LEFT_HAND).cwiseAbs();
 
     double dist, d1,d2, distBack;
     Eigen::Vector3d v,v1,v2, vecBack;
@@ -1447,8 +1447,10 @@ void PicFlyer::updateCursors()
     right = user.jtPosById(RIGHT_HAND);
     left = user.jtPosById(LEFT_HAND);
 
-    rAbs = user.jtPosBodyById(RIGHT_HAND);
-    lAbs = user.jtPosBodyById(LEFT_HAND);
+    // This seems to be what lair used to do for pts3D_norm
+    rAbs = user.jtPosBodyById(RIGHT_HAND).cwiseAbs();
+    lAbs = user.jtPosBodyById(LEFT_HAND).cwiseAbs();
+
 
     OSGObjectBase* group;
 
