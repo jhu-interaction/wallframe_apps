@@ -31,6 +31,19 @@ find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 #include_directories(library ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
+
+### OpenSceneGraph and OSGQt ###
+find_package(OpenSceneGraph COMPONENTS osgWidget osgViewer osgUtil 
+  osgGA osgDB osgText osgQt osgParticle osgFX osgManipulator)
+if(OpenSceneGraph_FOUND)
+  include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
+endif(OpenSceneGraph_FOUND)
+
+if(NOT OSGQT_FOUND)
+  message(error "Could not find osgQt")
+endif()
+
+
 ## Set Paths
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
@@ -89,4 +102,6 @@ rosbuild_add_executable(screen_saver_app 	${CPP_EXAMPLE_APP_SOURCES})
 target_link_libraries(screen_saver_app 		${PROJECT_NAME}
 											${QT_LIBRARIES}
 											${GLUT_LIBRARY} 
-											${OPENGL_LIBRARY})
+											${OPENGL_LIBRARY}
+                      ${OPENSCENEGRAPH_LIBRARIES}
+										  osgQt)
