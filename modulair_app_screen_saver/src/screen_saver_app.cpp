@@ -51,7 +51,7 @@
 using namespace std;
 namespace modulair{
 
-ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size) : ModulairAppBaseQt(app_name, nh, event_deque_size){
+ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size){
 
     widget = new GLWidget(this);
     connect( &_timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -107,11 +107,11 @@ void ExampleApp::updateUsers(){
         activeUsers[j]=false;
     }
 
-    AppUserMap::iterator uit;
+    wallframe::AppUserMap::iterator uit;
     for(uit = users_.begin();uit!=users_.end();uit++){
         int id = uit->first;
         numActiveUsers++;
-        AppUser user = uit->second;
+        wallframe::AppUser user = uit->second;
         activeUsers[id]=true;
 //        cout<<"Active user id"<<id;
         //   ROS_WARN_STREAM( activeUsers[id] <<"aftersettrue");
@@ -212,11 +212,11 @@ int main(int argc, char* argv[]){
     application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
     modulair::ExampleApp example_app("Screen Saver",node_handle,20);
 
-    cout<< "Width"<<  example_app.width();
-    cout<<"Height" << example_app.height();
+//    cout<< "Width"<<  example_app.width();
+//    cout<<"Height" << example_app.height();
     // adding the openGL window into the scene
 
-    example_app.widget->resize(example_app.width(), example_app.height());
+//    example_app.widget->resize(example_app.width(), example_app.height());
     //  example_app.widget->setWindowState(Qt::WindowFullScreen);
     //    example_app.widget->resize(Qt::WindowFullScreen);
     example_app.widget->show();

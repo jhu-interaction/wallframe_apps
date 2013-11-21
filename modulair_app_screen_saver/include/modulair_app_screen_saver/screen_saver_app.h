@@ -39,7 +39,8 @@
 #ifndef cpp_example_app_h
 #define cpp_example_app_h 
 
-#include <modulair_core/modulair_app_base_qt.h>
+#include <wallframe_core/wallframe_app_base_qt.h>
+
 
 #include <modulair_app_screen_saver/glWidget.h>
 
@@ -48,7 +49,8 @@
 #include <modulair_osg_tools/vector_conversions.h>
 namespace modulair{
 
-	class ExampleApp : public ModulairAppBaseQt{
+    class ExampleApp : wallframe::WallframeAppBaseQt{
+
         Q_OBJECT
   public:
     ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size);
