@@ -1,4 +1,0 @@
-<launch>
-  <node pkg="modulair_app_tron" name="tron_app" type="tron_app" output="screen"/>
-  <param name="/modulair/apps/modulair_app_tron/paths/assets" value="$(find modulair_app_tron)/assets"/>
-</launch>
