@@ -7,7 +7,7 @@
 #include <SDL/SDL_timer.h>
 #include <QThread>
 #include <QTimer>
-namespace modulair{
+//namespace modulair{
 typedef struct
 {
     int connected;
@@ -79,6 +79,6 @@ private:
 };
 
 
-} // namespace::modulair
+//} // namespace::modulair
 
 #endif //_Mouseprovider_h

@@ -14,7 +14,7 @@
   <depend package="wallframe_msgs"/>
   <depend package="modulair_osg_tools"/>
   <export>
-    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lmodulair_app_image_storm"/>  
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -modulair_app_screen_saver"/>  
   </export>
 
 

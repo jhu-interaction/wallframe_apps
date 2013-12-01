@@ -1,7 +1,7 @@
 
 #include  <modulair_app_screen_saver/MouseProvider.h>
 
-using namespace modulair;
+//using namespace modulair;
 using namespace std;
 #include <QThread>
 
