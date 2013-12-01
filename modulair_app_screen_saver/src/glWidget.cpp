@@ -49,7 +49,7 @@
 
 
 using namespace std;
-
+#define PI 3.14
 
  float R = 0.8f;
  float G = 0.2f;
@@ -57,7 +57,7 @@ using namespace std;
  float cR = 0.0005f;
  float cG = 0.0005f;
  float cB = 0.0005f;
-
+float theta = 0;
 
 GLWidget::GLWidget(QWidget* parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers),parent)
@@ -92,10 +92,20 @@ GLWidget::~GLWidget()
 
     for(it = ParticleSystems.begin() ; it != ParticleSystems.end() ; it++){
         ParticleSystem* system = it->second;
+
+        for(int i=0;i<=MAX_PARTICLES;i++){
+                   PARTICLE* p = system->particles.at(i);
+                   delete p;
+               }
          delete system;
      }
     for(it = ParticleSystemsLeft.begin() ; it != ParticleSystemsLeft.end() ; it++){
         ParticleSystem* system = it->second;
+        for(int i=0;i<=MAX_PARTICLES;i++){
+                   PARTICLE* p = system->particles.at(i);
+                   delete p;
+               }
+
          delete system;
      }
 }
@@ -104,10 +114,10 @@ void GLWidget::initializeGL()
 {
 
     //// I do not know if this is the right place to do so
-//    screenWidth = 1200;
-//    screenHeight = 800;
+    screenWidth = 1200;
+    screenHeight = 800;
 
-//    glViewport(0,0,screenWidth,screenHeight);						// Reset The Current Viewport
+    glViewport(0,0,screenWidth,screenHeight);						// Reset The Current Viewport
 
     glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
     glLoadIdentity();									// Reset The Projection Matrix
@@ -237,11 +247,33 @@ void GLWidget::EvolveParticles()
     // if the mode is default then update the default particle system
     if(defaultMode == true){
 
+        //int theta = 0;
         for(int i=0;i<=MAX_PARTICLES;i++){      // evolve the particle parameters
-            defaultParticles.at(i)->lifetime-=defaultParticles.at(i)->decay;
-            defaultParticles.at(i)->xpos+=defaultParticles.at(i)->xspeed * 0.1 ;
-            defaultParticles.at(i)->ypos+=defaultParticles.at(i)->yspeed * 0.1;
-            defaultParticles.at(i)->zpos+=defaultParticles.at(i)->zspeed * 0.1;
+
+
+        defaultParticles.at(i)->lifetime-=defaultParticles.at(i)->decay;
+        defaultParticles.at(i)->xpos+=defaultParticles.at(i)->xspeed * 0.1 ;
+        defaultParticles.at(i)->ypos+=defaultParticles.at(i)->yspeed * 0.1;
+        defaultParticles.at(i)->zpos+=defaultParticles.at(i)->zspeed * 0.1;
+
+        float r = 0.2  * theta / 360;//* sin(theta * PI / 180.0 );
+        //if(r < 0 )
+          //  r *= -1;
+        defaultParticles.at(i)->origX = r * cos(theta * PI / 180.0);
+//            cout <<"default orig x" << defaultParticles.at(i)->origX <<"\n";
+        defaultParticles.at(i)->origY = r * sin(theta * PI / 180.0);
+        theta += 1;
+
+        if(theta >= 1200)
+            theta = 0;
+
+
+
+
+//            defaultParticles.at(i)->lifetime-=defaultParticles.at(i)->decay;
+//            defaultParticles.at(i)->xpos+=defaultParticles.at(i)->xspeed * 0.1 ;
+//            defaultParticles.at(i)->ypos+=defaultParticles.at(i)->yspeed * 0.1;
+//            defaultParticles.at(i)->zpos+=defaultParticles.at(i)->zspeed * 0.1;
             //     defaultParticles.at(i)->yspeed-=0.007;
         }
     }
@@ -328,7 +360,7 @@ void GLWidget::CreateParticle(int i)
 {
 
      defaultParticles.at(i)->lifetime= (float)(rand() % 500000 )/500000.0;
-     defaultParticles.at(i)->decay=0.001;
+     defaultParticles.at(i)->decay=0.02;
      defaultParticles.at(i)->r = 0.7;
      defaultParticles.at(i)->g = 0.7;
      defaultParticles.at(i)->b = 1.0;

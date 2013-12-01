@@ -55,6 +55,7 @@
 
 #define NUM_USERS 5
 
+
 using namespace std;
 // TODO wrap this into particle system
 typedef struct
