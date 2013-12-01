@@ -59,23 +59,27 @@ using namespace std;
  float cB = 0.0005f;
 
 
-GLWidget::GLWidget(QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
+GLWidget::GLWidget(QWidget* parent)
+    : QGLWidget(QGLFormat(QGL::SampleBuffers),parent)
 {
 
-//    screenHeight = 800;
-//    screenWidth = 1200;
+    cout<<"creating new GL widget\n";
 
     //TODO set the screen size and width as the size of the widget
 
-    // default mode particles
+//    // default mode particles
     defaultMode = true;
+
+
+    PARTICLE* p = NULL;
+
     // create the default particles system
     for(int i = 0; i <=MAX_PARTICLES;i++){
+        p= new PARTICLE();
+        p->origX = 0;p->origY=0; p->origZ = 0;
 
-        defaultParticles[i].origX = 0;
-        defaultParticles[i].origY = 0;
-        defaultParticles[i].origZ = 0;
+        defaultParticles.push_back(p);
+
         CreateParticle(i);
     }
 
@@ -100,10 +104,10 @@ void GLWidget::initializeGL()
 {
 
     //// I do not know if this is the right place to do so
-    screenWidth = 1200;
-    screenHeight = 800;
+//    screenWidth = 1200;
+//    screenHeight = 800;
 
-    glViewport(0,0,screenWidth,screenHeight);						// Reset The Current Viewport
+//    glViewport(0,0,screenWidth,screenHeight);						// Reset The Current Viewport
 
     glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
     glLoadIdentity();									// Reset The Projection Matrix
@@ -134,7 +138,7 @@ void GLWidget::keyPressEvent(QKeyEvent *e)
    }
 }
 
-void GLWidget::paintGL()
+void  GLWidget::paintGL()
 {
    glClear (GL_COLOR_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
@@ -154,13 +158,13 @@ void GLWidget::DrawGLScene(void){
 
     if(defaultMode){
         for (int i=0;i<=MAX_PARTICLES;i++){
-            //      if(defaultParticles[i].ypos<0.0) defaultParticles[i].lifetime=0.0;
-            if((defaultParticles[i].active==true) && (defaultParticles[i].lifetime>0.0)){
+            //      if(defaultParticles.at(i)->ypos<0.0) defaultParticles.at(i)->lifetime=0.0;
+            if((defaultParticles.at(i)->active==true) && (defaultParticles.at(i)->lifetime>0.0)){
 
             } else CreateParticle(i);
 
-            glColor4f(defaultParticles[i].r,defaultParticles[i].g,defaultParticles[i].b,0.5f);
-            glVertex3f(defaultParticles[i].xpos, defaultParticles[i].ypos, defaultParticles[i].zpos);
+            glColor4f(defaultParticles.at(i)->r,defaultParticles.at(i)->g,defaultParticles.at(i)->b,0.5f);
+            glVertex3f(defaultParticles.at(i)->xpos, defaultParticles.at(i)->ypos, defaultParticles.at(i)->zpos);
 
         }
     }
@@ -234,11 +238,11 @@ void GLWidget::EvolveParticles()
     if(defaultMode == true){
 
         for(int i=0;i<=MAX_PARTICLES;i++){      // evolve the particle parameters
-            defaultParticles[i].lifetime-=defaultParticles[i].decay;
-            defaultParticles[i].xpos+=defaultParticles[i].xspeed * 0.1 ;
-            defaultParticles[i].ypos+=defaultParticles[i].yspeed * 0.1;
-            defaultParticles[i].zpos+=defaultParticles[i].zspeed * 0.1;
-            //     defaultParticles[i].yspeed-=0.007;
+            defaultParticles.at(i)->lifetime-=defaultParticles.at(i)->decay;
+            defaultParticles.at(i)->xpos+=defaultParticles.at(i)->xspeed * 0.1 ;
+            defaultParticles.at(i)->ypos+=defaultParticles.at(i)->yspeed * 0.1;
+            defaultParticles.at(i)->zpos+=defaultParticles.at(i)->zspeed * 0.1;
+            //     defaultParticles.at(i)->yspeed-=0.007;
         }
     }
     else { // update the user particle system
@@ -323,23 +327,23 @@ void GLWidget::EvolveParticles()
 void GLWidget::CreateParticle(int i)
 {
 
-     defaultParticles[i].lifetime= (float)(rand() % 500000 )/500000.0;
-     defaultParticles[i].decay=0.001;
-     defaultParticles[i].r = 0.7;
-     defaultParticles[i].g = 0.7;
-     defaultParticles[i].b = 1.0;
-     defaultParticles[i].xpos= defaultParticles[i].origX + 0.0;
-     defaultParticles[i].ypos= defaultParticles[i].origY + 0.0;
-     defaultParticles[i].zpos= defaultParticles[i].origZ + 0.0;
+     defaultParticles.at(i)->lifetime= (float)(rand() % 500000 )/500000.0;
+     defaultParticles.at(i)->decay=0.001;
+     defaultParticles.at(i)->r = 0.7;
+     defaultParticles.at(i)->g = 0.7;
+     defaultParticles.at(i)->b = 1.0;
+     defaultParticles.at(i)->xpos= defaultParticles.at(i)->origX + 0.0;
+     defaultParticles.at(i)->ypos= defaultParticles.at(i)->origY + 0.0;
+     defaultParticles.at(i)->zpos= defaultParticles.at(i)->origZ + 0.0;
 
 
-     defaultParticles[i].xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-     defaultParticles[i].yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-     defaultParticles[i].zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
+     defaultParticles.at(i)->xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
+     defaultParticles.at(i)->yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
+     defaultParticles.at(i)->zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
 
-     defaultParticles[i].r = R;
-     defaultParticles[i].g = G;
-     defaultParticles[i].b = B;
+     defaultParticles.at(i)->r = R;
+     defaultParticles.at(i)->g = G;
+     defaultParticles.at(i)->b = B;
      R+=cR;
      G+=cG;
      B+=cB;
@@ -364,14 +368,14 @@ void GLWidget::CreateParticle(int i)
          ydirection = -1;
      }
 
-     defaultParticles[i].xspeed *= -xdirection;
-     defaultParticles[i].yspeed *= -ydirection;
+     defaultParticles.at(i)->xspeed *= -xdirection;
+     defaultParticles.at(i)->yspeed *= -ydirection;
 
 
      if(i%2 == 0)
-        defaultParticles[i].zspeed *= -1;
+        defaultParticles.at(i)->zspeed *= -1;
 
-     defaultParticles[i].active = true;
+     defaultParticles.at(i)->active = true;
 }
 
 void GLWidget::toggleMode(){
@@ -420,7 +424,7 @@ void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
         system->xscale = ((float)(p->origX - screenX)) /0.01;
         if(system->xscale < 0)
             system->xscale *= -1;
-        cout<<system->xscale;
+//        cout<<system->xscale;
 
         system->yscale = ((float)(p->origY - screenY)) /0.01;
 
@@ -584,7 +588,6 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
     p->b = b;
 
 
-
     int xdirection = 1;
     int ydirection = 1;
     if(i%4 == 1){
@@ -602,9 +605,6 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
 
     p->xspeed *= -xdirection;
     p->yspeed*= -ydirection;
-
-//    if(i%2 == 0)
-//       p->zspeed *= -1;
 
     p->active = true; //    TODO we do not need this active field
 

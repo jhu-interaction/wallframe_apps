@@ -53,23 +53,26 @@ namespace modulair{
 
 ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size){
 
+    cout<<"creating the screen saver app\n";
     widget = new GLWidget(this);
+
+
     connect( &_timer, SIGNAL(timeout()), this, SLOT(update()));
     connect( &_dataTimer, SIGNAL(timeout()), widget, SLOT(updateGL()));
     connect( &_dataTimer1, SIGNAL(timeout()), this, SLOT(updateUsers()));
 
-    //       connect( &_dataTimer, SIGNAL(timeout()), widget, SLOT(update()));
+//    //       connect( &_dataTimer, SIGNAL(timeout()), widget, SLOT(update()));
     _timer.start( 50 );
     _dataTimer.start(60);
     _dataTimer1.start(50);
 
 
 
-//    mouseThread = new MouseProvider(this);
-//    mouseThread->start();
+////    mouseThread = new MouseProvider(this);
+////    mouseThread->start();
 
-//    connect(mouseThread,SIGNAL(mouseMoveEvent(int,int,int)),this,SLOT(mouseMoved(int,int,int)));
-//    connect(mouseThread,SIGNAL(mouseClickEvent(int,int, int ,bool)),this,SLOT(mouseClicked(int,int, int ,bool)));
+////    connect(mouseThread,SIGNAL(mouseMoveEvent(int,int,int)),this,SLOT(mouseMoved(int,int,int)));
+////    connect(mouseThread,SIGNAL(mouseClickEvent(int,int, int ,bool)),this,SLOT(mouseClicked(int,int, int ,bool)));
 
     for(int j=0;j<NUM_USERS;j++){
         activeUsers[j]=false;
@@ -87,6 +90,25 @@ bool ExampleApp::build(){
         return false;
     }
     asset_path_ = QString(asset_path.c_str());
+
+//    std::string height;
+//    if (!node_.getParam("/wallframe/core/params/height", height)){
+//        ROS_ERROR("Modulair%s: No height found on parameter  server (namespace: %s)",
+//                  name_.c_str(), node_.getNamespace().c_str());
+//        return false;
+//    }
+
+//    std::string width;
+//    if (!node_.getParam("/wallframe/core/params/width", width)){
+//        ROS_ERROR("Modulair%s: No width on parameter server (namespace: %s)",
+//                  name_.c_str(), node_.getNamespace().c_str());
+//        return false;
+//    }
+
+//    cout<< "The width of the app is "<<this->width_;
+//    this->widget->resize(width_, height_);
+
+    // set the widget height and width
 
     return true;
 }
@@ -180,16 +202,17 @@ void ExampleApp::updateUsers(){
 void ExampleApp::mouseMoved(int x,int y,int id,bool left){
     widget->splashParticleSystem(x,y,id,left);
 
-    //      cout<< "Mouse "<< mouse->x << "," << mouse->y <<endl;
-
 }
-//  void ExampleApp::mouseClicked(Mouse* mouse,bool pressed){//cout <<"Mouse clicked ";
-void ExampleApp::mouseClicked(int x,int y,int id,bool pressed){//cout <<"Mouse clicked ";
-    //      cout<< "Mouse "<< mouse->x << "," << mouse->y <<endl;
+void ExampleApp::mouseClicked(int x,int y,int id,bool pressed){
 
     if(pressed){
         widget->toggleMode();
     }
+
+}
+ExampleApp::~ExampleApp(){
+
+    delete widget;
 
 }
 
@@ -198,30 +221,37 @@ void ExampleApp::mouseClicked(int x,int y,int id,bool pressed){//cout <<"Mouse c
 using namespace modulair;
 
 int main(int argc, char* argv[]){
+
+
     // ros::init must be called before instantiating any apps
-    ros::init(argc,argv, "modulair_app_screen_saver");
+    ros::init(argc,argv, "screen_saver");
 
     // intializing glut
-    glutInit(&argc, argv);
+//    glutInit(&argc, argv);
 
 
     ROS_WARN_STREAM("Screen Saver: Starting Up...");
     ros::NodeHandle node_handle;
     QApplication application(argc,argv);
     // This line will quit the application once any window is closed.
-    application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
-    modulair::ExampleApp example_app("Screen Saver",node_handle,20);
+        application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
+    ExampleApp example_app("Screen Saver",node_handle,20);
 
-//    cout<< "Width"<<  example_app.width();
-//    cout<<"Height" << example_app.height();
-    // adding the openGL window into the scene
+    ROS_WARN_STREAM("Screen Saver: created ...");
 
-//    example_app.widget->resize(example_app.width(), example_app.height());
+    int width = 5760;
+    int height = 3197;
+//    if(example_app.widget){
+//        example_app.widget->setFixedSize(width,height);
+//    }
+//    example_app.resize(width,height);
+    example_app.widget->resize(width,height);
     //  example_app.widget->setWindowState(Qt::WindowFullScreen);
-    //    example_app.widget->resize(Qt::WindowFullScreen);
-    example_app.widget->show();
-    //    example_app.widget->setParent(example_app);
+//        example_app.widget->resize(Qt::WindowFullScreen);
+
     example_app.build();
+    example_app.widget->show();
+
     ROS_WARN_STREAM("Screen Saver: App Running");
     application.exec();
     // Running

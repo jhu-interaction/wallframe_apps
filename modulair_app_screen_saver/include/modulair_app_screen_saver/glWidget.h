@@ -49,6 +49,7 @@
 #include <map>
 #include <iostream>
 #define MAX_PARTICLES 2000
+//#define MAX_PARTICLES 20
 #define MAX_PARTICLE_AGE 150
 #define MAX_BOUNCE_COUNT 5
 
@@ -129,7 +130,7 @@ class GLWidget : public QGLWidget
 public:
 
     bool defaultMode;
-    GLWidget(QWidget *parent);
+    GLWidget(QWidget*parent);
     ~GLWidget();
     void initializeGL();
     void resizeGL(int w, int h);
@@ -163,9 +164,10 @@ private:
     map<int , ParticleSystem*> ParticleSystems;
 
     // map containing the particle systems given to the left hand
-    map<int , ParticleSystem*> ParticleSystemsLeft;
+    map<int , ParticleSystem*> ParticleSystemsLeft  ;
 
-    PARTICLE defaultParticles[MAX_PARTICLES];
+    vector<PARTICLE*> defaultParticles;
+//    PARTICLE defaultParticles[MAX_PARTICLES];
 
     int screenWidth;
     int screenHeight;

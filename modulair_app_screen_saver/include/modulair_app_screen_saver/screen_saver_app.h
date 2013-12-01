@@ -41,12 +41,12 @@
 
 #include <wallframe_core/wallframe_app_base_qt.h>
 
-
 #include <modulair_app_screen_saver/glWidget.h>
 
 #include  <modulair_app_screen_saver/MouseProvider.h>
 
 #include <modulair_osg_tools/vector_conversions.h>
+
 namespace modulair{
 
     class ExampleApp : wallframe::WallframeAppBaseQt{
@@ -54,7 +54,7 @@ namespace modulair{
         Q_OBJECT
   public:
     ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size);
-    ~ExampleApp(){};
+    ~ExampleApp();
     bool build();
     bool start();
     bool stop();
