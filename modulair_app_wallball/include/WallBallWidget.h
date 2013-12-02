@@ -17,11 +17,8 @@ class WallBallWidget : public wallframe::WallframeAppBaseQt
 
 public:
     WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size);
-    //WallBallWidget(QWidget *parent = 0);
-
-    //    WallBallWidget(QWidget *parent = 0, QWidget *appManager = 0, QString appID = "null", bool useKin = false);
-
     ~WallBallWidget();
+
     void doResize(int w, int h);
     
     bool build();
@@ -29,16 +26,6 @@ public:
     bool stop();
     bool pause();
     bool resume();
-
-    /*    public Q_SLOTS:
-        void config();
-        void pause();
-        void unpause();
-        void resume();
-        void suspend();
-        void pullData(); 
-        void increment();
-        void recieveDiscreteGesture(QMap<int,int> events){}*/
 
 protected:
 
@@ -58,6 +45,5 @@ private:
 	static void* physicsThreadMethod(void* data);
 }; // class WallBallWidget
 
-//} // namespace lair
 
 #endif // WALLBALLWIDGET_H
