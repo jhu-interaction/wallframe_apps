@@ -126,7 +126,7 @@ void GraphicsManager::resize(int w, int h) {
 
 IMeshSceneNode* GraphicsManager::getMeshSceneNode(path meshFilepath, path textureFilepath) {
     
-    std::cout << "About to load mesh: " << meshFilepath.c_str() << "\n" << std::flush;
+    //std::cout << "About to load mesh: " << meshFilepath.c_str() << "\n" << std::flush;
 	IMesh* mesh = m_SceneManager->getMesh(meshFilepath);
 	if (!mesh)
 	{
@@ -136,8 +136,14 @@ IMeshSceneNode* GraphicsManager::getMeshSceneNode(path meshFilepath, path textur
 	
 	IMeshSceneNode* node = m_SceneManager->addMeshSceneNode( mesh );
 	node->setMaterialFlag(EMF_LIGHTING, true);
-    std::cout << "About to load texture: " << textureFilepath.c_str() << "\n" << std::flush;
-	node->setMaterialTexture( 0, m_VideoDriver->getTexture(textureFilepath) );
-	
+    //std::cout << "About to load texture: " << textureFilepath.c_str() << "\n" << std::flush;
+
+    ITexture *texture = m_VideoDriver->getTexture(textureFilepath);
+
+    // TODO Why does this fail sometimes seemingly being passed the mesh file path?
+    if (texture) {
+    	node->setMaterialTexture(0,  texture);
+    }
+
 	return node;
 }

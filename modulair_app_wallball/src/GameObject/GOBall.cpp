@@ -59,15 +59,8 @@ void GOBall::init(int jumpKey, int leftKey, int rightKey, int playerNum) {
     case 5: texturePath = (WallBall::s_AssetPath + "/color8.bmp").c_str(); break;
     }
 
-    //char tempString[strlen(texturePath)];
-    //char *tempString = (char *)calloc(strlen(texturePath), sizeof(char));
-    //strcpy(tempString, texturePath);
-
-    std::cout << "GOBALL: Texture filename: " << texturePath << "\n" << std::flush;
 	addComponent(new CGraphicsObject(this, (WallBall::s_AssetPath + "/sphere.3ds").c_str(), texturePath));
-	std::cout << "GOBALL: 2: Texture filename: " << texturePath << "\n" << std::flush;
-
-    //free(tempString);
+	// TODO Somehow texture path is being passed in as the mesh path sometimes
 
 	// make controller component
     if (!GOBall::USE_KINECT)
