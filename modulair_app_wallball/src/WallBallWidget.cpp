@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <cmath>
 
 #include <QTimer>
 #include <QDialog>
@@ -64,6 +65,8 @@ WallBallWidget::~WallBallWidget()
     s_RunPhysics = false;
 }
 
+// TODO Check interaction with more than 2 players.
+
 bool lastUserFlags[NUM_USERS];
 void WallBallWidget::updateUsers(){
     bool userFlags[NUM_USERS];
@@ -71,40 +74,42 @@ void WallBallWidget::updateUsers(){
         userFlags[i] = false;
 
     wallframe::AppUserMap::iterator uit;
-    // for each user
-    for(uit = users_.begin();uit!=users_.end();uit++){
 
-        // will return the existing ball if user already exists for it
+    for(uit = users_.begin(); uit != users_.end(); uit++){
+    	int user_index = uit->first;
+        wallframe::AppUser user = uit->second;
+
         GOBall* ball = WallBall::newBall(uit->first);
                 
-	wallframe::AppUser appUser = uit->second;
-        Eigen::Vector3d torso = appUser.jtPosByName("torso");
-        Eigen::Vector3d lShoulder = appUser.jtPosByName("left_shoulder");
-        Eigen::Vector3d rShoulder = appUser.jtPosByName("right_shoulder");
-        Eigen::Vector3d head = appUser.jtPosByName("head");
-        Eigen::Vector3d lHand = appUser.jtPosByName("left_hand");
-        Eigen::Vector3d rHand = appUser.jtPosByName("right_hand");
-        Eigen::Vector3d lElbow = appUser.jtPosByName("left_elbow");
-        Eigen::Vector3d rElbow = appUser.jtPosByName("right_elbow");
+        // TODO use constants
+        Eigen::Vector3d torso = user.jtPosByName("torso");
+        Eigen::Vector3d lShoulder = user.jtPosByName("left_shoulder");
+        Eigen::Vector3d rShoulder = user.jtPosByName("right_shoulder");
+        Eigen::Vector3d head = user.jtPosByName("head");
+        Eigen::Vector3d lHand = user.jtPosByName("left_hand");
+        Eigen::Vector3d rHand = user.jtPosByName("right_hand");
+        Eigen::Vector3d lElbow = user.jtPosByName("left_elbow");
+        Eigen::Vector3d rElbow = user.jtPosByName("right_elbow");
+        Eigen::Vector3d lHip = user.jtPosByName("left_hip");
+        Eigen::Vector3d rHip = user.jtPosByName("right_hip");
 
-        double leanOffset =lElbow.x() - lHand.x();
-        //double leanOffset = abs(torso.x() - rHand.x()) - abs(torso.x() - lHand.x());
-        //double leanOffset = torso.x() - (lShoulder.x() + rShoulder.x())/2.0f;
- 
-        /*if (abs(leanOffset) < 25)
-            leanOffset = 0.0f;
-        else if (abs(leanOffset) < 45)
-            leanOffset = leanOffset / abs(leanOffset) * 30.0f;
-        else
-        leanOffset = leanOffset / abs(leanOffset) * 50.0f;*/
+        // TODO Play with lean threshhold
+        double lean_threshold = abs(rShoulder.x() - lShoulder.x()) / 4.0;
+        float direction = 0.0;
 
-        InputManager::SetMoveDirection(uit->first, leanOffset/500.0f);
+        if (rShoulder.x() < rHip.x() - lean_threshold) {
+        	direction = 1.0;
+        } else if (lShoulder.x() > lHip.x() + lean_threshold) {
+        	direction = -1.0;
+        }
 
-        //bool jump = lHand.y() > head.y() && rHand.y() > head.y();
-        bool jump = rHand.y() > rShoulder.y();
-        InputManager::SetJump(uit->first, jump);
+        InputManager::SetMoveDirection(user_index, direction);
 
-        userFlags[uit->first] = true;
+        bool jump = rHand.y() > rShoulder.y() || lHand.y() > lShoulder.y();
+
+        InputManager::SetJump(user_index, jump);
+
+        userFlags[user_index] = true;
     }
 
     for (int i = 0; i < NUM_USERS; ++i) {
