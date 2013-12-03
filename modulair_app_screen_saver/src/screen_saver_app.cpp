@@ -191,6 +191,7 @@ void ExampleApp::updateUsers(){
             prev_activeUsers[j]=false;
             ROS_WARN_STREAM("User Left deleting the particle system for user #"<<j);
             widget->destroyParticleSystemForUser(j);
+
             // TODO if the number of users in zero then go to the default mode
 
         }

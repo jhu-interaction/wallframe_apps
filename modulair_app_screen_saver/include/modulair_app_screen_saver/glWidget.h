@@ -48,53 +48,32 @@
 #include <time.h>
 #include <map>
 #include <iostream>
-#define MAX_PARTICLES 2000
+#define MAX_PARTICLES 1500
 //#define MAX_PARTICLES 20
 #define MAX_PARTICLE_AGE 150
 #define MAX_BOUNCE_COUNT 5
 
-#define NUM_USERS 5
+#define NUM_USERS 12
 
 
 using namespace std;
-// TODO wrap this into particle system
+
 typedef struct
 {
     float lifetime;                       // total lifetime of the particle
-    float decay;                          // decay speed of the particle
     float r,g,b;                          // color values of the particle
     float xpos,ypos,zpos;                 // position of the particle
     float xspeed,yspeed,zspeed;           // speed of the particle
-    bool active;                       // is particle active or not?
-    float origX, origY,origZ;
-
-
-    //  void   initialize(){}
 
 } PARTICLE;
 
-//class User{
-
-//    ParticleSystem  system;
-//    int userId;
-
-
-//}
 
 class ParticleSystem{
 private:
 
-
-
-    int userId;
-
-
-    //    int origX;
-    //    int origY;
-
-    // intialize the particles
+    int userId; // Not used currently
 public:
-    vector<PARTICLE*> particles;
+    std::vector<PARTICLE*> particles;
 
     bool isActive;
 
@@ -102,8 +81,10 @@ public:
     float yscale;
     float r,g,b;
     float dr, dg, db;
+    float origX, origY,origZ;
+    float decay;
 
-    ParticleSystem(int id,float r,float g,float b, float dr,float dg,float db){
+    ParticleSystem(int id,float r,float g,float b, float dr,float dg,float db,float decay,float origX,float origY,float origZ){
         this->isActive = true;
         this->userId = id;
         this->r = r;
@@ -112,9 +93,12 @@ public:
         this->dr = dr;
         this->dg = dg;
         this->db = db;
-//        particles = new particles[MAX_PARTICLES];
-//        cout<<"New particles :)  \n";
-        //        particles.intialize();
+        this->origX = origX;
+        this->origY = origY;
+        this->origZ = origZ;
+        this->decay = decay;
+        particles.reserve(MAX_PARTICLES);
+
         // TODO initialize the particles here currently this  is happening in createParticle system BADDDD!!!
 
     }
@@ -138,20 +122,17 @@ public:
     void paintGL();
 
 
-
-
     void DrawGLScene(void);
 
     // this function updates the particles in the scene
     void EvolveParticles();
+
+    // create the default particle
     void CreateParticle(int i);
 
 
     void createParticleSystemForUser(int id);
-//    void initializeSingleUserParticle(int i,int user);
-    void initializeSingleUserParticle(int i,PARTICLE* p,float r,float g,float b);
-
-
+    void initializeSingleUserParticle(int i,PARTICLE* p,float r,float g,float b,float origX,float origY,float origZ);
     void destroyParticleSystemForUser(int id);
     void splashParticleSystem(int x, int y, int deviceID,bool left);
     void toggleMode();
@@ -167,8 +148,9 @@ private:
     // map containing the particle systems given to the left hand
     map<int , ParticleSystem*> ParticleSystemsLeft  ;
 
-    vector<PARTICLE*> defaultParticles;
-//    PARTICLE defaultParticles[MAX_PARTICLES];
+//    vector<PARTICLE*> defaultParticles;
+
+    ParticleSystem* defaultSystem;
 
     int screenWidth;
     int screenHeight;
