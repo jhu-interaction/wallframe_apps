@@ -81,7 +81,9 @@ void GOBall::init(int jumpKey, int leftKey, int rightKey, int playerNum) {
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(0.0f, 20.0f);
-	
+    bodyDef.linearDamping = 0.0f;
+    bodyDef.angularDamping = 0.02f;
+
 	addComponent(new CPhysicsObject(this, &bodyDef, &fixtureDef));
 }
 
