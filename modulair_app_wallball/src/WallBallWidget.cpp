@@ -94,19 +94,25 @@ void WallBallWidget::updateUsers(){
         Eigen::Vector3d rHip = user.jtPosByName("right_hip");
 
         // TODO Play with lean threshhold
-        double lean_threshold = abs(rShoulder.x() - lShoulder.x()) / 4.0;
+        double lean_threshold = fabs(rShoulder.x() - lShoulder.x()) / 3.0;
         float direction = 0.0;
 
+        // Move faster the greater the lean
         if (rShoulder.x() < rHip.x() - lean_threshold) {
-        	direction = 1.0;
+        	direction =  (rHip.x() - rShoulder.x()) / (lean_threshold  * 2);            
         } else if (lShoulder.x() > lHip.x() + lean_threshold) {
-        	direction = -1.0;
+        	direction = (lHip.x() - lShoulder.x()) / (lean_threshold * 2);
         }
+
+        if (direction < -1.0) {
+            direction = -1.0;
+        } else if (direction > 1.0) {
+            direction = 1.0;
+        }        
 
         InputManager::SetMoveDirection(user_index, direction);
 
         bool jump = rHand.y() > rShoulder.y() || lHand.y() > lShoulder.y();
-
         InputManager::SetJump(user_index, jump);
 
         userFlags[user_index] = true;

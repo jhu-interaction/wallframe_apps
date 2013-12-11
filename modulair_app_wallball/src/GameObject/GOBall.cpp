@@ -49,40 +49,56 @@ void GOBall::init(int jumpKey, int leftKey, int rightKey, int playerNum) {
     this->m_ScoreObject = new GOScore(playerNum);
 
     // make graphics component
-    const char* texturePath = (WallBall::s_AssetPath + "/color0.bmp").c_str();
+
+    std::string texturePath = WallBall::s_AssetPath + "/color0.bmp";
+
     switch (playerNum) {
-    case 0: texturePath = (WallBall::s_AssetPath + "/color0.bmp").c_str(); break;
-    case 1: texturePath = (WallBall::s_AssetPath + "/color2.bmp").c_str(); break;
-    case 2: texturePath = (WallBall::s_AssetPath + "/color3.bmp").c_str(); break;
-    case 3: texturePath = (WallBall::s_AssetPath + "/color4.bmp").c_str(); break;
-    case 4: texturePath = (WallBall::s_AssetPath + "/color6.bmp").c_str(); break;
-    case 5: texturePath = (WallBall::s_AssetPath + "/color8.bmp").c_str(); break;
+    case 0:
+      texturePath = WallBall::s_AssetPath + "/color0.bmp";
+      break;
+    case 1:
+      texturePath = WallBall::s_AssetPath + "/color2.bmp";
+      break;
+    case 2:
+      texturePath = WallBall::s_AssetPath + "/color3.bmp";
+      break;
+    case 3:
+      texturePath = WallBall::s_AssetPath + "/color4.bmp"; 
+      break;
+    case 4:
+      texturePath = WallBall::s_AssetPath + "/color6.bmp";
+      break;
+    case 5: 
+      texturePath = WallBall::s_AssetPath + "/color8.bmp";
+      break;
     }
 
-	addComponent(new CGraphicsObject(this, (WallBall::s_AssetPath + "/sphere.3ds").c_str(), texturePath));
-	// TODO Somehow texture path is being passed in as the mesh path sometimes
+    addComponent(new CGraphicsObject(this, (WallBall::s_AssetPath + "/sphere.3ds").c_str(), texturePath.c_str()));
 
-	// make controller component
-    if (!GOBall::USE_KINECT)
+    // make controller component
+    if (!GOBall::USE_KINECT) {
         addComponent(new CKeyboardController(this, jumpKey, leftKey, rightKey));
-    else
+    } else {
         addComponent(new CKinectController(this, playerNum));
+    }
 
-	// make physics component
-	b2CircleShape circle;
-	circle.m_radius = 0.95f;
-	
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &circle;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-	fixtureDef.restitution = 0.4f;
-	
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(0.0f, 20.0f);
-	
-	addComponent(new CPhysicsObject(this, &bodyDef, &fixtureDef));
+    // make physics component
+    b2CircleShape circle;
+    circle.m_radius = 0.95f;
+    
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &circle;
+    fixtureDef.density = 1.0f;
+    fixtureDef.friction = 0.3f;
+    fixtureDef.restitution = 0.4f;
+    
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(0.0f, 20.0f);
+    bodyDef.linearDamping = 0.0f;
+    bodyDef.angularDamping = 0.02f;
+    
+    addComponent(new CPhysicsObject(this, &bodyDef, &fixtureDef));
 }
 
 const b2Vec2& GOBall::getPosition() {
