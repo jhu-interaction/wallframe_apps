@@ -68,10 +68,9 @@ GLWidget::GLWidget(QWidget* parent)
     PARTICLE* p = NULL;
 
     // initialize the default particle system
-
-    float r = 0.7f, g = 0.1f , b = 0.1f;
-    float dr = 0.05, dg = 0.1 , db = 0.05;
-    float decay = 0.005;
+    float r = 0.4f, g = 0.05f , b = 0.5f;
+    float dr = 0.0025, dg = 0.0005 , db = 0.0015;
+    float decay = 0.004;
 
     defaultSystem = new ParticleSystem(-1,r,g,b,dr,dg,db,decay,0,0,0);
 
@@ -131,11 +130,14 @@ void GLWidget::initializeGL()
     glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
     glLoadIdentity();									// Reset The Projection Matrix
 
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 }
-
+    
 void GLWidget::resizeGL(int w, int h){
 
  	glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
@@ -172,7 +174,7 @@ void GLWidget::DrawGLScene(void){
 
     glPointSize(10.0);
   //glBindTexture(GL_TEXTURE_2D,ParticleTexture);          // choose particle texture
-    glBegin(GL_POINTS);
+    
 
     if(defaultMode){
 
@@ -183,12 +185,17 @@ void GLWidget::DrawGLScene(void){
                 initializeSingleUserParticle(i,p,defaultSystem->r,defaultSystem->g,defaultSystem->b,defaultSystem->origX,defaultSystem->origY,defaultSystem->origZ);
 
 
-            glColor4f(p->r,p->g,p->b,0.5f);
+            // cout<<p->lifetime * 10<< " ";
+            glPointSize(10 - GLfloat(p->lifetime*10));
+            glBegin(GL_POINTS);
+            glColor4f(p->r,p->g,p->b,p->lifetime);
             glVertex3f(p->xpos, p->ypos, p->zpos);
-
+            glEnd();
         }
     }
     else{
+
+        glBegin(GL_POINTS);
 
         map<int , ParticleSystem*>::iterator it;
 
@@ -238,9 +245,10 @@ void GLWidget::DrawGLScene(void){
             }
         }
 
+    glEnd();
+
     }
 
-    glEnd();
     EvolveParticles();
 
 }
@@ -253,23 +261,57 @@ void GLWidget::EvolveParticles()
 
         // update the origin of the system
 
-//        float r = 0.2  * theta / 360;
-//        defaultSystem->origX = r * cos(theta * PI / 180.0);
-//        defaultSystem->origY = r * sin(theta * PI / 180.0);
-//        theta += 1.5;
+        if(defMode == 0){
+        int k1 = 7;
+        int k2 = 4;
+        defaultSystem->origX =(cos(k1*theta)) * 0.4;
+        defaultSystem->origY = (k2*sin(theta)) * 0.2;
+        defaultSystem->origZ = (k2 *cos(theta)) * 0.05;
+        theta += 0.007;
+        if(theta >= 8){
+            theta = 0;
+            defMode += 1;
+            
+            defaultSystem->dr -= 0.001;
+            defaultSystem->dg += 0.001;
+            }    
+        }
 
+        if(defMode == 1){
+        // spiral
+        float r = 0.2  * theta / 360;
+        defaultSystem->origX = r * cos(theta * PI / 180.0);
+        defaultSystem->origY = r * sin(theta * PI / 180.0);
+        theta += 1.8;
+        if(theta >= 1500){
+            theta = 0;
+            defMode += 1;
+            
 
+            defaultSystem->dg -= 0.001;
+            defaultSystem->db += 0.001;
 
+            }
+
+        }    
+
+        if(defMode == 2){
+        // /* Loop */
         double t = theta * PI / 180.0;
         double r = 1.5;
-        double k = 5;
+        double k = 8;
         defaultSystem->origX = (r * cos(t) - cos (k* t))/3;
         defaultSystem->origY = (r * sin(t) - sin (k* t))/3;
-        theta += 0.8;
+        theta += 0.5;
 
-        if(theta >= 100000)
-            theta = 0;
+            if(theta >= 400){
+                theta = 0;
+                defMode = 0;
+                defaultSystem->db -= 0.001;
+                defaultSystem->dr += 0.001;
 
+            }
+        }
         defaultSystem->r -= defaultSystem->dr;
         defaultSystem->g -= defaultSystem->dg;
         defaultSystem->b -= defaultSystem->db;
@@ -610,12 +652,22 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
     p->lifetime= (float)(rand() % 500000 )/500000.0;
 
     p->xpos= origX;
+    if(i % 2 == 0)
+        p->xpos *= -1;
     p->ypos= origY;
     p->zpos= origZ;
 
-    p->xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-    p->yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-    p->zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
+    if(defMode == 1){
+    if(i % 2 != 0){
+        p->ypos *= -1;
+
+    }
+
+    }
+
+    p->xspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
+    p->yspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
+    p->zspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
 
 
     p->r = r;
