@@ -142,7 +142,8 @@ protected:
 
 private:
 
-
+    // this variable is used to control the default mode
+    int defMode;
     map<int , ParticleSystem*> ParticleSystems;
 
     // map containing the particle systems given to the left hand
