@@ -214,7 +214,8 @@ void GLWidget::DrawGLScene(void){
                         initializeSingleUserParticle(i,p,p->r,p->g,p->b,system->origX,system->origY,system->origZ);
                     }
 
-                    glColor4f(p->r,p->g,p->b,0.5f);
+                    // particles fade away as their life time reduces
+                    glColor4f(p->r,p->g,p->b,p->lifetime);
                     glVertex3f(p->xpos, p->ypos, p->zpos);
                 }
 
@@ -238,7 +239,8 @@ void GLWidget::DrawGLScene(void){
                         initializeSingleUserParticle(i,p,p->r,p->g,p->b,system->origX,system->origY,system->origZ);
                     }
 
-                    glColor4f(p->r,p->g,p->b,0.5f);
+                    // the particles fade away as the lifetime reduces
+                    glColor4f(p->r,p->g,p->b,p->lifetime);
                     glVertex3f(p->xpos, p->ypos, p->zpos);
                 }
 
