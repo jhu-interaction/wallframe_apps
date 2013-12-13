@@ -260,8 +260,9 @@ void GLWidget::EvolveParticles()
     if(defaultMode == true){
 
         // update the origin of the system
+        // there are currently three modes in which the origin moves
 
-        if(defMode == 0){
+        if(defMode == 0){  // cross helix
         int k1 = 7;
         int k2 = 4;
         defaultSystem->origX =(cos(k1*theta)) * 0.4;
@@ -270,29 +271,27 @@ void GLWidget::EvolveParticles()
         theta += 0.007;
         if(theta >= 8){
             theta = 0;
-            defMode += 1;
-            
-            defaultSystem->dr -= 0.001;
+            defMode += 1;   // change to next mode
+             
+            defaultSystem->dr -= 0.001;   // changing these value to add some randomness to color changes
             defaultSystem->dg += 0.001;
             }    
         }
 
         if(defMode == 1){
-        // spiral
+        // spiral 
         float r = 0.2  * theta / 360;
         defaultSystem->origX = r * cos(theta * PI / 180.0);
         defaultSystem->origY = r * sin(theta * PI / 180.0);
         theta += 1.8;
         if(theta >= 1500){
             theta = 0;
-            defMode += 1;
+            defMode += 1;    // change to next mode
             
-
             defaultSystem->dg -= 0.001;
             defaultSystem->db += 0.001;
 
             }
-
         }    
 
         if(defMode == 2){
@@ -306,12 +305,14 @@ void GLWidget::EvolveParticles()
 
             if(theta >= 400){
                 theta = 0;
-                defMode = 0;
+                defMode = 0;      // change to the first mode again :) 
                 defaultSystem->db -= 0.001;
                 defaultSystem->dr += 0.001;
 
             }
         }
+
+        // change the color, these are the colors new particle generated pick up
         defaultSystem->r -= defaultSystem->dr;
         defaultSystem->g -= defaultSystem->dg;
         defaultSystem->b -= defaultSystem->db;
@@ -329,6 +330,7 @@ void GLWidget::EvolveParticles()
             p->ypos+=defaultSystem->particles.at(i)->yspeed * 0.1 ;
             p->zpos+=defaultSystem->particles.at(i)->zspeed * 0.1 ;
 
+// commenting this out because once a particle is made I do not want to change its color
 //            p->r -= defaultSystem->dr;
 //            p->g -= defaultSystem->dg;
 //            p->b -= defaultSystem->db;
@@ -339,10 +341,10 @@ void GLWidget::EvolveParticles()
 
         }
     }
-    else { // update the user particle system
+    else {  // if not in the default mode update the user particle systems as per user pos
         map<int , ParticleSystem*>::iterator it;
 
-        // iterate over the particle system map to draw the active particle systems
+        // iterate over the right particle system map to draw the active particle systems
         for(it = ParticleSystems.begin() ; it != ParticleSystems.end() ; it++){
             ParticleSystem* system = it->second;
 
@@ -372,9 +374,7 @@ void GLWidget::EvolveParticles()
 
         }
 
-
-
-        // iterate over the particle system map to draw the active particle systems
+        // iterate over the left particle system map to draw the active particle systems
         for(it = ParticleSystemsLeft.begin() ; it != ParticleSystemsLeft.end() ; it++){
             ParticleSystem* system = it->second;
 
@@ -409,68 +409,70 @@ void GLWidget::EvolveParticles()
     }
 
 }
-void GLWidget::CreateParticle(int i)
-{
+
+// this is the old default particle system create function TODO delete
+// void GLWidget::CreateParticle(int i)
+// {
 
 
-     defaultSystem->particles.at(i)->lifetime= (float)(rand() % 500000 )/500000.0;
+//      defaultSystem->particles.at(i)->lifetime= (float)(rand() % 500000 )/500000.0;
 
-     defaultSystem->particles.at(i)->r = 0.7;
-     defaultSystem->particles.at(i)->g = 0.7;
-     defaultSystem->particles.at(i)->b = 1.0;
+//      defaultSystem->particles.at(i)->r = 0.7;
+//      defaultSystem->particles.at(i)->g = 0.7;
+//      defaultSystem->particles.at(i)->b = 1.0;
 
-     defaultSystem->particles.at(i)->xpos= 0;
-     defaultSystem->particles.at(i)->ypos= 0;
-     defaultSystem->particles.at(i)->zpos= 0;
+//      defaultSystem->particles.at(i)->xpos= 0;
+//      defaultSystem->particles.at(i)->ypos= 0;
+//      defaultSystem->particles.at(i)->zpos= 0;
 
-//     defaultSystem->particles.at(i)->xpos= defaultSystem->particles.at(i)->xpos > screenWidth/2 ? 0 : defaultSystem->particles.at(i)->xpos;
-//     defaultSystem->particles.at(i)->ypos= defaultSystem->particles.at(i)->ypos > screenHeight/2 ? 0 :defaultSystem->particles.at(i)->ypos ;
-//     defaultSystem->particles.at(i)->zpos= defaultSystem->particles.at(i)->zpos > screenHeight/2 ? 0 :defaultSystem->particles.at(i)->zpos ;
+// //     defaultSystem->particles.at(i)->xpos= defaultSystem->particles.at(i)->xpos > screenWidth/2 ? 0 : defaultSystem->particles.at(i)->xpos;
+// //     defaultSystem->particles.at(i)->ypos= defaultSystem->particles.at(i)->ypos > screenHeight/2 ? 0 :defaultSystem->particles.at(i)->ypos ;
+// //     defaultSystem->particles.at(i)->zpos= defaultSystem->particles.at(i)->zpos > screenHeight/2 ? 0 :defaultSystem->particles.at(i)->zpos ;
 
-//     defaultSystem->particles.at(i)->xpos= defaultSystem->particles.at(i)->origX + 0.0;
-//     defaultSystem->particles.at(i)->ypos= defaultSystem->particles.at(i)->origY + 0.0;
-//     defaultSystem->particles.at(i)->zpos= defaultSystem->particles.at(i)->origZ + 0.0;
-
-
-     defaultSystem->particles.at(i)->xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-     defaultSystem->particles.at(i)->yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-     defaultSystem->particles.at(i)->zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
-
-     defaultSystem->particles.at(i)->r = R;
-     defaultSystem->particles.at(i)->g = G;
-     defaultSystem->particles.at(i)->b = B;
-     R+=cR;
-     G+=cG;
-     B+=cB;
-
-     if(R>1.0f){R=1.0f; cR=-cR;}if(R<0.0f){R=0.0f; cR=-cR;}
-     if(G>1.0f){G=1.0f; cG=-cG;}if(G<0.0f){G=0.0f; cG=-cG;}
-     if(B>1.0f){B=1.0f; cB=-cB;}if(B<0.0f){B=0.0f; cB=-cB;}
+// //     defaultSystem->particles.at(i)->xpos= defaultSystem->particles.at(i)->origX + 0.0;
+// //     defaultSystem->particles.at(i)->ypos= defaultSystem->particles.at(i)->origY + 0.0;
+// //     defaultSystem->particles.at(i)->zpos= defaultSystem->particles.at(i)->origZ + 0.0;
 
 
-     int xdirection = 1;
-     int ydirection = 1;
-     if(i%4 == 1){
-        xdirection = -1;
-        ydirection = 1;
-     }
-     else if(i%4 == 2) {
-         xdirection = -1;
-         ydirection = -1;
-     }
-     else if(i%4 == 3) {
-         xdirection = 1;
-         ydirection = -1;
-     }
+//      defaultSystem->particles.at(i)->xspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
+//      defaultSystem->particles.at(i)->yspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
+//      defaultSystem->particles.at(i)->zspeed = (((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f;
 
-     defaultSystem->particles.at(i)->xspeed *= -xdirection;
-     defaultSystem->particles.at(i)->yspeed *= -ydirection;
+//      defaultSystem->particles.at(i)->r = R;
+//      defaultSystem->particles.at(i)->g = G;
+//      defaultSystem->particles.at(i)->b = B;
+//      R+=cR;
+//      G+=cG;
+//      B+=cB;
+
+//      if(R>1.0f){R=1.0f; cR=-cR;}if(R<0.0f){R=0.0f; cR=-cR;}
+//      if(G>1.0f){G=1.0f; cG=-cG;}if(G<0.0f){G=0.0f; cG=-cG;}
+//      if(B>1.0f){B=1.0f; cB=-cB;}if(B<0.0f){B=0.0f; cB=-cB;}
 
 
-     if(i%2 == 0)
-        defaultSystem->particles.at(i)->zspeed *= -1;
+//      int xdirection = 1;
+//      int ydirection = 1;
+//      if(i%4 == 1){
+//         xdirection = -1;
+//         ydirection = 1;
+//      }
+//      else if(i%4 == 2) {
+//          xdirection = -1;
+//          ydirection = -1;
+//      }
+//      else if(i%4 == 3) {
+//          xdirection = 1;
+//          ydirection = -1;
+//      }
 
-}
+//      defaultSystem->particles.at(i)->xspeed *= -xdirection;
+//      defaultSystem->particles.at(i)->yspeed *= -ydirection;
+
+
+//      if(i%2 == 0)
+//         defaultSystem->particles.at(i)->zspeed *= -1;
+
+// }
 
 void GLWidget::toggleMode(){
 
@@ -480,6 +482,7 @@ void GLWidget::toggleMode(){
         defaultMode = true;
 
 }
+// this is the function called when user positon is updated
 void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
 
     map<int,ParticleSystem*>::iterator it;
@@ -531,7 +534,7 @@ void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
 
 }
 
-// creates both the left and the right particle system
+// creates both the left and the right particle system for a new user
 void GLWidget::createParticleSystemForUser(int id){
 
     cout<<"Creating the particle system for the user"<< id<<endl;
@@ -646,29 +649,31 @@ void GLWidget::destroyParticleSystemForUser(int id){
     return;
 
 }
+
 // TODO start from the position of the user
 void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, float b,float origX,float origY,float origZ){
 
     p->lifetime= (float)(rand() % 500000 )/500000.0;
 
     p->xpos= origX;
-    if(i % 2 == 0)
+
+    // This is done only when the default mode is on 
+    if(i % 2 == 0  && defMode != -1)
         p->xpos *= -1;
+
     p->ypos= origY;
     p->zpos= origZ;
 
+    // This is done only if the default mode is on and is equal to 1
     if(defMode == 1){
-    if(i % 2 != 0){
-        p->ypos *= -1;
-
-    }
-
+        if(i % 2 != 0){
+            p->ypos *= -1;
+        }
     }
 
     p->xspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
     p->yspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
     p->zspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
-
 
     p->r = r;
     p->g = g;
