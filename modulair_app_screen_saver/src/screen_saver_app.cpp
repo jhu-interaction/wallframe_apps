@@ -33,7 +33,7 @@
 *********************************************************************/
 
 /*
- * Author: Kelleher Guerin, futureneer@gmail.com, Johns Hopkins University
+ * Author: Vineeta Khatuja, Johns Hopkins University
  */
 
 
@@ -67,7 +67,7 @@ ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque
     _dataTimer1.start(50);
 
 
-
+    // This is commented , uncomment to test the app with mouse 
 ////    mouseThread = new MouseProvider(this);
 ////    mouseThread->start();
 
@@ -156,6 +156,7 @@ void ExampleApp::updateUsers(){
         int xtotal = abs(xmin) + abs(xmax);
         int ytotal = abs(ymin) + abs(ymax);
 
+        /*******TODO get these from the ROS params B******/
         int width = 5760;
         int height = 3197;
 
@@ -227,29 +228,42 @@ int main(int argc, char* argv[]){
     // ros::init must be called before instantiating any apps
     ros::init(argc,argv, "screen_saver");
 
-    // intializing glut
-//    glutInit(&argc, argv);
-
-
     ROS_WARN_STREAM("Screen Saver: Starting Up...");
-    ros::NodeHandle node_handle;
+    ros::NodeHandle node_;
     QApplication application(argc,argv);
     // This line will quit the application once any window is closed.
-        application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
-    ExampleApp example_app("Screen Saver",node_handle,20);
+    application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
+    ExampleApp example_app("Screen Saver",node_,20);
 
     ROS_WARN_STREAM("Screen Saver: created ...");
 
+    // int width = 1200;
+    // int height = 800;
     int width = 5760;
     int height = 3197;
-//    if(example_app.widget){
-//        example_app.widget->setFixedSize(width,height);
-//    }
-//    example_app.resize(width,height);
-    example_app.widget->resize(width,height);
-    //  example_app.widget->setWindowState(Qt::WindowFullScreen);
-//        example_app.widget->resize(Qt::WindowFullScreen);
 
+    /********Ideally we should be getting this from the ros params ***********/ 
+    /***********************I do not know why I cannot read these ***********/
+   //  std::string name_;
+   // std::string height;
+   // if (!node_.getParam("/wallframe/core/params/height", height)){
+   //     ROS_ERROR("Modulair%s: No height found on parameter  server (namespace: %s)",
+   //               name_.c_str(), node_.getNamespace().c_str());
+   //     return false;
+   // }
+
+   // std::string width;
+   // if (!node_.getParam("/wallframe/core/params/width", width)){
+   //     ROS_ERROR("Modulair%s: No width on parameter server (namespace: %s)",
+   //               name_.c_str(), node_.getNamespace().c_str());
+   //     return false;
+   // }
+ 
+    // example_app.widget->resize(atoi(width.c_str()),atoi(height.c_str()));
+    /*****************************************************************************/
+
+    example_app.widget->resize(width,height);
+    
     example_app.build();
     example_app.widget->show();
 
