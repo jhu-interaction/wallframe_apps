@@ -178,9 +178,9 @@ void ExampleApp::updateUsers(){
     }
     // if there are no user the default mode is on
     if(numActiveUsers > 0)
-        widget->defaultMode = false;
+        widget->resetDefaultMode() ;
     else
-        widget->defaultMode = true;
+        widget->setDefaultMode() ;
 
 //    cout<<"The number of active users is " <<numActiveUsers;
 

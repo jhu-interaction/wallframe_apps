@@ -49,6 +49,7 @@
 #include <map>
 #include <iostream>
 #define MAX_PARTICLES 1500
+#define DEF_MAX_PARTICLES 2500
 //#define MAX_PARTICLES 20
 #define MAX_PARTICLE_AGE 150
 #define MAX_BOUNCE_COUNT 5

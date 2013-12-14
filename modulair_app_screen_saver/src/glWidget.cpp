@@ -69,14 +69,14 @@ GLWidget::GLWidget(QWidget* parent)
     PARTICLE* p = NULL;
 
     // initialize the default particle system
-    float r = 0.4f, g = 0.05f , b = 0.5f;
+    float r = 0.4f, g = 0.15f , b = 0.5f;
     float dr = 0.0025, dg = 0.0005 , db = 0.0015;
     float decay = 0.004;
 
     defaultSystem = new ParticleSystem(-1,r,g,b,dr,dg,db,decay,0,0,0);
 
     // create the default particles system
-    for(int i = 0; i <=MAX_PARTICLES;i++){
+    for(int i = 0; i <=DEF_MAX_PARTICLES;i++){
         p= new PARTICLE();
 
         defaultSystem->particles.push_back(p);
@@ -111,7 +111,7 @@ GLWidget::~GLWidget()
          delete system;
      }
 
-    for(int i=0;i<=MAX_PARTICLES;i++){
+    for(int i=0;i<=DEF_MAX_PARTICLES;i++){
                PARTICLE* p = defaultSystem->particles.at(i);
                delete p;
      }
@@ -180,7 +180,7 @@ void GLWidget::DrawGLScene(void){
     if(defMode >= 0){
 
         glBegin(GL_POINTS);
-        for (int i=0;i<=MAX_PARTICLES;i++){
+        for(int i=0;i<=DEF_MAX_PARTICLES;i++){
             PARTICLE* p = defaultSystem->particles.at(i);
             if( p->lifetime <0)
 
@@ -326,7 +326,7 @@ void GLWidget::EvolveParticles()
         if(defaultSystem->g > 1.0f){defaultSystem->g=1.0f; defaultSystem->dg=-defaultSystem->dg;}if(defaultSystem->g<0.0f){defaultSystem->r=0.0f; defaultSystem->dg=-defaultSystem->dg;}
         if(defaultSystem->b > 1.0f){defaultSystem->b=1.0f; defaultSystem->db=-defaultSystem->db;}if(defaultSystem->b<0.0f){defaultSystem->r=0.0f; defaultSystem->db=-defaultSystem->db;}
 
-        for(int i=0;i<=MAX_PARTICLES;i++){
+        for(int i=0;i<=DEF_MAX_PARTICLES;i++){
 
             PARTICLE* p = defaultSystem->particles.at(i);
 
@@ -601,6 +601,7 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
     p->ypos= origY;
     p->zpos= origZ;
 
+    float scale = 0.6;
     if(defMode >= 0){
         // This is done only when the default mode is on 
         if(i % 2 == 0  && defMode != 2)
@@ -619,10 +620,12 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
         if((i/2) % 2 == 0)
                 p->xpos *= -1;    
         }
+
+        scale = 0.7;
     }
-    p->xspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
-    p->yspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
-    p->zspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * 0.4;
+    p->xspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale;
+    p->yspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale;
+    p->zspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale;
 
     p->r = r;
     p->g = g;
@@ -651,7 +654,9 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
 
 
 void GLWidget::setDefaultMode(){
-    defMode = 0;
+    if(defMode < 0)
+      defMode = 0;
+         
 }
 
 void GLWidget::resetDefaultMode(){
