@@ -270,7 +270,7 @@ void GLWidget::EvolveParticles()
         if(defMode == 0){  // cross helix
         int k1 = 7;
         int k2 = 4;
-        defaultSystem->origX =(cos(k1*theta)) * 0.4;
+        defaultSystem->origX =(cos(k1*theta)) * 0.6;
         defaultSystem->origY = (k2*sin(theta)) * 0.2;
         defaultSystem->origZ = (k2 *cos(theta)) * 0.05;
         theta += 0.007;
