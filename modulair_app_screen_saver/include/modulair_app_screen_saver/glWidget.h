@@ -136,6 +136,8 @@ public:
     void destroyParticleSystemForUser(int id);
     void splashParticleSystem(int x, int y, int deviceID,bool left);
     void toggleMode();
+    void setDefaultMode();
+    void resetDefaultMode();
 
 protected:
     void keyPressEvent (QKeyEvent *e);
