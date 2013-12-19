@@ -133,12 +133,7 @@ PicFlyer::~PicFlyer() {
 
 void PicFlyer::config(QDir texture_dir, QDir tooltip_dir)
 {
-    //Configures & displays the application widget
-    this->resize(width_, height_);
-    this->move(0,0);
-    this->show();
-
-    root = new osg::Group;
+     root = new osg::Group;
 
     //Loads assets
     ROS_WARN_STREAM("<<< PicFlyer >>> Application Loading Textures.");
