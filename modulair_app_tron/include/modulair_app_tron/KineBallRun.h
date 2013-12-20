@@ -2,7 +2,7 @@
 #define tron_app_h 
 // MODULAIR INCLUDES
 //#include <modulair_core/modulair_core.h>
-#include <modulair_core/modulair_app_base_qt.h>
+#include <wallframe_core/wallframe_app_base_qt.h>
 #include <modulair_osg_tools/osg_object_base.h>
 #include <modulair_osg_tools/osg_planar_object.h>
 // QT //
@@ -159,7 +159,7 @@ namespace modulair{
     };
 
     // class KineBallRun : public AppBase, public osgViewer::CompositeViewer
-    class KineBallRun : public ModulairAppBaseQt, public osgViewer::CompositeViewer
+    class KineBallRun : public wallframe::WallframeAppBaseQt, public osgViewer::CompositeViewer
     {
         Q_OBJECT;
     public:

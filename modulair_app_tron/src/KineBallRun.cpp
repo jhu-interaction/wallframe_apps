@@ -58,11 +58,10 @@ int maptimer = 0;
 namespace modulair{
 // ASK build config 
 // ASK pause resume updateApp
-KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size) : ModulairAppBaseQt(app_name, nh, event_deque_size)
+KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size){
 
 // KineBallRun::KineBallRun( QWidget *par, QWidget *appManager, 
                                         // QString appID, bool useKin) : AppBase(par, appID)
-{
     // this->myParent = par;
     // this->myID = appID;
     // this->myManager = appManager;
@@ -881,14 +880,14 @@ void KineBallRun::initiateUsers()
     double close = 10000000;
     // Get closest
 
-    AppUserMap::iterator it;
+    wallframe::AppUserMap::iterator it;
 
     // UserPtrMap::iterator it;
     Eigen::Vector3d u1pos,u2pos;
     int closest=-1;
     Eigen::Vector3d torclosest;
     for(it = users_.begin();it!=users_.end();it++){
-        AppUser user = it->second;
+        wallframe::AppUser user = it->second;
         // AppUser* user = it->second;
 
         // ASK
@@ -928,7 +927,7 @@ void KineBallRun::initiateUsers()
         for(it = users_.begin();it!=users_.end();it++){
             // AppUser* user = it->second;
  
-            AppUser user = it->second;
+          wallframe::AppUser user = it->second;
             // AppUser* user = it->second;
  
             // ASK
@@ -1563,7 +1562,7 @@ void KineBallRun::keyboardUpdateEnv()
             if(dismissable)
             {
                 if(p1id != -1){
-                    AppUser user1 = users_[p1id];
+                  wallframe::AppUser user1 = users_[p1id];
                     Eigen::Vector3d right = user1.jtPosByName("right_hand");
                     Eigen::Vector3d left = user1.jtPosByName("left_hand");
                     Eigen::Vector3d v = left-right;
@@ -1576,7 +1575,7 @@ void KineBallRun::keyboardUpdateEnv()
                 }
 
                 if(p2id != -1){
-                    AppUser user2 = users_[p2id];
+                    wallframe::AppUser user2 = users_[p2id];
                     Eigen::Vector3d right = user2.jtPosByName("right_hand");
                     Eigen::Vector3d left = user2.jtPosByName("left_hand");
                     Eigen::Vector3d v = left-right;

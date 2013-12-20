@@ -34,7 +34,7 @@
 // IOSTRAM //
 #include <iostream>
 
-#include <modulair_core/modulair_app_base_qt.h>
+#include <wallframe_core/wallframe_app_base_qt.h>
 #include <modulair_osg_tools/osg_object_base.h>
 #include <modulair_osg_tools/osg_planar_object.h>
 // INTERNAL INCLUDES //
