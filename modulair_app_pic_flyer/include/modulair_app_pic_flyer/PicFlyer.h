@@ -223,8 +223,6 @@ namespace PicFlyerApp {
     //Why is all of this public?
     public:
 
-        osg::Vec3d WKSP_OFFSET_PIC;
-
         // Icons //
         ObjectMap _actableIcons;
         ObjectMap _dockableIcons;
@@ -326,7 +324,6 @@ namespace PicFlyerApp {
         static const double GUI_MAX_Y =  0.5;
         static const double GUI_MIN_Y = -0.5;
         
-        osg::Vec2d WKSP_OFF;
         envState_t _envState;
         bool paused;
         osg::Vec3d _torsoLast;

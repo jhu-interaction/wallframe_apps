@@ -36,10 +36,6 @@ PicFlyer::PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size) :
     _imageLast = osg::Vec3(0,0,0);
     _handLast = osg::Vec2d(0,0);
 
-    this->WKSP_OFF = osg::Vec2d(0, -200);
-
-    WKSP_OFFSET_PIC = osg::Vec3d(0, wsoff, 0);
-
     numActiveUsers = 0;
     paused = false;
     _snap = true;
@@ -356,23 +352,12 @@ void PicFlyer::config(QDir texture_dir, QDir tooltip_dir)
 }
 
 osg::Vec2d PicFlyer::mapEnvPos(Eigen::Vector3d in){
-    osg::Vec2d h;
-    osg::Vec3d p,pt;
-    pt[0] = in[0];
-    pt[1] = in[1];
-    pt[2] = in[2];
+  osg::Vec2d result;
+    
+  result[0] = in[0];
+  result[1] = in[1];
 
-    p = pt - WKSP_OFFSET_PIC;
-
-    double dyp = fabs(GUI_MAX_Y_PIC)+fabs(GUI_MIN_Y_PIC);
-    double dy = fabs(WKSP_MAX_Y_PIC)+fabs(WKSP_MIN_Y_PIC);
-    double dxp = fabs(GUI_MAX_X_PIC)+fabs(GUI_MIN_X_PIC);
-    double dx = fabs(WKSP_MAX_X_PIC)+fabs(WKSP_MIN_X_PIC);
-
-    h[0] = p[0]*(dxp/dx);
-    h[1] = p[1]*(dyp/dy);
-
-    return h;
+  return result;
 }
 
 /**
@@ -1284,27 +1269,9 @@ void PicFlyer::set_z_position(OSGObjectBase *p, int z) {
 
 void PicFlyer::updateCursor(PlanarObject *cursor, Eigen::Vector3d kinect_hand_position, osg::Group* group)
 {
-
-    // Move cursor towards new hand position
-
     osg::Vec2d screen_hand_pos = mapEnvPos(kinect_hand_position);
-    osg::Vec2d old_screen_cursor_pos;
+    osg::Vec2d screen_cursor_pos = screen_hand_pos;
 
-    if (cursor->isVisible()) {
-        old_screen_cursor_pos =  cursor->getPos2D();
-    } else {
-      old_screen_cursor_pos = osg::Vec2d(0, 0);
-    }
-
-    osg::Vec2d offset;
-    offset = screen_hand_pos - old_screen_cursor_pos;
-    offset /= 15;
-
-    osg::Vec2d screen_cursor_pos(0, 0);
-    screen_cursor_pos += (offset);
-    screen_cursor_pos += (old_screen_cursor_pos);
-
-    // TODO Should there be a setPos@dAbs taking a osg::Vec2?
     cursor->setPos2DAbs(osg::Vec3(screen_cursor_pos[0], screen_cursor_pos[1], 0));
     cursor->setVisible();
 
