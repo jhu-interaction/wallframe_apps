@@ -39,7 +39,7 @@
 
 #include <modulair_app_screen_saver/screen_saver_app.h>
 #include <modulair_app_screen_saver/glWidget.h>
-#include <modulair_app_screen_saver/mouse/manymouse.h>
+#include <mouse/manymouse.h>
 #include <modulair_osg_tools/vector_conversions.h>
 
 #include <GL/glut.h>
@@ -80,6 +80,8 @@ ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque
     for(int j=0;j<NUM_USERS;j++){
         prev_activeUsers[j]=false;
     }
+
+    widget->resize(width_,height_ * height_perc_);
 }
 
 bool ExampleApp::build(){
@@ -157,8 +159,8 @@ void ExampleApp::updateUsers(){
         int ytotal = abs(ymin) + abs(ymax);
 
         /*******TODO get these from the ROS params B******/
-        int width = 5760;
-        int height = 3197;
+        int width = width_;
+        int height = height_ * height_perc_;        
 
         int xcenter = width/2;
         int ycenter = height/2;
@@ -212,6 +214,7 @@ void ExampleApp::mouseClicked(int x,int y,int id,bool pressed){
     }
 
 }
+
 ExampleApp::~ExampleApp(){
 
     delete widget;
@@ -235,12 +238,13 @@ int main(int argc, char* argv[]){
     application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
     ExampleApp example_app("Screen Saver",node_,20);
 
-    ROS_WARN_STREAM("Screen Saver: created ...");
+    ROS_WARN_STREAM("Screen Saver: created ...");    
 
-    // int width = 1200;
-    // int height = 800;
-    int width = 5760;
-    int height = 3197;
+    // int width = example_app.getWidgetWidth();
+    // int height = example_app.getWidgetHeight() * example_app.getWidgetHeightPerc();
+
+    // int width = 5760;
+    // int height = 3197;
 
     /********Ideally we should be getting this from the ros params ***********/ 
     /***********************I do not know why I cannot read these ***********/
@@ -262,7 +266,7 @@ int main(int argc, char* argv[]){
     // example_app.widget->resize(atoi(width.c_str()),atoi(height.c_str()));
     /*****************************************************************************/
 
-    example_app.widget->resize(width,height);
+    // example_app.widget->resize(width,height);
     
     example_app.build();
     example_app.widget->show();

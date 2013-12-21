@@ -2,7 +2,7 @@
 #define _Mouseprovider_h
 
 #include <iostream>
-#include <modulair_app_screen_saver/mouse/manymouse.h>
+#include <mouse/manymouse.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_timer.h>
 #include <QThread>

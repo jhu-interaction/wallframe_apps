@@ -6,7 +6,7 @@
  *  This file written by Ryan C. Gordon.
  */
 
-#include <mouse/manymouse.h>
+#include "manymouse.h"
 
 /* Try to use this on everything but Windows and Mac OS by default... */
 #ifndef SUPPORT_XINPUT2

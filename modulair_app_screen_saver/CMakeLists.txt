@@ -11,6 +11,8 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 rosbuild_init()
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 ### Bring in the Qt Libraries ###
 find_package(Qt4 REQUIRED)
 if(QT_FOUND)
@@ -31,17 +33,8 @@ find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 #include_directories(library ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
-
-### OpenSceneGraph and OSGQt ###
-find_package(OpenSceneGraph COMPONENTS osgWidget osgViewer osgUtil 
-  osgGA osgDB osgText osgQt osgParticle osgFX osgManipulator)
-if(OpenSceneGraph_FOUND)
-  include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
-endif(OpenSceneGraph_FOUND)
-
-if(NOT OSGQT_FOUND)
-  message(error "Could not find osgQt")
-endif()
+# ### Mouse Library ####
+add_subdirectory(mouse)
 
 
 ## Set Paths
@@ -54,39 +47,23 @@ set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
 
 ## Set your source files here (anything thats has a Q_OBJECT in it)
 set(CPP_EXAMPLE_APP_SOURCES
-src/mouse/manymouse.c
-    src/mouse/linux_evdev.c
-    src/mouse/macosx_hidmanager.c
-    src/mouse/manymouse.c
-    src/mouse/macosx_hidutilities.c
-    src/mouse/macosx_hidmanager.c
-    src/mouse/macosx_hidutilities.c
-    src/mouse/windows_wminput.c
-    src/mouse/x11_xinput2.c
-src/MouseProvider.cpp
-src/screen_saver_app.cpp
-src/glWidget.cpp
-)
+  src/MouseProvider.cpp
+  src/screen_saver_app.cpp
+  src/glWidget.cpp
+  )
 
-
-
-
-set(CPP_EXAMPLE_APP_HEADERS
-        include/${PROJECT_NAME}/mouse/manymouse.h
+set(CPP_EXAMPLE_APP_HEADERS  
         include/${PROJECT_NAME}/screen_saver_app.h
         include/${PROJECT_NAME}/glWidget.h
         include/${PROJECT_NAME}/MouseProvider.h
-         )
-
-
-							
+         )				
 
 ## Create MOC wrappers for headers
 qt4_wrap_cpp(CPP_EXAMPLE_APP_HEADERS_MOC ${CPP_EXAMPLE_APP_HEADERS})
 
 rosbuild_add_library(${PROJECT_NAME}	${CPP_EXAMPLE_APP_HEADERS}
-										${CPP_EXAMPLE_APP_SOURCES}
-										${CPP_EXAMPLE_APP_HEADERS_MOC})
+                                        ${CPP_EXAMPLE_APP_SOURCES}
+                                        ${CPP_EXAMPLE_APP_HEADERS_MOC})
 
 #uncomment if you have defined messages
 #rosbuild_genmsg()
@@ -98,10 +75,12 @@ rosbuild_add_library(${PROJECT_NAME}	${CPP_EXAMPLE_APP_HEADERS}
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
-rosbuild_add_executable(screen_saver_app 	${CPP_EXAMPLE_APP_SOURCES})
-target_link_libraries(screen_saver_app 		${PROJECT_NAME}
-											${QT_LIBRARIES}
-											${GLUT_LIBRARY} 
-											${OPENGL_LIBRARY}
-                      ${OPENSCENEGRAPH_LIBRARIES}
-										  osgQt)
+rosbuild_add_executable(screen_saver_app 	${CPP_EXAMPLE_APP_SOURCES} )
+target_link_libraries(screen_saver_app
+                    ${PROJECT_NAME}
+                    ${QT_LIBRARIES}
+                    ${GLUT_LIBRARY}
+                    ${OPENGL_LIBRARY}
+                    ${OPENSCENEGRAPH_LIBRARIES}
+                    MOUSE
+                    )

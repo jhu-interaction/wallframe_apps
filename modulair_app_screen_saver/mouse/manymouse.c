@@ -8,7 +8,7 @@
  */
 
 #include <stdlib.h>
-#include <mouse/manymouse.h>
+#include "manymouse.h"
 
 static const char *manymouse_copyright =
     "ManyMouse " MANYMOUSE_VERSION " copyright (c) 2005-2012 Ryan C. Gordon.";

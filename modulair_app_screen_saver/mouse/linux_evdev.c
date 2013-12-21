@@ -6,7 +6,7 @@
  *  This file written by Ryan C. Gordon.
  */
 
-#include <mouse/manymouse.h>
+#include "manymouse.h"
 
 #ifdef __linux__
 

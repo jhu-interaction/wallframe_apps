@@ -10,7 +10,7 @@
  *  This file written by Ryan C. Gordon.
  */
 
-#include <mouse/manymouse.h>
+#include "manymouse.h"
 
 #if ( (defined(__MACH__)) && (defined(__APPLE__)) )
 #  include <AvailabilityMacros.h>  // we need the 10.5 SDK headers here...
