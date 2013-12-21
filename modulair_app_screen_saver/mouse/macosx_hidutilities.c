@@ -8,7 +8,7 @@
  *  This file written by Ryan C. Gordon.
  */
 
-#include <mouse/manymouse.h>
+#include "manymouse.h"
 
 /*
  * These APIs exist on x86_64 in 10.6, but don't actually work (they'll work

@@ -73,7 +73,6 @@ namespace modulair{
     int joint_increments[12];
     bool prev_activeUsers[12];
 
-
     protected:
     QTimer _timer;
     QTimer _dataTimer;

@@ -6,7 +6,7 @@
  *  This file written by Ryan C. Gordon.
  */
 
-#include <mouse/manymouse.h>
+#include "manymouse.h"
 
 #if (defined(_WIN32) || defined(_WINDOWS) || defined(__CYGWIN__))
 
