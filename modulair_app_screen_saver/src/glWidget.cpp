@@ -59,29 +59,35 @@ using namespace std;
  float cB = 0.0005f;
 float theta = 0;
 
-GLWidget::GLWidget(QWidget* parent)
-    : QGLWidget(QGLFormat(QGL::SampleBuffers),parent)
+GLWidget::GLWidget(QWidget* parent) : QGLWidget(parent)
 {
+
+    ROS_WARN_STREAM("GLWIDGET");
 
     // defaultMode = true;
     defMode = 0;
 
     PARTICLE* p = NULL;
+    ROS_WARN_STREAM("GLWIDGET - 1");
 
     // initialize the default particle system
     float r = 0.4f, g = 0.15f , b = 0.5f;
     float dr = 0.0025, dg = 0.0005 , db = 0.0015;
     float decay = 0.004;
 
+    ROS_WARN_STREAM("GLWIDGET - 2");
+
     defaultSystem = new ParticleSystem(-1,r,g,b,dr,dg,db,decay,0,0,0);
+    ROS_WARN_STREAM("GLWIDGET - 3");
 
     // create the default particles system
     for(int i = 0; i <=DEF_MAX_PARTICLES;i++){
         p= new PARTICLE();
 
+//        cout<<" "<<i;
         defaultSystem->particles.push_back(p);
         initializeSingleUserParticle(i,p,r,g,b,0,0,0);
-
+//        cout<<"done"<<i<<"\n";
     }
 
 }
@@ -623,9 +629,11 @@ void GLWidget::initializeSingleUserParticle(int i,PARTICLE* p,float r, float g, 
 
         scale = 0.7;
     }
-    p->xspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale;
-    p->yspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale;
-    p->zspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale;
+
+    p->xspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale ;
+    p->yspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale ;
+    p->zspeed = ((((float)((rand() % 100) + 1)) / 4000.0f) - 0.005f) * scale ;
+
 
     p->r = r;
     p->g = g;

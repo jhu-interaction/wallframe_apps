@@ -5,7 +5,7 @@
       <Option title="modulair_app_screen_saver" />
       <Option makefile_is_custom="1" />
       <Option compiler="gcc" />
-      <Option virtualFolders="CMake Files\;" />
+      <Option virtualFolders="CMake Files\;CMake Files\mouse\;" />
       <Build>
       <Target title="all">
          <Option working_dir="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
@@ -79,6 +79,7 @@
             <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_osg_tools/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/srv_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_extra/msg_gen/cpp/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf_conversions/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/msg_gen/cpp/include" />
@@ -113,6 +114,7 @@
             <Add directory="/opt/ros/electric/ros/tools/rospack" />
             <Add directory="/opt/ros/electric/ros/tools/rospack/include" />
             <Add directory="/usr/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
             <Add directory="/usr/include/qt4" />
             <Add directory="/usr/include/qt4/QtOpenGL" />
             <Add directory="/usr/include/qt4/QtWebKit" />
@@ -138,6 +140,7 @@
             <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_osg_tools/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/srv_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_extra/msg_gen/cpp/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf_conversions/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/msg_gen/cpp/include" />
@@ -172,6 +175,7 @@
             <Add directory="/opt/ros/electric/ros/tools/rospack" />
             <Add directory="/opt/ros/electric/ros/tools/rospack/include" />
             <Add directory="/usr/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
             <Add directory="/usr/include/qt4" />
             <Add directory="/usr/include/qt4/QtOpenGL" />
             <Add directory="/usr/include/qt4/QtWebKit" />
@@ -257,6 +261,7 @@
             <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_osg_tools/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/srv_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_extra/msg_gen/cpp/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf_conversions/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/msg_gen/cpp/include" />
@@ -291,6 +296,7 @@
             <Add directory="/opt/ros/electric/ros/tools/rospack" />
             <Add directory="/opt/ros/electric/ros/tools/rospack/include" />
             <Add directory="/usr/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
             <Add directory="/usr/include/qt4" />
             <Add directory="/usr/include/qt4/QtOpenGL" />
             <Add directory="/usr/include/qt4/QtWebKit" />
@@ -316,6 +322,7 @@
             <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_osg_tools/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/include" />
             <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/srv_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_extra/msg_gen/cpp/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf_conversions/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/include" />
             <Add directory="/opt/ros/electric/stacks/geometry/tf/msg_gen/cpp/include" />
@@ -350,6 +357,7 @@
             <Add directory="/opt/ros/electric/ros/tools/rospack" />
             <Add directory="/opt/ros/electric/ros/tools/rospack/include" />
             <Add directory="/usr/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
             <Add directory="/usr/include/qt4" />
             <Add directory="/usr/include/qt4/QtOpenGL" />
             <Add directory="/usr/include/qt4/QtWebKit" />
@@ -413,6 +421,128 @@
             <DistClean command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/Makefile&quot; clean" />
          </MakeCommands>
       </Target>
+      <Target title="MOUSE">
+         <Option output="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/lib/libMOUSE.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_msgs/msg_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_osg_tools/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/srv_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_extra/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf_conversions/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/sensor_msgs/include" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/sensor_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/sensor_msgs/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/bullet/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/angles/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/message_filters/include" />
+            <Add directory="/opt/ros/electric/stacks/orocos_kinematics_dynamics/orocos_kdl/install_dir/include" />
+            <Add directory="/usr/include/eigen3" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/geometry_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/rosbag/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/topic_tools/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/topic_tools/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/rostest/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp_serialization/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp_traits/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/xmlrpcpp/src" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/rosconsole/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/rostime/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/cpp_common/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/messages/std_msgs/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/ros/core/roslib/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/ros/core/roslib/include" />
+            <Add directory="/opt/ros/electric/ros/tools/rospack" />
+            <Add directory="/opt/ros/electric/ros/tools/rospack/include" />
+            <Add directory="/usr/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
+            <Add directory="/usr/include/qt4" />
+            <Add directory="/usr/include/qt4/QtOpenGL" />
+            <Add directory="/usr/include/qt4/QtWebKit" />
+            <Add directory="/usr/include/qt4/QtGui" />
+            <Add directory="/usr/include/qt4/QtCore" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; MOUSE" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="MOUSE/fast">
+         <Option output="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/lib/libMOUSE.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_msgs/msg_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_osg_tools/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_core/srv_gen/cpp/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe/wallframe_extra/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf_conversions/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/tf/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/sensor_msgs/include" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/sensor_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/sensor_msgs/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/bullet/include" />
+            <Add directory="/opt/ros/electric/stacks/geometry/angles/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/message_filters/include" />
+            <Add directory="/opt/ros/electric/stacks/orocos_kinematics_dynamics/orocos_kdl/install_dir/include" />
+            <Add directory="/usr/include/eigen3" />
+            <Add directory="/opt/ros/electric/stacks/common_msgs/geometry_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/rosbag/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/topic_tools/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/topic_tools/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/rostest/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/srv_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp_serialization/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp_traits/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/xmlrpcpp/src" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/tools/rosconsole/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/rostime/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/utilities/cpp_common/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/messages/std_msgs/include" />
+            <Add directory="/opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/ros/core/roslib/msg_gen/cpp/include" />
+            <Add directory="/opt/ros/electric/ros/core/roslib/include" />
+            <Add directory="/opt/ros/electric/ros/tools/rospack" />
+            <Add directory="/opt/ros/electric/ros/tools/rospack/include" />
+            <Add directory="/usr/include" />
+            <Add directory="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver" />
+            <Add directory="/usr/include/qt4" />
+            <Add directory="/usr/include/qt4/QtOpenGL" />
+            <Add directory="/usr/include/qt4/QtWebKit" />
+            <Add directory="/usr/include/qt4/QtGui" />
+            <Add directory="/usr/include/qt4/QtCore" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; MOUSE/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/Makefile&quot; clean" />
+         </MakeCommands>
+      </Target>
       </Build>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/moc_MouseProvider.cxx">
       </Unit>
@@ -420,23 +550,21 @@
       </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/moc_screen_saver_app.cxx">
       </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/mouse/moc_manymouse.cxx">
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/linux_evdev.c">
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/macosx_hidmanager.c">
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/macosx_hidutilities.c">
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/manymouse.c">
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/windows_wminput.c">
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/x11_xinput2.c">
       </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/MouseProvider.cpp">
       </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/glWidget.cpp">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/mouse/linux_evdev.c">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/mouse/macosx_hidmanager.c">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/mouse/macosx_hidutilities.c">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/mouse/manymouse.c">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/mouse/windows_wminput.c">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/mouse/x11_xinput2.c">
       </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/src/screen_saver_app.cpp">
       </Unit>
@@ -450,14 +578,15 @@
       </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/moc_screen_saver_app.cxx.rule">
       </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/mouse/manymouse.h">
-      </Unit>
-      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/mouse/moc_manymouse.cxx.rule">
-      </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/include/modulair_app_screen_saver/screen_saver_app.h">
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/manymouse.h">
       </Unit>
       <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/CMakeLists.txt">
           <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/kel/jhu-interaction/wallframe_apps/modulair_app_screen_saver/mouse/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\mouse\" />
       </Unit>
    </Project>
 </CodeBlocks_project_file>

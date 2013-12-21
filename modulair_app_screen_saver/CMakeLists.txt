@@ -35,6 +35,17 @@ find_package(OpenGL REQUIRED)
 
 # ### Mouse Library ####
 add_subdirectory(mouse)
+### OpenSceneGraph and OSGQt ###
+find_package(OpenSceneGraph COMPONENTS osgWidget osgViewer osgUtil 
+  osgGA osgDB osgText osgQt osgParticle osgFX osgManipulator)
+if(OpenSceneGraph_FOUND)
+  include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
+endif(OpenSceneGraph_FOUND)
+
+if(NOT OSGQT_FOUND)
+  message(error "Could not find osgQt")
+endif()
+
 
 
 ## Set Paths

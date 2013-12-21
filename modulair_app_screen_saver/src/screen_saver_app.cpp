@@ -63,8 +63,8 @@ ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque
 
 //    //       connect( &_dataTimer, SIGNAL(timeout()), widget, SLOT(update()));
     _timer.start( 50 );
-    _dataTimer.start(60);
-    _dataTimer1.start(50);
+    _dataTimer.start(30);
+    _dataTimer1.start(30);
 
 
     // This is commented , uncomment to test the app with mouse 
@@ -233,9 +233,14 @@ int main(int argc, char* argv[]){
 
     ROS_WARN_STREAM("Screen Saver: Starting Up...");
     ros::NodeHandle node_;
+
     QApplication application(argc,argv);
     // This line will quit the application once any window is closed.
+
+    cout<<"2\n";
     application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
+    cout<<"3";
+
     ExampleApp example_app("Screen Saver",node_,20);
 
     ROS_WARN_STREAM("Screen Saver: created ...");    
