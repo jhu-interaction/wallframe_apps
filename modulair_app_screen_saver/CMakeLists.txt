@@ -33,8 +33,7 @@ find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 #include_directories(library ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
-# ### Mouse Library ####
-add_subdirectory(mouse)
+
 ### OpenSceneGraph and OSGQt ###
 find_package(OpenSceneGraph COMPONENTS osgWidget osgViewer osgUtil 
   osgGA osgDB osgText osgQt osgParticle osgFX osgManipulator)
@@ -45,8 +44,6 @@ endif(OpenSceneGraph_FOUND)
 if(NOT OSGQT_FOUND)
   message(error "Could not find osgQt")
 endif()
-
-
 
 ## Set Paths
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -93,5 +90,4 @@ target_link_libraries(screen_saver_app
                     ${GLUT_LIBRARY}
                     ${OPENGL_LIBRARY}
                     ${OPENSCENEGRAPH_LIBRARIES}
-                    MOUSE
                     )
