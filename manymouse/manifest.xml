@@ -1,0 +1,17 @@
+<package>
+  <description brief="manymouse">
+     Crossplatform mouse library.
+  </description>
+  <author>Ryan C. Gordon</author>
+  <license>zlib</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://icculus.org/manymouse/></url>
+  <depend package="roscpp"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lmanymouse"/>  
+  </export>
+
+</package>
+
+
