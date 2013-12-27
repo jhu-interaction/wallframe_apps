@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libMOUSE.a  CMakeFiles/MOUSE.dir/linux_evdev.o CMakeFiles/MOUSE.dir/macosx_hidmanager.o CMakeFiles/MOUSE.dir/macosx_hidutilities.o CMakeFiles/MOUSE.dir/manymouse.o CMakeFiles/MOUSE.dir/windows_wminput.o CMakeFiles/MOUSE.dir/x11_xinput2.o
+/usr/bin/ranlib ../lib/libMOUSE.a
