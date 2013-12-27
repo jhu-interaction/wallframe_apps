@@ -13,6 +13,8 @@
   <depend package="wallframe_core"/>
   <depend package="wallframe_msgs"/>
   <depend package="modulair_osg_tools"/>
+  <depend package="manymouse"/>
+
   <export>
     <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -modulair_app_screen_saver"/>  
   </export>
