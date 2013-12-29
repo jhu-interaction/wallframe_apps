@@ -60,16 +60,6 @@ namespace modulair{
 // ASK pause resume updateApp
 KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size){
 
-// KineBallRun::KineBallRun( QWidget *par, QWidget *appManager, 
-                                        // QString appID, bool useKin) : AppBase(par, appID)
-    // this->myParent = par;
-    // this->myID = appID;
-    // this->myManager = appManager;
-
-    // readConfigFile();
-
-    // this->suspended = false;
-    // this->useKinect = useKin;
     runtime = 0;
     paused = false;
     runs = 0;
@@ -110,77 +100,34 @@ KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deq
 
 void KineBallRun::increment(){ runtime++;}
 
-// ASK
-
-
-bool KineBallRun::build(){
-    readConfigFile(); 
-    config();           
-    return true;
-}
-
-bool KineBallRun::readConfigFile()
+bool KineBallRun::build()
 {   
+    std::string asset_path;
 
-    //////////////////////////////////////////
-    // VK TODO from the new framework ASK
+    if (!node_.getParam("/modulair/apps/modulair_app_tron/paths/assets", asset_path)) {
+      ROS_ERROR("Modulair%s: No asset path found on parameter server (namespace: %s)",
+        name_.c_str(), node_.getNamespace().c_str());
+      return false;
+    } else{
+      asset_path_ = QString(asset_path.c_str());
 
-    std::string asset_path = "/home/kel/modulair_applications/modulair_core_applications/modulair_app_tron/assets";
-    this->asset_path_ = QString(asset_path.c_str());
+      if (!QDir(asset_path_).exists()) {
+	ROS_ERROR("Modulair%s: Asset path does not exists: %s",
+		name_.c_str(), asset_path.c_str());
+	return false;
+      }
+    }
+
     ROS_WARN_STREAM("TronApp:  Asset path is [" << this->asset_path_.toStdString() << "]");
-    // if (!node_.getParam("/modulair/apps/modulair_app_tron/paths/assets", asset_path)){
-    //   ROS_ERROR("Modulair%s: No asset path found on parameter server (namespace: %s)",
-    //     name_.c_str(), node_.getNamespace().c_str());
-    //   return false;
-    // }else{
-    //   this->asset_path_ = QString(asset_path.c_str());
-    //   ROS_WARN_STREAM("TronApp:  Asset path is [" << this->asset_path_.toStdString() << "]");
-    // }
 
-    /////////////////////////////////
-
-    // QString app_path(GetEnv("LAIR_APP_PATH").c_str());
-    // ROS_WARN_STREAM("<<< KineBallRun >>>  App Path: "<<app_path.toStdString());
-  
-    // QString configFileName = app_path + QString("/") + this->myID + QString("/") + this->myID + QString(".txt");
-    // QFile config_file(configFileName);
-    // if (!config_file.open(QIODevice::ReadOnly)){
-    //     ROS_WARN_STREAM("<<< KineBallRun Config File >>> Error with config file");
-    //     ROS_WARN_STREAM("<<< KineBallRun Config File >>> File is "<<configFileName.toStdString());
-    //     exit(0);
-    // }
-
-    // ROS_WARN_STREAM("<<< KineBallRun >>> Parsing Config File");
-    //   QTextStream stream ( &config_file );
-    //   while( !stream.atEnd() ) {
-    //     QString line;
-    //     QStringList lineElem;
-    //     line = stream.readLine();
-    //     lineElem = line.split(" ");
-
-    //     if(lineElem[0] == "ASSET_DIR"){
-    //       this->assetDir = app_path + QString("/") + this->myID + QString("/") + lineElem[1];
-    //       ROS_INFO_STREAM(this->assetDir.toStdString());
-    //     }
-    //     if(lineElem[0] == "TAG_ASSET_DIR"){
-    //       this->tagAssetDir = app_path + QString("/") + this->myID + QString("/") + lineElem[1];
-    //       ROS_INFO_STREAM(this->tagAssetDir.toStdString());
-    //     }
-    //     if(lineElem[0] == "IMAGE_DIR"){
-    //       this->imageDir = app_path + QString("/") + this->myID + QString("/") + lineElem[1];
-    //       ROS_INFO_STREAM(this->imageDir.toStdString());
-    //     }
-    //     if(lineElem[0] == "TEX_IMG_DIR"){
-    //       this->texImageDir = app_path + QString("/") + this->myID + QString("/") + lineElem[1];
-    //       ROS_INFO_STREAM(this->texImageDir.toStdString());
-    //     }
-
-    // }
     this->assetDir = this->asset_path_;
     this->tagAssetDir = this->asset_path_ + QString("/tags");
     this->imageDir = this->asset_path_ + QString("/images");
     this->texImageDir = this->asset_path_ + QString("/tex");
     this->mapDir = this->asset_path_ + QString("/maps");
+
+    config();
+    return true;
 }
 
 osg::Vec3 KineBallRun::loadMap(double sz, double ballH, int mapnum)
@@ -195,12 +142,6 @@ osg::Vec3 KineBallRun::loadMap(double sz, double ballH, int mapnum)
     osg::Vec3 rval;
     int maxcol = 0,maxrow = 0;
 
-    // QString app_path(GetEnv("LAIR_APP_PATH").c_str());
-
-    // ROS_WARN_STREAM("<<< KineBallRun >>> Parsing Map File");
-    // ROS_WARN_STREAM("<<< KineBallRun >>> Map ID: "<<mapnum);
-
-    // QString configFileName = app_path + QString("/") + this->myID + QString("/maps/")+ this->myID + QString("Map") + QString("%1").arg(mapnum)+QString(".txt");
     
     QString configFileName = this->mapDir + QString("/")+ QString("Map") +  QString("%1").arg(mapnum)  +QString(".txt");
     QFile pre_config_file(configFileName);
