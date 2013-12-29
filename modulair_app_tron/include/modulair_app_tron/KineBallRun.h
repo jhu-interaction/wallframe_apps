@@ -198,7 +198,6 @@ namespace modulair{
         // Methods
         void updateCursors();
         void initiateUsers();
-        bool readConfigFile();
         void setImageDirectories();
         void setTexImageDirs();
         void LoadTextures();
