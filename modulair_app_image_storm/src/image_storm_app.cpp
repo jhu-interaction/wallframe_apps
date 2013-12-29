@@ -126,6 +126,13 @@ namespace modulair{
       return false;
     }else{
       asset_path_ = QString(asset_path.c_str());
+
+      if (!QDir(asset_path_).exists()) {
+	ROS_ERROR("Modulair%s: Asset path does not exists: %s",
+		name_.c_str(), asset_path.c_str());
+	return false;
+      }
+
       ROS_WARN_STREAM("ImageStormApp:  Asset path is [" << this->asset_path_.toStdString() << "]");
     }
 
