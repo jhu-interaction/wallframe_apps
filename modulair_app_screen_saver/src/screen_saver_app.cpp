@@ -51,7 +51,7 @@
 using namespace std;
 namespace modulair{
 
-ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size){
+ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size,app_id){
 
     cout<<"creating the screen saver app\n";
     widget = new GLWidget(this);
@@ -117,7 +117,7 @@ bool ExampleApp::build(){
 
 bool ExampleApp::start(){return true;}
 
-bool ExampleApp::stop(){return true;}
+//bool ExampleApp::stop(){return true;}
 
 bool ExampleApp::pause(){return true;}
 
@@ -241,7 +241,9 @@ int main(int argc, char* argv[]){
     application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
     cout<<"3";
 
-    ExampleApp example_app("Screen Saver",node_,20);
+    // The app_id should be same as the name in the menu.cfg
+    // TODO we should have a menu.cfg parser for C++ for now these are hardcoded
+    ExampleApp example_app("Screen Saver",node_,20,"screensaver");
 
     ROS_WARN_STREAM("Screen Saver: created ...");    
 

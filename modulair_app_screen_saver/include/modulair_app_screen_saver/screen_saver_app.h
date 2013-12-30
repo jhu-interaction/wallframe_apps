@@ -49,17 +49,17 @@
 
 namespace modulair{
 
-    class ExampleApp : wallframe::WallframeAppBaseQt{
+    class ExampleApp : public wallframe::WallframeAppBaseQt{
 
         Q_OBJECT
   public:
-    ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size);
+    ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size, std::string app_id);
     ~ExampleApp();
-    bool build();
-    bool start();
-    bool stop();
-    bool pause();
-    bool resume();
+    virtual bool build();
+    virtual bool start();
+    //virtual bool stop();
+    virtual bool pause();
+    virtual bool resume();
 //    void updateUsers();
     GLWidget* widget;
     MouseProvider* mouseThread;
