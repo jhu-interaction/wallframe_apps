@@ -27,7 +27,7 @@ void* WallBallWidget::physicsThreadMethod(void* data) {
     return 0;
 }
 
-WallBallWidget::WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size) : wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size)
+WallBallWidget::WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) : wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size,app_id)
 {
     std::cout << "WallBallWidget constructor!!!\n" << std::flush;
 
@@ -140,9 +140,8 @@ bool WallBallWidget::build(){
   }
 
 bool WallBallWidget::start(){return true;}
-bool WallBallWidget::stop(){return true;}
-bool WallBallWidget::pause(){return true;}
-bool WallBallWidget::resume(){return true;}
+//bool WallBallWidget::pause(){return true;}
+//bool WallBallWidget::resume(){return true;}
 
 /* Currently, app does not use ROS asset directory. Should add this method and modify it to do so.
 void WallBallWidget::LoadTextures(){
@@ -196,7 +195,7 @@ int main(int argc, char* argv[]){
   QApplication application(argc,argv);
   // This line will quit the application once any window is closed.
   application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
-  WallBallWidget wallBallWidget("WallBallApp",node_handle,20);
+  WallBallWidget wallBallWidget("WallBallApp",node_handle,20,"wallball");
   wallBallWidget.build();
   ROS_WARN_STREAM("WallBallApp: App Running");
   application.exec();

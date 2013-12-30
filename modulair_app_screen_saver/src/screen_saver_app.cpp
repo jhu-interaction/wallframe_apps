@@ -119,9 +119,25 @@ bool ExampleApp::start(){return true;}
 
 //bool ExampleApp::stop(){return true;}
 
-bool ExampleApp::pause(){return true;}
+bool ExampleApp::pause(){
+  this->hide();
+  _timer.stop();
+  _dataTimer.stop();
+  _dataTimer1.stop();
 
-bool ExampleApp::resume(){return true;}
+  return true;
+}
+
+bool ExampleApp::resume(){
+ 
+  this->show();
+  _timer.start( 50 );
+  _dataTimer.start(30);
+  _dataTimer1.start(30);
+
+  return true;
+
+}
 
 
 void ExampleApp::updateUsers(){

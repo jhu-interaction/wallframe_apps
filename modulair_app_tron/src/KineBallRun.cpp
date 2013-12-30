@@ -58,7 +58,7 @@ int maptimer = 0;
 namespace modulair{
 // ASK build config 
 // ASK pause resume updateApp
-KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size){
+KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size,app_id){
 
     runtime = 0;
     paused = false;
@@ -1825,28 +1825,25 @@ _dataTimer.start(10);
 ROS_WARN_STREAM("<<< KineBallRun >>> Timers Started");
 return true;
 }
-bool KineBallRun::stop(){
-/*Stop stuff here before destructor is called, if needed*/
-return true;
-}
 
+// TODO pause and resume functions are not used for apps currently because we have only one app running at the moment
 bool KineBallRun::pause(){
-// this->hide();
-// _timer.stop();
-// _dataTimer.stop();
-// paused = true;
-// ROS_WARN_STREAM("<< KineBallRun >> Pausing");
+ this->hide();
+ _timer.stop();
+ _dataTimer.stop();
+ paused = true;
+ ROS_WARN_STREAM("<< KineBallRun >> Pausing");
 return true;
 }
 
 bool KineBallRun::resume(){
-// _timer.start(10);
-// _dataTimer.start(10);
-// this->show();
+ _timer.start(10);
+ _dataTimer.start(10);
+ this->show();
 // this->glWidget->show();
-// this->update();
-// paused = false;
-// ROS_WARN_STREAM("<< KineBallRun >> Resumed");
+ this->update();
+ paused = false;
+ ROS_WARN_STREAM("<< KineBallRun >> Resumed");
 return true;
 }
 
@@ -2197,7 +2194,7 @@ int main(int argc, char* argv[]){
   QApplication application(argc,argv);
   // This line will quit the application once any window is closed.
   application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
-  modulair::KineBallRun tron_app("TronApp",node_handle,20);
+  modulair::KineBallRun tron_app("TronApp",node_handle,20,"tron");
   tron_app.build();
   tron_app.start();
   ROS_WARN_STREAM("ImageStormApp: App Running");

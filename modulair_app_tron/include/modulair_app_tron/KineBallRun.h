@@ -163,13 +163,13 @@ namespace modulair{
     {
         Q_OBJECT;
     public:
-        KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size);
+        KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id);
         // KineBallRun( QWidget *par = NULL, QWidget *appManager = NULL, QString appID = "null", bool useKin = false);
         ~KineBallRun(){};
             /* ModulairAppBase Virtual Methods */
         bool build();
         bool start();
-    bool stop();
+//    bool stop();
     bool pause();
     bool resume();
         

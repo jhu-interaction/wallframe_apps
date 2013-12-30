@@ -30,7 +30,7 @@ double wsoff = 480;
 osg::ref_ptr<osg::Image> PicFlyer::defaultCoverImage;
 osg::ref_ptr<osg::Image> PicFlyer::defaultPageImage;
 
-PicFlyer::PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size) : wallframe::WallframeAppBaseQt(app_name.toStdString(), nh, event_deque_size)
+PicFlyer::PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) : wallframe::WallframeAppBaseQt(app_name.toStdString(), nh, event_deque_size,app_id)
 { 
     //Initializing variables to defaults
     _imageLast = osg::Vec3(0,0,0);
@@ -1452,10 +1452,6 @@ bool PicFlyer::start(){
   return true;
 }
 
-bool PicFlyer::stop(){
-  /*Stop stuff here before destructor is called, if needed*/
-  return true;
-}
 
 /**
  * Pauses the application. Required by AppBase.
@@ -2541,7 +2537,7 @@ int main(int argc, char* argv[]) {
 
   ros::NodeHandle node_handle;
 
-  PicFlyer pic_flyer_app("PicFlyerApp", node_handle, 20);
+  PicFlyer pic_flyer_app("PicFlyerApp", node_handle, 20,"pic_flyer");
 
   pic_flyer_app.build();
   pic_flyer_app.start();

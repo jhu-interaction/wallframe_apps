@@ -48,12 +48,11 @@ namespace modulair{
     Q_OBJECT
   public:
     /* Constructors and Destructors*/
-    ImageStormApp(QString app_name, ros::NodeHandle nh, int event_deque_size);
+    ImageStormApp(QString app_name, ros::NodeHandle nh, int event_deque_size, std::string app_id);
     ~ImageStormApp();
     /* ModulairAppBase Virtual Methods */
 		bool build();
 		bool start();
-    bool stop();
     bool pause();
     bool resume();
     /*ImageStormApp specific members*/

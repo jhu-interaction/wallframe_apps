@@ -26,11 +26,9 @@ TexturedPlane::TexturedPlane(   osg::Vec3 ul, osg::Vec3 ur,
   // Init Geometry
   initGeometry(_texIndex);
 
-      ROS_INFO_STREAM("<<< textured plane >>> 30.");
 
   this->box.set(ul_,lr_);
 
-      ROS_INFO_STREAM("<<< textured plane >>> 427.");
 
 }
 
@@ -86,7 +84,7 @@ bool TexturedPlane::triggerBehavior(QString type)
 void TexturedPlane::initGeometry(int index)
 {
   this->addChild(generatePlane(index));
-  ROS_INFO_STREAM("<<< textured plane >>> 89.");
+
 
 }
 
@@ -94,7 +92,6 @@ void TexturedPlane::initGeometry(int index)
 osg::Node* TexturedPlane::generatePlane(int index)
 {
 
-  ROS_INFO_STREAM("<<< textured plane >>> 97.");
 
   osg::Vec3 top_left = ul_;
   osg::Vec3 bottom_left = ll_;
@@ -131,7 +128,6 @@ osg::Node* TexturedPlane::generatePlane(int index)
 
   geom->addPrimitiveSet(new osg::DrawArrays(GL_QUADS, 0, 4));
 
-  ROS_INFO_STREAM("<<< textured plane >>> 134.");
   
   // disable display list so our modified tex coordinates show up
   geom->setUseDisplayList(false);
@@ -139,7 +135,6 @@ osg::Node* TexturedPlane::generatePlane(int index)
   osg::TexMat* texmat = new osg::TexMat;
   texmat->setScaleByTextureRectangleSize(true);
 
-  ROS_INFO_STREAM("<<< textured plane >>> 142.");
 
   // setup state
   osg::StateSet* state = geom->getOrCreateStateSet();
@@ -152,7 +147,6 @@ osg::Node* TexturedPlane::generatePlane(int index)
   // turn on blending
   state->setMode(GL_BLEND, osg::StateAttribute::ON);
 
-  ROS_INFO_STREAM("<<< textured plane >>> 155.");
 
   state->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
 
@@ -160,7 +154,6 @@ osg::Node* TexturedPlane::generatePlane(int index)
   osg::Geode* geode = new osg::Geode;
   geode->addDrawable(geom);
 
-  ROS_INFO_STREAM("<<< textured plane >>> 157.");
 
   return geode;
 }

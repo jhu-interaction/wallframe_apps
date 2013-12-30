@@ -41,7 +41,7 @@
 
 namespace modulair{
 
-  ImageStormApp::ImageStormApp(QString app_name, ros::NodeHandle nh, int event_deque_size) : wallframe::WallframeAppBaseQt(app_name.toStdString(), nh, event_deque_size){
+  ImageStormApp::ImageStormApp(QString app_name, ros::NodeHandle nh, int event_deque_size, std::string app_id) : wallframe::WallframeAppBaseQt(app_name.toStdString(), nh, event_deque_size,app_id){
 
     // readConfigFile();
     // setImageDirectories();
@@ -222,10 +222,6 @@ namespace modulair{
     return true;
   }
 
-  bool ImageStormApp::stop(){
-    /*Stop stuff here before destructor is called, if needed*/
-    return true;
-  }
 
   bool ImageStormApp::pause(){
     this->hide();
@@ -481,7 +477,7 @@ int main(int argc, char* argv[]){
   QApplication application(argc,argv);
   // This line will quit the application once any window is closed.
   application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
-  modulair::ImageStormApp image_storm_app("ImageStormApp",node_handle,20);
+  modulair::ImageStormApp image_storm_app("ImageStormApp",node_handle,20,"image_storm");
   image_storm_app.build();
   image_storm_app.start();
   ROS_WARN_STREAM("ImageStormApp: App Running");

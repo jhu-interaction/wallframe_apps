@@ -16,16 +16,16 @@ class WallBallWidget : public wallframe::WallframeAppBaseQt
     //Q_OBJECT;
 
 public:
-    WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size);
+    WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id);
     ~WallBallWidget();
 
     void doResize(int w, int h);
     
     bool build();
     bool start();
-    bool stop();
-    bool pause();
-    bool resume();
+    //bool stop();
+    //bool pause();
+    //bool resume();
 
 protected:
 

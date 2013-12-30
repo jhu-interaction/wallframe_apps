@@ -110,7 +110,7 @@ namespace PicFlyerApp {
     {
         Q_OBJECT;
     public: 
-        PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size);
+        PicFlyer(QString app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id);
         ~PicFlyer();
         
         osgQt::GLWidget* addViewWidget( osg::Camera* camera, 
@@ -339,7 +339,6 @@ namespace PicFlyerApp {
 
 	bool build();
 	bool start();
-	bool stop();
 	bool pause();
 	bool resume();
 
