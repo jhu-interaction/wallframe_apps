@@ -2544,6 +2544,7 @@ int main(int argc, char* argv[]) {
 
   ROS_WARN_STREAM("PicFlyerApp: App Running");
 
+  pic_flyer_app.ready();
   application.exec();
 
   pic_flyer_app.stop();

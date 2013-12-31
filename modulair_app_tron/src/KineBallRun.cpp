@@ -2197,6 +2197,7 @@ int main(int argc, char* argv[]){
   modulair::KineBallRun tron_app("TronApp",node_handle,20,"tron");
   tron_app.build();
   tron_app.start();
+  tron_app.ready();
   ROS_WARN_STREAM("ImageStormApp: App Running");
   application.exec();
   // Running

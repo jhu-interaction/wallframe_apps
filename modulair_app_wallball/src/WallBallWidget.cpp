@@ -198,6 +198,8 @@ int main(int argc, char* argv[]){
   WallBallWidget wallBallWidget("WallBallApp",node_handle,20,"wallball");
   wallBallWidget.build();
   ROS_WARN_STREAM("WallBallApp: App Running");
+
+  wallBallWidget.ready();
   application.exec();
   // Running
   wallBallWidget.stop();

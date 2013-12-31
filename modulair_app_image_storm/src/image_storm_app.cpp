@@ -211,6 +211,9 @@ namespace modulair{
     ROS_WARN_STREAM("<<< ImageStorm >>> Created Widget");
     // DONE //
     ROS_WARN_STREAM("<<< ImageStorm >>> Configured Successfully");
+  
+  
+  
     return true;
   }
 
@@ -480,7 +483,10 @@ int main(int argc, char* argv[]){
   modulair::ImageStormApp image_storm_app("ImageStormApp",node_handle,20,"image_storm");
   image_storm_app.build();
   image_storm_app.start();
+
   ROS_WARN_STREAM("ImageStormApp: App Running");
+
+  image_storm_app.ready();
   application.exec();
   // Running
   image_storm_app.stop();

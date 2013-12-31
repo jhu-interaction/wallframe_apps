@@ -117,7 +117,6 @@ bool ExampleApp::build(){
 
 bool ExampleApp::start(){return true;}
 
-//bool ExampleApp::stop(){return true;}
 
 bool ExampleApp::pause(){
   this->hide();
@@ -263,34 +262,6 @@ int main(int argc, char* argv[]){
 
     ROS_WARN_STREAM("Screen Saver: created ...");    
 
-    // int width = example_app.getWidgetWidth();
-    // int height = example_app.getWidgetHeight() * example_app.getWidgetHeightPerc();
-
-    // int width = 5760;
-    // int height = 3197;
-
-    /********Ideally we should be getting this from the ros params ***********/ 
-    /***********************I do not know why I cannot read these ***********/
-   //  std::string name_;
-   // std::string height;
-   // if (!node_.getParam("/wallframe/core/params/height", height)){
-   //     ROS_ERROR("Modulair%s: No height found on parameter  server (namespace: %s)",
-   //               name_.c_str(), node_.getNamespace().c_str());
-   //     return false;
-   // }
-
-   // std::string width;
-   // if (!node_.getParam("/wallframe/core/params/width", width)){
-   //     ROS_ERROR("Modulair%s: No width on parameter server (namespace: %s)",
-   //               name_.c_str(), node_.getNamespace().c_str());
-   //     return false;
-   // }
- 
-    // example_app.widget->resize(atoi(width.c_str()),atoi(height.c_str()));
-    /*****************************************************************************/
-
-    // example_app.widget->resize(width,height);
-    
     example_app.build();
     example_app.widget->show();
 
