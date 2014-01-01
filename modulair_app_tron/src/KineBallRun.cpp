@@ -95,7 +95,8 @@ KineBallRun::KineBallRun(std::string app_name, ros::NodeHandle nh, int event_deq
     QObject::connect(&p2_reset_timer, SIGNAL(timeout()),this,SLOT(resetP2Pos()));
 
     setThreadingModel(SingleThreaded);
-            }
+    useKinect = true;
+}
 
 
 void KineBallRun::increment(){ runtime++;}
