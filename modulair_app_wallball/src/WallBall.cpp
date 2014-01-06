@@ -27,6 +27,10 @@ void WallBall::start(QWidget* qWidget) {
 	WallBall::start();
 }
 
+bool WallBall::isRunning() {
+  return WallBall::s_Running;
+}
+
 // TODO What is going on here?
 void WallBall::setupLevel() {
     //	WallBall::s_GOBalls[0] = new GOBall(Qt::Key_W,Qt::Key_A,Qt::Key_D);

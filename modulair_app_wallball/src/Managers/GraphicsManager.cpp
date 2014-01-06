@@ -32,60 +32,56 @@ IGUIFont *font = 0;
 dimension2d<u32> size;
 
 GraphicsManager::GraphicsManager() {
+  if (GraphicsManager::s_QWidget == 0) {
+    // TODO In this case the QWidget has not been initialized and we should fail.
 
-    m_Scores = new int[6];
-    for (int i = 0; i < 6; i++)
-        m_Scores[i] = 1;
-
-	if (GraphicsManager::s_QWidget == 0) {
-        if (m_Device == 0)
-            m_Device = createDevice( video::EDT_OPENGL, dimension2d<u32>(5738,3218), 16,
-                                     false, false, false);
+    if (m_Device == 0) {
+      m_Device = createDevice( video::EDT_OPENGL, dimension2d<u32>(5738,3218), 16,
+			       false, false, false);
     }
-	else {
-		SIrrlichtCreationParameters parameters;
-		parameters.WindowId = (void*)s_QWidget->winId();
+  } else {
+    SIrrlichtCreationParameters parameters;
+    
+    parameters.WindowId = (void*)s_QWidget->winId();
         
-        parameters.AntiAlias = 0;
-        parameters.Bits = 32;
-        parameters.DeviceType = EIDT_X11;
-        parameters.Doublebuffer = true;
-        parameters.DriverType = EDT_OPENGL;
-        parameters.EventReceiver = 0;
-        parameters.Fullscreen = false;
-        parameters.HighPrecisionFPU = false;
-        parameters.IgnoreInput = false;
-        parameters.Stencilbuffer = true;
-        parameters.Stereobuffer = false;
-        parameters.Vsync = false;
-        parameters.WindowSize.Width = s_QWidget->width();
-        parameters.WindowSize.Height = s_QWidget->height();
-        parameters.WithAlphaChannel = false;
-        parameters.ZBufferBits = 16;
-
-		m_Device = createDeviceEx( parameters );
-        m_Device->setResizable(true);
-		std::cout << "CREATED device with QtWidget: " << m_Device << "\n" << std::flush;
-	}
+    parameters.AntiAlias = 0;
+    parameters.Bits = 32;
+    parameters.DeviceType = EIDT_X11;
+    parameters.Doublebuffer = true;
+    parameters.DriverType = EDT_OPENGL;
+    parameters.EventReceiver = 0;
+    parameters.Fullscreen = false;
+    parameters.HighPrecisionFPU = false;
+    parameters.IgnoreInput = false;
+    parameters.Stencilbuffer = true;
+    parameters.Stereobuffer = false;
+    parameters.Vsync = false;
+    parameters.WindowSize.Width = s_QWidget->width();
+    parameters.WindowSize.Height = s_QWidget->height();
+    parameters.WithAlphaChannel = false;
+    parameters.ZBufferBits = 16;
+    
+    m_Device = createDeviceEx( parameters );
+    m_Device->setResizable(true);
+  
+    std::cout << "CREATED device with QtWidget: " << m_Device << "\n" << std::flush;
+  }
 			
-	m_VideoDriver = m_Device->getVideoDriver();
-	m_SceneManager = m_Device->getSceneManager();
-	m_GUIEnvironment = m_Device->getGUIEnvironment();
+  m_VideoDriver = m_Device->getVideoDriver();
+  m_SceneManager = m_Device->getSceneManager();
+  m_GUIEnvironment = m_Device->getGUIEnvironment();
 
-    //font = m_GUIEnvironment->getBuiltInFont();
-    //size = font->getDimension(L"Test Text");
-	
-	// CAMERA
-	vector3df cameraPosition(0,22.5f,35);
-	vector3df lookAtPosition(0,22.5f,0);
-	ICameraSceneNode* cameraNode = m_SceneManager->addCameraSceneNode(0, cameraPosition, lookAtPosition);
-	cameraNode->setUpVector(vector3df(0.0f, 1.0f, 0.0f));
-	
-	// LIGHTS
-	m_SceneManager->setAmbientLight(SColorf(0.5,0.5,0.5,1));
-	m_SceneManager->addLightSceneNode( 0, core::vector3df(60,20,100), video::SColorf(0.0f,0.0f,0.0f), 50.0f, 1 );
-	//m_SceneManager->addLightSceneNode( 0, core::vector3df(-60,20,100), video::SColorf(0.0f,0.0f,5.0f), 50.0f, 1 );
-	//m_SceneManager->addLightSceneNode( 0, core::vector3df(-50,30,40), video::SColorf(0.0f,0.0f,0.0f), 75.0f, 1 );
+  // CAMERA
+  vector3df cameraPosition(0,22.5f,35);
+  vector3df lookAtPosition(0,22.5f,0);
+  ICameraSceneNode* cameraNode = m_SceneManager->addCameraSceneNode(0, cameraPosition, lookAtPosition);
+  cameraNode->setUpVector(vector3df(0.0f, 1.0f, 0.0f));
+  
+  // LIGHTS
+  m_SceneManager->setAmbientLight(SColorf(0.5,0.5,0.5,1));
+  m_SceneManager->addLightSceneNode( 0, core::vector3df(60,20,100), video::SColorf(0.0f,0.0f,0.0f), 50.0f, 1 );
+  //m_SceneManager->addLightSceneNode( 0, core::vector3df(-60,20,100), video::SColorf(0.0f,0.0f,5.0f), 50.0f, 1 );
+  //m_SceneManager->addLightSceneNode( 0, core::vector3df(-50,30,40), video::SColorf(0.0f,0.0f,0.0f), 75.0f, 1 );
 }
 
 GraphicsManager::~GraphicsManager() {

@@ -20,7 +20,7 @@ bool WallBallWidget::s_RunPhysics = false;
 
 pthread_t s_PhysicsThread;
 void* WallBallWidget::physicsThreadMethod(void* data) {
-    cout << "physicsThreadMethod()\n" << flush;
+
     while (s_RunPhysics) {
     	WallBall::tickPhysics();
     }
@@ -29,8 +29,6 @@ void* WallBallWidget::physicsThreadMethod(void* data) {
 
 WallBallWidget::WallBallWidget(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) : wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size,app_id)
 {
-    std::cout << "WallBallWidget constructor!!!\n" << std::flush;
-
     // INIT ASSET PATH
     if (!node_.getParam("/modulair/apps/wallball_app/paths/assets", WallBall::s_AssetPath)){
       ROS_ERROR("Modulair App WallBall: No asset path found on parameter server (namespace: %s)", node_.getNamespace().c_str());
@@ -39,25 +37,15 @@ WallBallWidget::WallBallWidget(std::string app_name, ros::NodeHandle nh, int eve
         ROS_WARN_STREAM("ImageStormApp:  Asset path is [" << WallBall::s_AssetPath << "]");
     }
 
-    std::cout << "WallBall asset path: " << WallBall::s_AssetPath << "\n" << std::flush;
-
     // SET UP Qt
     setAttribute(Qt::WA_PaintOnScreen, true);
     setAttribute(Qt::WA_OpaquePaintEvent, true);
     setFocusPolicy(Qt::StrongFocus);
     setAutoFillBackground(false);
     
-    // START WALLBALL
-    WallBall::start(this);
-    
     QTimer* timer = new QTimer(this);
     connect( timer, SIGNAL( timeout() ), this, SLOT( update() ) );
     timer->start(1000.0 / 60.0);
-    
-    s_RunPhysics = true;
-    pthread_create(&s_PhysicsThread, NULL, &(WallBallWidget::physicsThreadMethod), NULL);
-    
-    setFocus();
 }
 
 WallBallWidget::~WallBallWidget()
@@ -173,6 +161,15 @@ void WallBallWidget::resizeEvent(QResizeEvent* event) {
 }
 
 void WallBallWidget::paintEvent(QPaintEvent* event) {
+    // TODO: The initialization procedure is awful and needs to be redone.
+    
+    if (!WallBall::isRunning()) {
+      WallBall::start(this);
+    
+      s_RunPhysics = true;
+      pthread_create(&s_PhysicsThread, NULL, &(WallBallWidget::physicsThreadMethod), NULL);
+    }
+
     WallBall::tickGraphics();
     this->updateUsers();
 }

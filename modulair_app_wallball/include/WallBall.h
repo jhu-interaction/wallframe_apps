@@ -52,7 +52,9 @@ public:
 	static bool tick();
 	static bool tickPhysics();
 	static bool tickGraphics();
-	
+
+	static bool isRunning();
+
     static GOBall* newBall(int index);
     static bool removeBall(int index);
 	static GOBall* getBall(int index);
