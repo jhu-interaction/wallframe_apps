@@ -168,6 +168,7 @@ void WallBallWidget::paintEvent(QPaintEvent* event) {
     
       s_RunPhysics = true;
       pthread_create(&s_PhysicsThread, NULL, &(WallBallWidget::physicsThreadMethod), NULL);
+      ready();
     }
 
     WallBall::tickGraphics();
@@ -196,7 +197,6 @@ int main(int argc, char* argv[]){
   wallBallWidget.build();
   ROS_WARN_STREAM("WallBallApp: App Running");
 
-  wallBallWidget.ready();
   application.exec();
   // Running
   wallBallWidget.stop();
