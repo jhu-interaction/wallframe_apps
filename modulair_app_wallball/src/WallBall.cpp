@@ -126,8 +126,6 @@ GOBall* WallBall::newBall(int index) {
     GOBall* ball = new GOBall(index);
     WallBall::s_GOBallMap->insert(std::pair<int,GOBall*>(index,ball));
     
-    std::cout << "Made ball with ID: " << index << "\n" << std::flush;
-
     return ball;
 }
 
