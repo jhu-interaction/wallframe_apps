@@ -267,7 +267,7 @@ osg::Vec3 KineBallRun::loadMap(double sz, double ballH, int mapnum)
                                                     osg::Vec3(col*cell_sz,h+level_off,row*cell_sz));
                 map_wrapper_->addChild(b);
                 // wall_wrapper_->addChild(b);
-                cout<<line[i].toLatin1();
+                //cout<<line[i].toLatin1();
             }else if(line[i] == QChar('B')){
                 TexturedCube* b;
                 if(i<len/2)
@@ -284,24 +284,24 @@ osg::Vec3 KineBallRun::loadMap(double sz, double ballH, int mapnum)
                 wall_wrapper_->addChild(b);
                 colliders_.push_back(b);
 
-                cout<<line[i].toLatin1();
+                //cout<<line[i].toLatin1();
             }else if(line[i] == QChar('-')){
-                cout<<line[i].toLatin1();    
+	      //cout<<line[i].toLatin1();    
             }else if(line[i] == QChar('\\')){
-                cout<<line[i].toLatin1();    
+	      //cout<<line[i].toLatin1();    
             }else if(line[i] == QChar('x')){
                 
-                cout<<line[i].toLatin1();  
+	      //cout<<line[i].toLatin1();  
                 p1_start_pos = osg::Vec3(col*cell_sz,ballsize,row*cell_sz);
             }else if(line[i] == QChar('y')){
-                cout<<line[i].toLatin1();  
+	      //cout<<line[i].toLatin1();  
                 p2_start_pos = osg::Vec3(col*cell_sz,ballsize,row*cell_sz);
             }
             col++;
         }
         minimap.push_back(t_line);
-        cout<<minimap.size()<<endl;
-        cout<<endl;
+        //cout<<minimap.size()<<endl;
+        //cout<<endl;
         row++;
     }
     int max = max_cols;
@@ -311,19 +311,19 @@ osg::Vec3 KineBallRun::loadMap(double sz, double ballH, int mapnum)
                                 3,4,5,6,7,8,osg::Vec3(0,max*cell_sz/2,0));
     // skybox_wrapper_->addChild(skybox_);
 
-    cout<<endl;
-    cout<<minimap.size()<<endl;
-    cout<<minimap[0].size()<<endl;
-    cout<<"MINIMAP"<<endl;
+    //cout<<endl;
+    //cout<<minimap.size()<<endl;
+    //cout<<minimap[0].size()<<endl;
+    //cout<<"MINIMAP"<<endl;
     int N=minimap.size();
     int M=minimap[0].size();
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < M; j++)
         {
-            cout<<minimap[i][j];
+	  //cout<<minimap[i][j];
         }
-        cout<<endl;
+        //cout<<endl;
     }
     return rval;
 }
@@ -349,7 +349,7 @@ void KineBallRun::config()
     LoadTextureImages();                         
                                            
     // Cursors
-    ROS_INFO_STREAM("<<< KineBallRun >>> Adding Cursors.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> Adding Cursors.");
     cursor_wrapper_ = new OSGObjectBase();
 
     // Ball
@@ -371,21 +371,21 @@ void KineBallRun::config()
                                 osg::Vec3(hud_sz,0,hud_sz),osg::Vec3(-hud_sz,0,hud_sz),
                                 &_assetTextures,12);
 
-    ROS_INFO_STREAM("<<< KineBallRun >>> 431.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> 431.");
  
     p1winlose = new TexturedPlane( osg::Vec3(-hud_sz,0,-hud_sz),osg::Vec3(hud_sz,0,-hud_sz),
                                 osg::Vec3(-hud_sz,0,hud_sz),osg::Vec3(hud_sz,0,hud_sz),
                                 &_assetTextures,17);
-    ROS_INFO_STREAM("<<< KineBallRun >>> 436.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> 436.");
 
     p1winlose->setHidden();
     // p1arrow->setPosition(osg::Vec3(0,ballsize*2,0));
     ROS_INFO_STREAM("<<< KineBallRun >>> 440.");
 
     p1_hud_wrapper->addChild(p1arrow);
-    ROS_INFO_STREAM("<<< KineBallRun >>> 443.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> 443.");
     p1_hud_wrapper->addChild(p1winlose);
-    ROS_INFO_STREAM("<<< KineBallRun >>> 445.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> 445.");
 
     p2_hud_wrapper = new OSGObjectBase();
     p2arrow = new TexturedPlane( osg::Vec3(-hud_sz,0,hud_sz),osg::Vec3(hud_sz,0,hud_sz),
@@ -411,8 +411,8 @@ void KineBallRun::config()
     double vnorm = (c1s.length()*c1l.length());
 
     double p1hudang = acos(vang/vnorm);
-    printv(cam1_start);
-    printv(cam1_look_start);
+    //printv(cam1_start);
+    //printv(cam1_look_start);
 
     p1hud->rotateAbs(osg::Vec3(-((_pi/2)-p1hudang),0,0));
 
@@ -428,8 +428,8 @@ void KineBallRun::config()
     double vnorm2 = (c2s.length()*c2l.length());
 
     double p2hudang = acos(vang2/vnorm2);
-    printv(cam2_start);
-    printv(cam2_look_start);
+    //printv(cam2_start);
+    //printv(cam2_look_start);
 
     p2hud->rotateAbs(osg::Vec3(-((_pi/2)-p2hudang),0,0));
 
@@ -498,7 +498,7 @@ void KineBallRun::config()
     fog->setColor(osg::Vec4(.2,.2,.2,.5));
     ss->setAttributeAndModes(fog,osg::StateAttribute::ON);
     // ENVIRONMENT ////////////////////////////////////////////////////////////
-    ROS_INFO_STREAM("<<< KineBallRun >>> Setting Up Environment.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> Setting Up Environment.");
     _envWrapper = new OSGObjectBase();
     _envWrapper->addChild(cursor_wrapper_);
     _envWrapper->addChild(cube_wrapper_);
@@ -522,7 +522,7 @@ void KineBallRun::config()
 
     
     // CAMERA ATTACHED OBJECTS ////////////////////////////////////////////////
-    ROS_INFO_STREAM("<<< KineBallRun >>> Setting Up Camera Attached Objects.");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> Setting Up Camera Attached Objects.");
     _cameraAttachedObjects = new OSGObjectBase();
     root->addChild(_cameraAttachedObjects);
 
@@ -674,7 +674,7 @@ void KineBallRun::config()
     // connect(this,SIGNAL(destroyed()),myManager,SLOT(confirmDestroyed()));
     connect( &_mandatoryTimer, SIGNAL(timeout()), this, SLOT(dismissability()));
 
-    ROS_INFO_STREAM("<<< KineBallRun >>> Created Widget");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> Created Widget");
 
     // Start Players at initial positions
     player1_wrapper_->setPos3DRel(p1_start_pos);
@@ -689,9 +689,9 @@ void KineBallRun::config()
     // STARTUP ////////////////////////////////////////////////////////////////
     _timer.start( 50 );
     _dataTimer.start(60);
-    ROS_WARN_STREAM("<<< KineBallRun >>> Timers Started");
+    //ROS_WARN_STREAM("<<< KineBallRun >>> Timers Started");
     // suspended = false;
-    ROS_WARN_STREAM("<<< KineBallRun >>> Configured Successfully");
+    //ROS_WARN_STREAM("<<< KineBallRun >>> Configured Successfully");
 
     resetP1Pos();
     resetP2Pos();
@@ -745,7 +745,7 @@ void KineBallRun::updateP2Score(int s)
 
 void KineBallRun::resetPlayer1()
 {
-    ROS_INFO_STREAM("<<< KineBallRun >>> Player 1 Reset");
+  //ROS_INFO_STREAM("<<< KineBallRun >>> Player 1 Reset");
     
     EasyParticle* partsys = new EasyParticle(p1prev,this->assetPaths[10],osg::Vec3(255.0/255.0,191.0/255.0,89.0/255.0),P_EXPLODE);
     _partWrapper->addChild(partsys);
@@ -761,7 +761,7 @@ void KineBallRun::resetPlayer1()
 
 void KineBallRun::resetPlayer2()
 {
-    ROS_INFO_STREAM("<<< KineBallRun >>> Player 2 Reset");
+  //ROS_INFO_STREAM("<<< KineBallRun >>> Player 2 Reset");
     
     EasyParticle* partsys = new EasyParticle(p2prev,this->assetPaths[10],osg::Vec3(0,157.0/255.0,255.0/255.0),P_EXPLODE);
     _partWrapper->addChild(partsys);
@@ -1512,7 +1512,7 @@ void KineBallRun::keyboardUpdateEnv()
                     double dist = v.norm();
                     if(dist < 160){
                         hideHelp();
-                        ROS_INFO_STREAM("<<< KineBallRun >>> User hiding help...");   
+                        //ROS_INFO_STREAM("<<< KineBallRun >>> User hiding help...");   
                     }
                 }
 
@@ -1524,7 +1524,7 @@ void KineBallRun::keyboardUpdateEnv()
                     double dist = v.norm();
                     if(dist < 160){
                         hideHelp();
-                        ROS_INFO_STREAM("<<< KineBallRun >>> User hiding help...");   
+                        //ROS_INFO_STREAM("<<< KineBallRun >>> User hiding help...");   
                     }
                 }
             }
@@ -1620,7 +1620,7 @@ void KineBallRun::testCollisionP1()
             double distt = lightTrail_1[i]->getPlane().distance(player1_wrapper_->getPos3D());
             if(abs(distt)< ballsize+dz1){
 
-                ROS_INFO_STREAM("<<< KineBallRun >>> P1 Collided");
+	      //ROS_INFO_STREAM("<<< KineBallRun >>> P1 Collided");
                 
                 theta1 = 0;
                 lightTrail_1.clear();
@@ -1642,7 +1642,7 @@ void KineBallRun::testCollisionP1()
         if(sb.intersects(lb)){
             double distt = lightTrail_2[i]->getPlane().distance(player1_wrapper_->getPos3D());
             if(abs(distt)< ballsize+dz1){
-                ROS_INFO_STREAM("<<< KineBallRun >>> P1 Collided");
+	      //ROS_INFO_STREAM("<<< KineBallRun >>> P1 Collided");
                 
                 theta1 = 0;
                 lightTrail_1.clear();
@@ -1707,7 +1707,7 @@ void KineBallRun::testCollisionP2()
         if(sb.intersects(lb)){
             double distt = lightTrail_2[i]->getPlane().distance(player2_wrapper_->getPos3D());
             if(abs(distt)< ballsize+dz2){
-                ROS_INFO_STREAM("<<< KineBallRun >>> P2 Collided");
+	      //ROS_INFO_STREAM("<<< KineBallRun >>> P2 Collided");
                 theta2 = 0;
                 lightTrail_2.clear();
                 trail_wrapper_2->removeChildren(0,trail_wrapper_2->getNumChildren());
@@ -1823,7 +1823,7 @@ bool KineBallRun::start(){
 // Start up app
 _timer.start( 10 );
 _dataTimer.start(10);
-ROS_WARN_STREAM("<<< KineBallRun >>> Timers Started");
+//ROS_WARN_STREAM("<<< KineBallRun >>> Timers Started");
 return true;
 }
 
@@ -1833,7 +1833,7 @@ bool KineBallRun::pause(){
  _timer.stop();
  _dataTimer.stop();
  paused = true;
- ROS_WARN_STREAM("<< KineBallRun >> Pausing");
+ // ROS_WARN_STREAM("<< KineBallRun >> Pausing");
 return true;
 }
 
@@ -1844,7 +1844,7 @@ bool KineBallRun::resume(){
 // this->glWidget->show();
  this->update();
  paused = false;
- ROS_WARN_STREAM("<< KineBallRun >> Resumed");
+ //ROS_WARN_STREAM("<< KineBallRun >> Resumed");
 return true;
 }
 
@@ -2123,7 +2123,7 @@ void KineBallRunKeyboardHandler::setup(KineBallRun* appPt){this->appPtr = appPt;
 
 void KineBallRun::setImageDirectories()
 {
-    ROS_INFO_STREAM("<<< KineBallRun >>> Getting Asset Image Directories");
+  //ROS_INFO_STREAM("<<< KineBallRun >>> Getting Asset Image Directories");
     // Asset Textures //
     QDir asset_dir(this->assetDir);
     QStringList assetFiles = asset_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
@@ -2131,7 +2131,7 @@ void KineBallRun::setImageDirectories()
         this->assetPaths << asset_dir.absoluteFilePath(assetFiles[i]);
     }
 
-    ROS_INFO_STREAM("<<< KineBallRun >>> Getting Tag Image Directories");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> Getting Tag Image Directories");
     QDir tagAsset_dir(this->tagAssetDir);
     QStringList tagAssetFiles = tagAsset_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
     for (int i=0; i<tagAssetFiles.count(); i++){
@@ -2141,29 +2141,29 @@ void KineBallRun::setImageDirectories()
 
 void KineBallRun::LoadTextures()
 {
-    ROS_INFO_STREAM("<<< KineBallRun >>> Loading Asset Images... ");
+  //ROS_INFO_STREAM("<<< KineBallRun >>> Loading Asset Images... ");
     osg::Image* img;    
     for (int i = 0; i < this->assetPaths.size(); ++i){
         img = osgDB::readImageFile(this->assetPaths.at(i).toStdString());
-        ROS_INFO_STREAM("<<< KineBallRun >>> Loading Image: "<<this->assetPaths.at(i).toStdString());
+        //ROS_INFO_STREAM("<<< KineBallRun >>> Loading Image: "<<this->assetPaths.at(i).toStdString());
         osg::TextureRectangle* t = new osg::TextureRectangle(img); 
         this->_assetTextures.push_back(t);
     }
-    ROS_INFO_STREAM("<<< KineBallRun >>> "<<_tagAssetTextures.size()<<" images...");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> "<<_tagAssetTextures.size()<<" images...");
 
-    ROS_INFO_STREAM("<<< KineBallRun >>> Loading Tag Images... ");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> Loading Tag Images... ");
     for (int i = 0; i < this->tagAssetPaths.size(); ++i){
         img = osgDB::readImageFile(this->tagAssetPaths.at(i).toStdString());
-        ROS_INFO_STREAM("<<< KineBallRun >>> Loading Image: "<<this->tagAssetPaths.at(i).toStdString());
+        //ROS_INFO_STREAM("<<< KineBallRun >>> Loading Image: "<<this->tagAssetPaths.at(i).toStdString());
         osg::TextureRectangle* t = new osg::TextureRectangle(img); 
         this->_tagAssetTextures.push_back(t);
     }
-    ROS_INFO_STREAM("<<< KineBallRun >>> loaded "<<_tagAssetTextures.size()<<" tag images...");
+    //ROS_INFO_STREAM("<<< KineBallRun >>> loaded "<<_tagAssetTextures.size()<<" tag images...");
 }
 
 void KineBallRun::setTexImageDirs()
 {
-    ROS_INFO_STREAM("<<< KineBallRun >>> Getting Texture Directories");
+  //ROS_INFO_STREAM("<<< KineBallRun >>> Getting Texture Directories");
     QDir tex_img_dir(this->texImageDir);
     QStringList tex_img_rel_paths = tex_img_dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
     for (int i=0; i<tex_img_rel_paths.count(); i++){
@@ -2173,11 +2173,11 @@ void KineBallRun::setTexImageDirs()
 
 void KineBallRun::LoadTextureImages()
 {
-    ROS_INFO_STREAM("<<< KineBallRun >>> Loading Textures");
+  //ROS_INFO_STREAM("<<< KineBallRun >>> Loading Textures");
     osg::Image* img;    
     for (int i = 0; i < this->textureImagePaths.size(); ++i){
         img = osgDB::readImageFile(this->textureImagePaths.at(i).toStdString());
-        ROS_INFO_STREAM("<<< KineBallRun >>> Loading Texture: "<<this->textureImagePaths.at(i).toStdString()); 
+        //ROS_INFO_STREAM("<<< KineBallRun >>> Loading Texture: "<<this->textureImagePaths.at(i).toStdString()); 
         textureImages_.push_back(img);  
         this->_assetTextures.push_back(new osg::TextureRectangle(img));
     }
@@ -2203,6 +2203,6 @@ int main(int argc, char* argv[]){
   application.exec();
   // Running
   tron_app.stop();
-  ROS_WARN_STREAM("TronaPp: App Finished");
+  ROS_WARN_STREAM("TronApp: App Finished");
   return 0;
 }
