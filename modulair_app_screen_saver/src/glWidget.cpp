@@ -62,23 +62,23 @@ float theta = 0;
 GLWidget::GLWidget(QWidget* parent) : QGLWidget(parent)
 {
 
-    ROS_WARN_STREAM("GLWIDGET");
+    //ROS_WARN_STREAM("GLWIDGET");
 
     // defaultMode = true;
     defMode = 0;
 
     PARTICLE* p = NULL;
-    ROS_WARN_STREAM("GLWIDGET - 1");
+    //ROS_WARN_STREAM("GLWIDGET - 1");
 
     // initialize the default particle system
     float r = 0.4f, g = 0.15f , b = 0.5f;
     float dr = 0.0025, dg = 0.0005 , db = 0.0015;
     float decay = 0.004;
 
-    ROS_WARN_STREAM("GLWIDGET - 2");
+    //ROS_WARN_STREAM("GLWIDGET - 2");
 
     defaultSystem = new ParticleSystem(-1,r,g,b,dr,dg,db,decay,0,0,0);
-    ROS_WARN_STREAM("GLWIDGET - 3");
+    //ROS_WARN_STREAM("GLWIDGET - 3");
 
     // create the default particles system
     for(int i = 0; i <=DEF_MAX_PARTICLES;i++){
@@ -152,7 +152,7 @@ void GLWidget::resizeGL(int w, int h){
  	glLoadIdentity ();
  	glMatrixMode (GL_MODELVIEW);
 
-    cout<< "Width "<< w << "Height "<< h << endl;
+    //cout<< "Width "<< w << "Height "<< h << endl;
     screenWidth = w;
     screenHeight = h;
 }
@@ -485,7 +485,7 @@ void GLWidget::splashParticleSystem(int x, int y, int id,bool left){
 // creates both the left and the right particle system for a new user
 void GLWidget::createParticleSystemForUser(int id){
 
-    cout<<"Creating the particle system for the user"<< id<<endl;
+    //cout<<"Creating the particle system for the user"<< id<<endl;
     map<int,ParticleSystem*>::iterator it = ParticleSystems.find(id);
 
     // insert the Particle system for the user in the map
@@ -554,7 +554,7 @@ void GLWidget::createParticleSystemForUser(int id){
 
     }
 
-    cout<<"Left and right Particle system succesfully created\n";
+    //cout<<"Left and right Particle system succesfully created\n";
     return;
 
 }

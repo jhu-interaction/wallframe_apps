@@ -53,7 +53,7 @@ namespace modulair{
 
 ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) :wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size,app_id){
 
-    cout<<"creating the screen saver app\n";
+    //cout<<"creating the screen saver app\n";
     widget = new GLWidget(this);
 
 
@@ -155,7 +155,7 @@ void ExampleApp::updateUsers(){
 //        cout<<"Active user id"<<id;
         //   ROS_WARN_STREAM( activeUsers[id] <<"aftersettrue");
         if(prev_activeUsers[id]==false){
-            ROS_WARN_STREAM("New user found! associating particle set #"<<id);
+	  //ROS_WARN_STREAM("New user found! associating particle set #"<<id);
             widget->createParticleSystemForUser(id);
         }
         prev_activeUsers[id]=true;
@@ -207,7 +207,7 @@ void ExampleApp::updateUsers(){
         if((activeUsers[j]==false) && prev_activeUsers[j]){
             //   ROS_WARN_STREAM( activeUsers[j] <<"checkinguserj "<<j);
             prev_activeUsers[j]=false;
-            ROS_WARN_STREAM("User Left deleting the particle system for user #"<<j);
+            //ROS_WARN_STREAM("User Left deleting the particle system for user #"<<j);
             widget->destroyParticleSystemForUser(j);
 
             // TODO if the number of users in zero then go to the default mode
@@ -246,26 +246,24 @@ int main(int argc, char* argv[]){
     // ros::init must be called before instantiating any apps
     ros::init(argc,argv, "screen_saver");
 
-    ROS_WARN_STREAM("Screen Saver: Starting Up...");
     ros::NodeHandle node_;
 
     QApplication application(argc,argv);
     // This line will quit the application once any window is closed.
 
-    cout<<"2\n";
+    //cout<<"2\n";
     application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
-    cout<<"3";
+    //cout<<"3";
 
     // The app_id should be same as the name in the menu.cfg
     // TODO we should have a menu.cfg parser for C++ for now these are hardcoded
     ExampleApp example_app("Screen Saver",node_,20,"screensaver");
 
-    ROS_WARN_STREAM("Screen Saver: created ...");    
-
     example_app.build();
     example_app.widget->show();
 
     ROS_WARN_STREAM("Screen Saver: App Running");
+    example_app.ready();
     application.exec();
     // Running
     example_app.stop();
