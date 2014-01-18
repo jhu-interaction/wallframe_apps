@@ -10,7 +10,7 @@ MouseProvider::MouseProvider(QWidget *parent = NULL):QThread(0)
 {
     int screenWidth = 1200;
     int screenHeight = 800;
-    std::cout<<"Creating new mouse event\n";
+    //std::cout<<"Creating new mouse event\n";
     MouseUpdatePeriod = 30;
     availableMice = ManyMouse_Init();
 
@@ -34,7 +34,7 @@ MouseProvider::MouseProvider(QWidget *parent = NULL):QThread(0)
 
 void MouseProvider::run()
 {
-    std::cout<<"Running the mouse provider\n";
+  //std::cout<<"Running the mouse provider\n";
     //ROS_WARN_STREAM("<<< MouseProvider >>> Starting Up...");
     QTimer timer;
     QObject::connect(&timer, SIGNAL(timeout()),

@@ -526,7 +526,7 @@ void GLWidget::createParticleSystemForUser(int id){
         float r = 0.0f, g = 0.0f , b = 1.0f;
         float dr = 0.002, dg = 0.001 , db = 0.002;
         float decay = 0.01;
-        cout<<"Initializing the particles\n";
+        //cout<<"Initializing the particles\n";
 
         ParticleSystem* system = new ParticleSystem(id,r,g,b,dr,dg,db,decay,0,0,0);
 
