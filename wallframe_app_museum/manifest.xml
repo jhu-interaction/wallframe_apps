@@ -1,0 +1,25 @@
+<package>
+  <description brief="wallframe_app_museum">
+
+     wallframe_app_museum
+
+  </description>
+  <author>Preetham Chalasani</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/wallframe_app_museum</url>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="wallframe_core"/>
+  <depend package="wallframe_msgs"/>
+  <depend package="ogre"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -wallframe_app_museum"/>  
+  </export>
+
+
+
+</package>
+
+
