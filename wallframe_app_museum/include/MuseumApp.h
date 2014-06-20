@@ -22,9 +22,9 @@ This source file is part of the
 #include "Room.h"
 #include <boost/thread.hpp>
 
-#define WIDTH 2500
-#define HEIGHT 600
-#define DEPTH 2500
+#define WIDTH 9500
+#define HEIGHT 800
+#define DEPTH 9500
 
 class MuseumApp : public OgreWidget
 {    

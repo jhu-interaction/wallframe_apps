@@ -89,16 +89,12 @@ void Room::Draw(void)
     Wall->Node[5]->pitch(Ogre::Degree(90));
     Wall->Node[5]->setPosition(0.0, height/2.0, 0.0);
 
-    //    node1->attachObject(util->createPlane(roomName+"_Wall_front"        ,roomName+"_plane_1"  , "Ogre/Wall"     , width, height, true ));
     Wall->Node[0]->addChild(CreateWall("DoorFront", width, height));
     Wall->Node[1]->addChild(CreateWall("DoorBack", width, height));
     Wall->Node[2]->addChild(CreateWall("DoorLeft", depth, height));
     Wall->Node[3]->addChild(CreateWall("DoorRight", depth, height));
     Wall->Node[4]->attachObject(util->createPlane(roomName+"_Wall_bottom"       ,roomName+"_plane_4"  , "Ogre/Floor"    , width, depth, false));
-    Wall->Node[5]->attachObject(util->createPlane(roomName+"_Wall_top"          ,roomName+"_plane_5"  , "Ogre/Floor"    , width, depth, true ));
-    //    node4->attachObject(util->createPlane(roomName+"_Wall_back"         ,roomName+"_plane_4"  , "Ogre/Wall"     , width, height, false));
-    //    node5->attachObject(util->createPlane(roomName+"_Wall_left"         ,roomName+"_plane_5"  , "Ogre/Wall"     , depth, height, true ));
-    //    node6->attachObject(util->createPlane(roomName+"_Wall_right"        ,roomName+"_plane_6"  , "Ogre/Wall"     , depth, height, false));
+    Wall->Node[5]->attachObject(util->createPlane(roomName+"_Wall_top"          ,roomName+"_plane_5"  , "Ogre/Floor"    , width, depth, true ));    
 
     DrawPaintings();
 }
@@ -108,15 +104,15 @@ Ogre::SceneNode* Room::CreateWall(std::string randomName, double w, double h)
     Ogre::SceneNode *node1 = util->mSceneMgr->createSceneNode(roomName + randomName + "_node");
 
     Ogre::SceneNode *node2 = node1->createChildSceneNode(roomName + randomName + "_child_1");
-    node2->attachObject(util->createPlane(roomName + randomName + "_Wall_left"  ,roomName + randomName + "_plane_1"  , "Ogre/Wall"     , w/2-175, h, true ));
-    node2->setPosition(-w/4-87.5,0,0);
+    node2->attachObject(util->createPlane(roomName + randomName + "_Wall_left_Part"  ,roomName + randomName + "_plane_1"  , "Ogre/Wall"     , w/2-DOOR_WDITH/2, h, true ));
+    node2->setPosition(-w/4-DOOR_WDITH/4,0,0);
 
     Ogre::SceneNode *node3 = node1->createChildSceneNode(roomName + randomName + "_child2");
-    node3->attachObject(util->createPlane(roomName + randomName + "_Wall_right" ,roomName + randomName + "_plane_2"  , "Ogre/Wall"     , w/2-175, h, true ));
-    node3->setPosition(w/4+87.5,0,0);
+    node3->attachObject(util->createPlane(roomName + randomName + "_Wall_right_Part" ,roomName + randomName + "_plane_2"  , "Ogre/Wall"     , w/2-DOOR_WDITH/2, h, true ));
+    node3->setPosition(w/4+DOOR_WDITH/4,0,0);
 
     Ogre::SceneNode *node4 = node1->createChildSceneNode(roomName + randomName + "_child3");
-    node4->attachObject(util->createPlane(roomName + randomName + "_Wall_top"   ,roomName + randomName + "_plane_3"  , "Ogre/Wall"     , 350, 50, true ));
+    node4->attachObject(util->createPlane(roomName + randomName + "_Wall_top_Part"   ,roomName + randomName + "_plane_3"  , "Ogre/Wall"     , DOOR_WDITH, 50, true ));
     node4->setPosition(0,h/2-25,0);
 
     //    Ogre::SceneNode *node5 = node1->createChildSceneNode(roomName + randomName + "_child4");
@@ -129,12 +125,11 @@ Ogre::SceneNode* Room::CreateWall(std::string randomName, double w, double h)
 void Room::DrawPaintings(void)
 {
     double rW = width;
-    double border = 40.0;
-    double inBwSpace = 50.0;
-    double doorWidth = 350.0;
+    double border = 1000.0;
+    double inBwSpace = 400.0;
 
-    double whiteSpace = (rW - 4*border - doorWidth - inBwSpace*(numPaintings-1))/numPaintings;
-    double maxW = 2.5*whiteSpace/5;
+    double whiteSpace = (rW - 4*border - DOOR_WDITH - inBwSpace*(numPaintings-1))/numPaintings;
+    double maxW = 1.5*whiteSpace/5;
     double maxH = maxW;
 
     // Paintings on all four walls
@@ -145,15 +140,34 @@ void Room::DrawPaintings(void)
             std::stringstream ss;
             ss << "Image" << rand() << i;
             paint  = NULL;
-            paint = new WPainting(util->mSceneMgr, ss.str(), WPainting::objFiles[rand() % WPainting::objFiles.size()], maxW, maxH);
-            //            paint->CreateFrame();
             double loc;
 
-            if(i >= std::floor(numPaintings/2))
-                loc = -rW/2.0 + border + 2*inBwSpace + doorWidth + 3*maxW/4 + (whiteSpace + inBwSpace) * i;
+            if(numPaintings != 2)
+            {
+                if(i >= std::floor(numPaintings/2))
+                    loc = -rW/2.0 + border + 2*inBwSpace + DOOR_WDITH + 2*maxW + (whiteSpace + inBwSpace) * i;
+                else
+                    loc = -rW/2.0 + border + 1.5*maxW + (whiteSpace + inBwSpace) * i;
+            }
             else
-                loc = -rW/2.0 + border + 3*maxW/4 + (whiteSpace + inBwSpace) * i;
+            {
+                maxH = 3*height/4;
+                maxW = (rW/2 - DOOR_WDITH/2)/2;
+                maxW = 3*maxW/4;
+                if(maxW >= maxH)
+                    maxW = maxH;
+                else if(maxH > maxW)
+                    maxH = maxW;
 
+                if(i==0)
+                    loc = -rW/2.0 + (rW/2 - DOOR_WDITH/2)/2;
+                else
+                {
+                    loc =  rW/2.0 - (rW/2 - DOOR_WDITH/2)/2;
+                }
+            }
+
+            paint = new WPainting(util->mSceneMgr, ss.str(), WPainting::objFiles[rand() % WPainting::objFiles.size()], maxW, maxH);
             paint->SetPosition(loc, 0, 0);
             Wall->art[j].push_back(paint);
 

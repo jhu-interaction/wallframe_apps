@@ -16,7 +16,7 @@ Ogre::Entity* Utils::createPlane(Ogre::String entName,Ogre::String planeName, Og
     p.d = 0;
     Ogre::MeshManager::getSingleton().createPlane(planeName,
                                                   Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                  p,sx,sy,200,200,true,1,3,3,Ogre::Vector3::UNIT_Y);
+                                                  p,sx,sy,1,1,true,1,1,1,Ogre::Vector3::UNIT_Y);
 
     Ogre::Entity *ent = mSceneMgr->createEntity(entName, planeName);
     ent->setMaterialName(matName);

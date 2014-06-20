@@ -39,14 +39,17 @@
 #ifndef museum_app_h
 #define museum_app_h
 
+#include <ros/node_handle.h>
+
 #include <wallframe_core/wallframe_app_base_qt.h>
+
 #include <MuseumApp.h>
 
 //#include <modulair_osg_tools/vector_conversions.h>
 #include <iostream>
 #include <osg/Vec3>
 
-namespace modulair{
+namespace wallframe{
 
 class ExampleApp : public wallframe::WallframeAppBaseQt{
 
@@ -60,7 +63,22 @@ public:
     bool pause();
     bool resume();
 
+    void EventCallback(const wallframe_msgs::WallframeUserEventConstPtr &user_event);
+    void StateCallback(const wallframe_msgs::WallframeUserArrayConstPtr &user_packet);
+
     MuseumApp* widget;
+
+protected:
+
+
+private:
+    ros::Subscriber user_event_subscriber;
+    ros::Subscriber user_state_subscriber;
+
+    wallframe_msgs::WallframeUserEvent current_user_event;
+    wallframe_msgs::WallframeUserArray current_user_packet;
+
+    std::vector<wallframe_msgs::WallframeUser> user_data;
 
 };
 }

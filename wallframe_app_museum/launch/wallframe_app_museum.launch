@@ -1,5 +1,5 @@
 <launch>
   <node pkg="wallframe_app_museum" name="museum_app" type="museum_app" output="screen"/>
-  <param name="/wllframe/apps/museum_app/paths/assets" value="$(find wallframe_app_museum)/assets"/>
-  <param name="/wllframe/apps/museum_app/paths/assets" value="$(find wallframe_app_museum)/assets"/>
+  <param name="/wallframe/apps/museum_app/paths/assets" value="$(find wallframe_app_museum)/assets"/>
+  <param name="/wallframe/apps/museum_app/paths/assets" value="$(find wallframe_app_museum)/assets"/>
 </launch>

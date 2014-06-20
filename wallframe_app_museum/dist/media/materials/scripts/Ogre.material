@@ -1,26 +1,10 @@
-material Ogre/Frame
-{
-	technique
-	{
-		pass
-		{		
-			cull_hardware none
-   			cull_software none	
-			texture_unit
-			{
-				texture Zeus.jpg					
-			}
-		}
-	}
-}
-
 material Ogre/Skin
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.8 0.3 0.4
+			ambient 0.3 0.3 0.4
 			cull_hardware none
    			cull_software none
 			texture_unit
@@ -80,37 +64,6 @@ material Ogre/Wall
 				texture wall.jpg
 				tex_address_mode mirror				
 			}
-		}
-	}
-}
-
-material Ogre/Tusks
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.6 0.6 0.8
-			cull_hardware none
-   			cull_software none
-			texture_unit
-			{
-				texture tusk.jpg
-				scale 2 2
-			}
-		}
-	}
-}
-
-material Ogre/Eyes
-{
-	technique
-	{
-		pass
-		{
-			ambient 1 0.4 0.4
-			diffuse 1 0.7 0
-			emissive 0.3 0.1 0
 		}
 	}
 }

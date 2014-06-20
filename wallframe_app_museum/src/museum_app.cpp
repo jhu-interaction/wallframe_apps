@@ -38,10 +38,10 @@
 
 
 #include <museum_app.h>
-
+#include <QTimer>
 
 using namespace std;
-namespace modulair{
+namespace wallframe{
 
 ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque_size,std::string app_id) :
     wallframe::WallframeAppBaseQt(app_name, nh, event_deque_size,app_id)
@@ -49,6 +49,15 @@ ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque
     widget = new MuseumApp(this);
 
     widget->resize(width_,height_ * height_perc_);
+
+//    QTimer* timer = new QTimer(this);
+//    connect( timer, SIGNAL( timeout() ), this, SLOT( update() ) );
+//    timer->start(1000.0 / 60.0);
+
+   user_state_subscriber = node_.subscribe("/wallframe/users/state", 1000, &ExampleApp::StateCallback, this);
+   user_event_subscriber = node_.subscribe("/wallframe/users/events", 1000, &ExampleApp::EventCallback, this);
+
+
 }
 
 ExampleApp::~ExampleApp()
@@ -58,7 +67,7 @@ ExampleApp::~ExampleApp()
 
 bool ExampleApp::build(){
     std::string asset_path;
-    if (!node_.getParam("/modulair/apps/museum_app/paths/assets", asset_path)){
+    if (!node_.getParam("/wallframe/apps/museum_app/paths/assets", asset_path)){
         ROS_ERROR("Wallframe%s: No asset path found on parameter server (namespace: %s)",
                   name_.c_str(), node_.getNamespace().c_str());
         return false;
@@ -67,6 +76,19 @@ bool ExampleApp::build(){
 
     return true;
 }
+
+void ExampleApp::EventCallback(const wallframe_msgs::WallframeUserEventConstPtr &user_event)
+{
+    current_user_event = *user_event;
+    ROS_WARN_STREAM(current_user_event.message);
+}
+
+void ExampleApp::StateCallback(const wallframe_msgs::WallframeUserArrayConstPtr &user_packet)
+{
+    current_user_packet = *user_packet;
+    user_data = this->current_user_packet.users;
+}
+
 
 bool ExampleApp::start()
 {
@@ -93,7 +115,7 @@ bool ExampleApp::resume()
 
 } // end namepsace modulair
 
-using namespace modulair;
+using namespace wallframe;
 
 int main(int argc, char* argv[]){
 
@@ -106,13 +128,13 @@ int main(int argc, char* argv[]){
     QApplication application(argc,argv);
     // This line will quit the application once any window is closed.
 
-    application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));    
+    application.connect(&application, SIGNAL(lastWindowClosed()), &application, SLOT(quit()));
 
     // The app_id should be same as the name in the menu.cfg
     // TODO we should have a menu.cfg parser for C++ for now these are hardcoded
     ExampleApp example_app("Virtual Museum",node_,20,"museum");
 
-    example_app.build();    
+    example_app.build();
     example_app.widget->show();
 
     ROS_WARN_STREAM("Virtual Museum: App Running");

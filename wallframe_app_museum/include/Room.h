@@ -3,6 +3,8 @@
 
 #include "WPainting.h"
 
+#define DOOR_WDITH 800
+
 class Room
 {
     struct WALL{

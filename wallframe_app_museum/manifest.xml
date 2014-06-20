@@ -12,7 +12,7 @@
   <depend package="roscpp"/>
   <depend package="wallframe_core"/>
   <depend package="wallframe_msgs"/>
-  <depend package="ogre"/>
+  
 
   <export>
     <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -wallframe_app_museum"/>  

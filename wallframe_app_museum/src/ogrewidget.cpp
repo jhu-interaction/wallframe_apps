@@ -85,7 +85,6 @@ bool OgreWidget::Configure()
                                          false,
                                          &params );
 
-    std::cout << "Here 2" << std::endl;
     mWindow->setActive(true);
     mWindow->setVisible(true);
     WId ogreWinId = 0x0;
