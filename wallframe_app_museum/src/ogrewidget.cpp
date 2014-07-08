@@ -76,8 +76,8 @@ bool OgreWidget::Configure()
     params["parentWindowHandle"] = winHandle;
     params["externalGLControl"] = "true";
     params["currentGLContext"] = "true";
-    params["left"] = "0" ;
-    params["top"] = "0";
+//    params["left"] = "0" ;
+//    params["top"] = "0";
 
     mWindow = mRoot->createRenderWindow( "QOgreWidget_RenderWindow",
                                          this->width(),

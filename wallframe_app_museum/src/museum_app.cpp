@@ -50,12 +50,12 @@ ExampleApp::ExampleApp(std::string app_name, ros::NodeHandle nh, int event_deque
 
     widget->resize(width_,height_ * height_perc_);
 
-//    QTimer* timer = new QTimer(this);
-//    connect( timer, SIGNAL( timeout() ), this, SLOT( update() ) );
-//    timer->start(1000.0 / 60.0);
+    //    QTimer* timer = new QTimer(this);
+    //    connect( timer, SIGNAL( timeout() ), this, SLOT( update() ) );
+    //    timer->start(1000.0 / 60.0);
 
-   user_state_subscriber = node_.subscribe("/wallframe/users/state", 1000, &ExampleApp::StateCallback, this);
-   user_event_subscriber = node_.subscribe("/wallframe/users/events", 1000, &ExampleApp::EventCallback, this);
+    user_state_subscriber = node_.subscribe("/wallframe/users/state", 1000, &ExampleApp::StateCallback, this);
+    user_event_subscriber = node_.subscribe("/wallframe/users/events", 1000, &ExampleApp::EventCallback, this);
 
 
 }
@@ -80,7 +80,19 @@ bool ExampleApp::build(){
 void ExampleApp::EventCallback(const wallframe_msgs::WallframeUserEventConstPtr &user_event)
 {
     current_user_event = *user_event;
-    ROS_WARN_STREAM(current_user_event.message);
+    //    ROS_WARN_STREAMWall->art[i](current_user_event.message);
+
+    if(current_user_event.event_id == "hand_event")
+    {
+        std::string userEvent = current_user_event.message;
+
+        if(userEvent == "left_elbow_click")
+            widget->MoveToNextPainting();
+        else if(userEvent == "right_elbow_click" )
+            widget->MoveToPreviousPainting();
+
+        ROS_WARN_STREAM("Event : [" << userEvent << "]");
+    }
 }
 
 void ExampleApp::StateCallback(const wallframe_msgs::WallframeUserArrayConstPtr &user_packet)
@@ -91,7 +103,7 @@ void ExampleApp::StateCallback(const wallframe_msgs::WallframeUserArrayConstPtr 
 
 
 bool ExampleApp::start()
-{
+{    
     return true;
 }
 

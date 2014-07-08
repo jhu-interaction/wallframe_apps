@@ -34,6 +34,8 @@ public:
     MuseumApp(QWidget*parent);
     ~MuseumApp(void);
     void DrawRoom(Room *room, Ogre::SceneNode *mNode);
+    void MoveToNextPainting();
+    void MoveToPreviousPainting();
 
 protected:
     void CreateScene();
@@ -53,7 +55,8 @@ private:
     bool IsMoving;
     bool loadPainting;
     std::vector< std::vector<int> > RoomIndex;
-    int P;
+    int PaintingIndex;
+    int PaintingNumber;
 };
 
 

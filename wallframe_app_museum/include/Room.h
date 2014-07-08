@@ -26,6 +26,7 @@ public:
     void RedrawPaintings(void);
     void SetNewPaintings(void);
     void LoadPaintingToMemory(std::vector<int> index);
+    WPainting *MoveToPainting(Ogre::Camera *mCamera, int number);
 
     // Inline Functions
     inline void SetWorldPosition(double x, double y, double z)
@@ -49,8 +50,7 @@ private:
     double height;
     double depth;    
     Utils *util;
-    Ogre::SceneNode *Node;
-    WPainting *paint;        
+    Ogre::SceneNode *Node;    
     std::vector <WPainting*> paintings[4];
 
     std::vector<Ogre::String> BufferdNames;

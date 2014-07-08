@@ -139,7 +139,7 @@ void Room::DrawPaintings(void)
         {
             std::stringstream ss;
             ss << "Image" << rand() << i;
-            paint  = NULL;
+            WPainting *paint;
             double loc;
 
             if(numPaintings != 2)
@@ -171,7 +171,6 @@ void Room::DrawPaintings(void)
             paint->SetPosition(loc, 0, 0);
             Wall->art[j].push_back(paint);
 
-            paint = NULL;
         }
     }
 
@@ -252,4 +251,27 @@ void Room::SetNewPaintings(void)
             k++;
         }
     }
+}
+
+WPainting* Room::MoveToPainting(Ogre::Camera *mCamera, int number)
+{
+    int wallNumber = (int)number/2;
+    int paintNumber = number % 2;
+
+    WPainting *paint;
+    paint = Wall->art[wallNumber][paintNumber];
+    return paint;
+//    Ogre::Vector3 location = paint->GetNode()->convertLocalToWorldPosition(Ogre::Vector3(0,0,1500));
+
+//    std::cout << "World Location "  << location << std::endl;
+//    std::cout << "Cam   Location "  << mCamera->getPosition() << std::endl;
+
+//    for (int i = 0; i <= 1; i=i+0.05)
+//    {
+//        Ogre::Vector3 startPos = mCamera->getPosition();
+//        Ogre::Vector3 NewPos = (i-1)*startPos + i * location;
+//        mCamera->setPosition(NewPos);
+//    }
+//    return location;
+
 }

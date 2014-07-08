@@ -16,6 +16,7 @@ This source file is part of the
 */
 #include "MuseumApp.h"
 
+#include <ros/node_handle.h>
 //-------------------------------------------------------------------------------------
 MuseumApp::MuseumApp(QWidget *parent) :
     OgreWidget(parent)
@@ -80,7 +81,8 @@ void MuseumApp::InitializeParams(void)
     }
 
     loadPainting = false;
-    P=0;
+    PaintingIndex=0;
+    PaintingNumber=0;
 }
 
 //-------------------------------------------------------------------------------------
@@ -162,8 +164,8 @@ void MuseumApp::MoveToRoom(int i)
         pose = currRoom->rooms[LEFT]->GetPosition();
         currRoom->rooms[LEFT]->SetPosition(pose.x, pose.y, pose.z - (currRoom->GetDepth()+2));
 
-        currRoom->rooms[LEFT]->LoadPaintingToMemory(RoomIndex[P++]);
-        currRoom->rooms[RIGHT]->LoadPaintingToMemory(RoomIndex[P++]);
+        currRoom->rooms[LEFT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+        currRoom->rooms[RIGHT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
 
         currRoom->rooms[LEFT]->SetNewPaintings();
         currRoom->rooms[RIGHT]->SetNewPaintings();
@@ -191,8 +193,8 @@ void MuseumApp::MoveToRoom(int i)
         pose = currRoom->rooms[LEFT]->GetPosition();
         currRoom->rooms[LEFT]->SetPosition(pose.x, pose.y, pose.z + (currRoom->GetDepth()+2));
 
-        currRoom->rooms[LEFT]->LoadPaintingToMemory(RoomIndex[P++]);
-        currRoom->rooms[RIGHT]->LoadPaintingToMemory(RoomIndex[P++]);
+        currRoom->rooms[LEFT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+        currRoom->rooms[RIGHT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
 
         currRoom->rooms[LEFT]->SetNewPaintings();
         currRoom->rooms[RIGHT]->SetNewPaintings();
@@ -220,8 +222,8 @@ void MuseumApp::MoveToRoom(int i)
         pose = currRoom->rooms[BACK]->GetPosition();
         currRoom->rooms[BACK]->SetPosition(pose.x - (currRoom->GetWidth()+2), pose.y, pose.z);
 
-        currRoom->rooms[FRONT]->LoadPaintingToMemory(RoomIndex[P++]);
-        currRoom->rooms[BACK]->LoadPaintingToMemory(RoomIndex[P++]);
+        currRoom->rooms[FRONT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+        currRoom->rooms[BACK]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
 
         currRoom->rooms[FRONT]->SetNewPaintings();
         currRoom->rooms[BACK]->SetNewPaintings();
@@ -249,8 +251,8 @@ void MuseumApp::MoveToRoom(int i)
         pose = currRoom->rooms[BACK]->GetPosition();
         currRoom->rooms[BACK]->SetPosition(pose.x + (currRoom->GetWidth()+2), pose.y, pose.z);
 
-        currRoom->rooms[FRONT]->LoadPaintingToMemory(RoomIndex[P++]);
-        currRoom->rooms[BACK]->LoadPaintingToMemory(RoomIndex[P++]);
+        currRoom->rooms[FRONT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+        currRoom->rooms[BACK]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
 
         currRoom->rooms[FRONT]->SetNewPaintings();
         currRoom->rooms[BACK]->SetNewPaintings();
@@ -260,6 +262,63 @@ void MuseumApp::MoveToRoom(int i)
 
     loadPainting = true;
 
+}
+
+void MuseumApp::MoveToNextPainting()
+{
+    WPainting *paint = currRoom->MoveToPainting(mCamera, PaintingNumber++);
+    Ogre::Vector3 location = paint->GetNode()->convertLocalToWorldPosition(Ogre::Vector3(0,0,1500));
+    Ogre::Vector3 paintingOrigin = paint->GetNode()->convertLocalToWorldPosition(Ogre::Vector3(0,0,0));
+
+#if 1
+    for (double i = 0; i <= 1; i=i+0.005)
+    {
+        Ogre::Vector3 startPos = mCamera->getPosition();
+        Ogre::Vector3 startLookAt = mCamera->getDirection() + startPos;
+
+        Ogre::Vector3 NewPos = (1-i)*startPos + i * location;
+        Ogre::Vector3 NewLookAt = (1-i)*startLookAt + i * paintingOrigin;
+        mCamera->setPosition(NewPos);
+        mCamera->lookAt(NewLookAt);
+        repaint();
+    }
+    ROS_WARN_STREAM("Done");
+#else
+    mCamera->setPosition(location);
+    mCamera->lookAt(paintingOrigin);
+    repaint();
+#endif
+    if(PaintingNumber == 8)
+        PaintingNumber = 1;
+}
+
+void MuseumApp::MoveToPreviousPainting()
+{
+    WPainting *paint  = currRoom->MoveToPainting(mCamera, PaintingNumber--);
+    Ogre::Vector3 location = paint->GetNode()->convertLocalToWorldPosition(Ogre::Vector3(0,0,1500));
+    Ogre::Vector3 paintingOrigin = paint->GetNode()->convertLocalToWorldPosition(Ogre::Vector3(0,0,0));
+
+#if 1
+    for (double i = 0; i <= 1; i=i+0.0005)
+    {
+        Ogre::Vector3 startPos = mCamera->getPosition();
+        Ogre::Vector3 startLookAt = mCamera->getDirection() + startPos;
+
+        Ogre::Vector3 NewPos = (1-i)*startPos + i * location;
+        Ogre::Vector3 NewLookAt = (1-i)*startLookAt + i * paintingOrigin;
+        mCamera->setPosition(NewPos);
+        mCamera->lookAt(NewLookAt);
+        repaint();
+    }
+    ROS_WARN_STREAM("Done");
+#else
+    mCamera->setPosition(location);
+    mCamera->lookAt(paintingOrigin);
+    repaint();
+#endif
+
+    if(PaintingNumber == 1)
+        PaintingNumber = 8;
 }
 
 bool MuseumApp::frameStarted(const Ogre::FrameEvent &evt)
@@ -290,10 +349,10 @@ void MuseumApp::runThread()
             // Lock mutex
             boost::unique_lock<boost::mutex>* lock = new boost::unique_lock<boost::mutex>(mMutex);
 
-            //            currRoom->rooms[LEFT]->LoadPaintingToMemory(RoomIndex[P++]);
-            //            currRoom->rooms[RIGHT]->LoadPaintingToMemory(RoomIndex[P++]);
-            //            currRoom->rooms[FRONT]->LoadPaintingToMemory(RoomIndex[P++]);
-            //            currRoom->rooms[BACK]->LoadPaintingToMemory(RoomIndex[P++]);
+            //            currRoom->rooms[LEFT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+            //            currRoom->rooms[RIGHT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+            //            currRoom->rooms[FRONT]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
+            //            currRoom->rooms[BACK]->LoadPaintingToMemory(RoomIndex[PaintingIndex++]);
             std::stringstream ss;
             ss << rand();
             for (int i = 0; i < 96; ++i)

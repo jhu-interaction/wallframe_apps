@@ -8,3 +8,4 @@ srv_gen
 *.cxx
 *.project
 *.cproject
+wallframe_app_museum/CMakeLists.txt.user

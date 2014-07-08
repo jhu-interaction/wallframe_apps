@@ -80,6 +80,7 @@ private:
 
     std::vector<wallframe_msgs::WallframeUser> user_data;
 
+    std::string previousEvent;
 };
 }
 

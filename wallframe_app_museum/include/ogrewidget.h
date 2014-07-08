@@ -24,7 +24,7 @@ public:
 
     ~OgreWidget()
     {
-        mRoot->shutdown();
+        mRoot->shutdown();        
         delete mRoot;
         delete mCameraMan;
         destroy();
